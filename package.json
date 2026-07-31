@@ -1,6 +1,6 @@
 {
-  "name": "vscode-utilities",
-  "displayName": "Utilities",
+  "name": "vscode-essentials",
+  "displayName": "Essentials",
   "description": "A collection of practical tools for VS Code",
   "version": "0.0.1",
   "publisher": "huanent",
@@ -20,16 +20,16 @@
     "viewsContainers": {
       "activitybar": [
         {
-          "id": "vscode-utilities",
-          "title": "Utilities",
+          "id": "vscode-essentials",
+          "title": "Essentials",
           "icon": "$(tools)"
         }
       ]
     },
     "views": {
-      "vscode-utilities": [
+      "vscode-essentials": [
         {
-          "id": "vscode-utilities.features",
+          "id": "vscode-essentials.features",
           "name": "Features",
           "icon": "$(list-tree)"
         }
@@ -37,9 +37,9 @@
     },
     "commands": [
       {
-        "command": "vscode-utilities.openNetwork",
+        "command": "vscode-essentials.openNetwork",
         "title": "Open Network",
-        "category": "Utilities"
+        "category": "Essentials"
       }
     ]
   },

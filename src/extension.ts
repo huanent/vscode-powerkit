@@ -8,7 +8,7 @@ export function activate(context: vscode.ExtensionContext): void {
 			FeatureTreeProvider.viewType,
 			new FeatureTreeProvider(),
 		),
-		vscode.commands.registerCommand('vscode-utilities.openNetwork', () => {
+		vscode.commands.registerCommand('vscode-essentials.openNetwork', () => {
 			NetworkPanel.show(context.extensionUri);
 		}),
 	);

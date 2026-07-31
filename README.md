@@ -1,10 +1,10 @@
-# Utilities
+# Essentials
 
-A VS Code Activity Bar collection of focused developer utilities.
+A VS Code Activity Bar collection of focused developer essentials.
 
 ## Features
 
-- A dedicated Utilities item in the Activity Bar.
+- A dedicated Essentials item in the Activity Bar.
 - A feature list designed to grow as more tools are added.
 - Network opens as a dedicated editor webview from the feature list.
 - The overview shows the public IP, address version, hostname, operating system, DNS servers, local interfaces, and last refresh time.

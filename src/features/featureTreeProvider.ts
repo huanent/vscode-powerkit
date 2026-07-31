@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 
 export class FeatureTreeProvider implements vscode.TreeDataProvider<vscode.TreeItem> {
-	static readonly viewType = 'vscode-utilities.features';
+	static readonly viewType = 'vscode-essentials.features';
 
 	getTreeItem(element: vscode.TreeItem): vscode.TreeItem {
 		return element;
@@ -12,7 +12,7 @@ export class FeatureTreeProvider implements vscode.TreeDataProvider<vscode.TreeI
 		networkItem.description = 'Public IP';
 		networkItem.iconPath = new vscode.ThemeIcon('globe');
 		networkItem.command = {
-			command: 'vscode-utilities.openNetwork',
+			command: 'vscode-essentials.openNetwork',
 			title: 'Open Network',
 		};
 		return [networkItem];
