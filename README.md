@@ -1,10 +1,10 @@
-# Essentials
+# PowerKit
 
-A VS Code Activity Bar collection of focused developer essentials.
+A VS Code Activity Bar collection of focused developer tools.
 
 ## Features
 
-- A dedicated Essentials item in the Activity Bar.
+- A dedicated PowerKit item in the Activity Bar.
 - A feature list designed to grow as more tools are added.
 - Network opens as a dedicated editor webview from the feature list.
 - The overview shows the public IP, address version, hostname, operating system, DNS servers, local interfaces, and last refresh time.
