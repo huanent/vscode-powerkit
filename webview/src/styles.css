@@ -26,6 +26,12 @@ button {
 	padding: 42px 0 56px;
 }
 
+.generators-panel {
+	width: min(980px, calc(100% - 48px));
+	margin: 0 auto;
+	padding: 42px 0 56px;
+}
+
 .page-header,
 .title-group,
 .public-ip-heading,
@@ -54,6 +60,12 @@ button {
 	border: 1px solid color-mix(in srgb, var(--vscode-charts-green) 55%, var(--vscode-widget-border));
 	background: color-mix(in srgb, var(--vscode-charts-green) 12%, transparent);
 	color: var(--vscode-charts-green);
+}
+
+.generators-title-icon {
+	border-color: color-mix(in srgb, var(--vscode-charts-yellow) 55%, var(--vscode-widget-border));
+	background: color-mix(in srgb, var(--vscode-charts-yellow) 12%, transparent);
+	color: var(--vscode-charts-yellow);
 }
 
 .eyebrow,
@@ -171,15 +183,92 @@ h2 {
 }
 
 .refresh-button:focus-visible,
-.copy-button:focus-visible {
+.copy-button:focus-visible,
+.icon-button:focus-visible {
 	outline: 1px solid var(--vscode-focusBorder);
 	outline-offset: 2px;
 }
 
 .refresh-button:disabled,
-.copy-button:disabled {
+.copy-button:disabled,
+.icon-button:disabled {
 	cursor: default;
 	opacity: 0.55;
+}
+
+.generator-list {
+	border-top: 3px solid var(--vscode-charts-yellow);
+	background: var(--vscode-widget-border);
+}
+
+.generator-row {
+	display: grid;
+	grid-template-columns: minmax(190px, 0.8fr) minmax(260px, 1.4fr) auto;
+	align-items: center;
+	gap: 20px;
+	min-height: 92px;
+	border-bottom: 1px solid var(--vscode-widget-border);
+	padding: 16px 18px;
+	background: var(--vscode-sideBar-background);
+}
+
+.generator-details {
+	display: grid;
+	grid-template-columns: 36px minmax(0, 1fr);
+	align-items: center;
+	gap: 11px;
+}
+
+.generator-icon {
+	display: grid;
+	width: 34px;
+	height: 34px;
+	place-items: center;
+	color: var(--vscode-charts-yellow);
+}
+
+.generator-details strong,
+.generator-details span {
+	display: block;
+}
+
+.generator-details strong {
+	font-size: 13px;
+	font-weight: 600;
+}
+
+.generator-details span {
+	margin-top: 4px;
+	color: var(--vscode-descriptionForeground);
+	font-size: 11px;
+}
+
+.generator-value {
+	min-width: 0;
+	overflow-wrap: anywhere;
+	color: var(--vscode-textLink-foreground);
+	font-family: var(--vscode-editor-font-family);
+	font-size: 14px;
+}
+
+.generator-actions {
+	display: flex;
+	gap: 6px;
+}
+
+.icon-button {
+	display: grid;
+	width: 34px;
+	height: 34px;
+	place-items: center;
+	border: 1px solid var(--vscode-button-border, var(--vscode-widget-border));
+	background: var(--vscode-button-secondaryBackground);
+	color: var(--vscode-button-secondaryForeground);
+	cursor: pointer;
+}
+
+.icon-button:hover:not(:disabled) {
+	background: var(--vscode-button-secondaryHoverBackground);
 }
 
 .facts-grid {
@@ -300,6 +389,11 @@ h2 {
 		padding-top: 22px;
 	}
 
+	.generators-panel {
+		width: min(100% - 24px, 980px);
+		padding-top: 22px;
+	}
+
 	.page-header,
 	.public-ip-heading {
 		align-items: flex-start;
@@ -328,5 +422,20 @@ h2 {
 	.interface-row code {
 		grid-column: 1 / -1;
 		grid-row: 2;
+	}
+
+	.generator-row {
+		grid-template-columns: minmax(0, 1fr) auto;
+		gap: 13px;
+	}
+
+	.generator-value {
+		grid-column: 1 / -1;
+		grid-row: 2;
+	}
+
+	.generator-actions {
+		grid-column: 2;
+		grid-row: 1;
 	}
 }

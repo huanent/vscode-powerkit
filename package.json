@@ -2,7 +2,7 @@
   "name": "vscode-powerkit",
   "displayName": "PowerKit",
   "description": "A collection of practical tools for VS Code",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "publisher": "huanent",
   "icon": "resources/logo.png",
   "extensionKind": [
@@ -39,6 +39,11 @@
       {
         "command": "vscode-powerkit.openNetwork",
         "title": "Open Network",
+        "category": "PowerKit"
+      },
+      {
+        "command": "vscode-powerkit.openGenerators",
+        "title": "Open Generators",
         "category": "PowerKit"
       }
     ]

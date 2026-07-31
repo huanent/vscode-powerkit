@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
-import type { ExtensionMessage, NetworkSnapshot } from '../types';
-
-const vscode = acquireVsCodeApi();
+import type { NetworkExtensionMessage, NetworkSnapshot } from '../types';
+import { vscode } from '../vscodeApi';
 
 export function useNetwork() {
 	const [snapshot, setSnapshot] = useState<NetworkSnapshot>();
@@ -10,7 +9,7 @@ export function useNetwork() {
 	const [copied, setCopied] = useState(false);
 
 	useEffect(() => {
-		const handleMessage = (event: MessageEvent<ExtensionMessage>) => {
+		const handleMessage = (event: MessageEvent<NetworkExtensionMessage>) => {
 			switch (event.data.type) {
 				case 'loading':
 					setLoading(true);

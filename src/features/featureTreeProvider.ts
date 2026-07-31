@@ -15,6 +15,15 @@ export class FeatureTreeProvider implements vscode.TreeDataProvider<vscode.TreeI
 			command: 'vscode-powerkit.openNetwork',
 			title: 'Open Network',
 		};
-		return [networkItem];
+
+		const generatorsItem = new vscode.TreeItem('Generators', vscode.TreeItemCollapsibleState.None);
+		generatorsItem.description = 'Timestamp, UUID, password';
+		generatorsItem.iconPath = new vscode.ThemeIcon('symbol-misc');
+		generatorsItem.command = {
+			command: 'vscode-powerkit.openGenerators',
+			title: 'Open Generators',
+		};
+
+		return [networkItem, generatorsItem];
 	}
 }

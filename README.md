@@ -9,6 +9,7 @@ A VS Code Activity Bar collection of focused developer tools.
 - Network opens as a dedicated editor webview from the feature list.
 - The overview shows the public IP, address version, hostname, operating system, DNS servers, local interfaces, and last refresh time.
 - Refresh and clipboard copy actions for the public IP.
+- Generators for Unix timestamps, UUID v4 values, and secure random passwords.
 
 ## Requirements
 

@@ -37,7 +37,7 @@ export class NetworkPanel {
 		extensionUri: vscode.Uri,
 	) {
 		panel.iconPath = new vscode.ThemeIcon('globe');
-		panel.webview.html = getWebviewHtml(panel.webview, extensionUri);
+		panel.webview.html = getWebviewHtml(panel.webview, extensionUri, 'network');
 		panel.onDidDispose(() => {
 			NetworkPanel.currentPanel = undefined;
 		});
