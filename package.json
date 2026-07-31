@@ -1,0 +1,71 @@
+{
+  "name": "vscode-toolkit",
+  "displayName": "Toolkit",
+  "description": "A collection of practical tools for VS Code",
+  "version": "0.0.1",
+  "publisher": "huanent",
+  "icon": "resources/logo.png",
+  "extensionKind": [
+    "ui"
+  ],
+  "engines": {
+    "vscode": "^1.125.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [],
+  "main": "./out/extension.js",
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "vscode-toolkit",
+          "title": "Toolkit",
+          "icon": "$(tools)"
+        }
+      ]
+    },
+    "views": {
+      "vscode-toolkit": [
+        {
+          "id": "vscode-toolkit.features",
+          "name": "Features",
+          "icon": "$(list-tree)"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "vscode-toolkit.openNetwork",
+        "title": "Open Network",
+        "category": "Toolkit"
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run build",
+    "build": "npm run compile && npm run compile:webview",
+    "compile": "rimraf out && tsc -p ./",
+    "compile:webview": "tsc -p webview/tsconfig.json && vite build",
+    "package": "vsce package --allow-missing-repository --skip-license"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.2",
+    "@types/react-dom": "^19.2.2",
+    "@types/vscode": "^1.125.0",
+    "@types/node": "24.x",
+    "@vitejs/plugin-react": "^5.1.1",
+    "@vscode/vsce": "^3.6.2",
+    "lucide-react": "^0.468.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "rimraf": "^6.1.2",
+    "typescript": "^6.0.3",
+    "vite": "^7.2.2"
+  },
+  "overrides": {
+    "diff": "^8.0.4",
+    "serialize-javascript": "^7.0.6"
+  }
+}
