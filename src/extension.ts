@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import { FeatureTreeProvider } from './features/featureTreeProvider';
+import { CryptoPanel } from './features/crypto/cryptoPanel';
 import { GeneratorsPanel } from './features/generators/generatorsPanel';
 import { NetworkPanel } from './features/network/networkPanel';
 
@@ -14,6 +15,9 @@ export function activate(context: vscode.ExtensionContext): void {
 		}),
 		vscode.commands.registerCommand('vscode-powerkit.openGenerators', () => {
 			GeneratorsPanel.show(context.extensionUri);
+		}),
+		vscode.commands.registerCommand('vscode-powerkit.openCrypto', () => {
+			CryptoPanel.show(context.extensionUri);
 		}),
 	);
 }

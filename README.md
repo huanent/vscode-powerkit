@@ -10,6 +10,8 @@ A VS Code Activity Bar collection of focused developer tools.
 - The overview shows the public IP, address version, hostname, operating system, DNS servers, local interfaces, and last refresh time.
 - Refresh and clipboard copy actions for the public IP.
 - Generators for Unix timestamps, UUID v4 values, and secure random passwords.
+- Crypto tools for MD5, SHA-1, SHA-256, and SHA-512 text digests.
+- SSH key pair generation for Ed25519, RSA 2048, and RSA 4096 keys.
 
 ## Requirements
 

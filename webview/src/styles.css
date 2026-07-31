@@ -32,6 +32,12 @@ button {
 	padding: 42px 0 56px;
 }
 
+.crypto-panel {
+	width: min(980px, calc(100% - 48px));
+	margin: 0 auto;
+	padding: 42px 0 56px;
+}
+
 .page-header,
 .title-group,
 .public-ip-heading,
@@ -66,6 +72,12 @@ button {
 	border-color: color-mix(in srgb, var(--vscode-charts-yellow) 55%, var(--vscode-widget-border));
 	background: color-mix(in srgb, var(--vscode-charts-yellow) 12%, transparent);
 	color: var(--vscode-charts-yellow);
+}
+
+.crypto-title-icon {
+	border-color: color-mix(in srgb, var(--vscode-charts-blue) 55%, var(--vscode-widget-border));
+	background: color-mix(in srgb, var(--vscode-charts-blue) 12%, transparent);
+	color: var(--vscode-charts-blue);
 }
 
 .eyebrow,
@@ -105,7 +117,8 @@ h2 {
 }
 
 .refresh-button,
-.copy-button {
+.copy-button,
+.primary-button {
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
@@ -178,12 +191,22 @@ h2 {
 	color: var(--vscode-button-foreground);
 }
 
-.copy-button:hover:not(:disabled) {
+.primary-button {
+	background: var(--vscode-button-background);
+	color: var(--vscode-button-foreground);
+}
+
+.copy-button:hover:not(:disabled),
+.primary-button:hover:not(:disabled) {
 	background: var(--vscode-button-hoverBackground);
 }
 
 .refresh-button:focus-visible,
 .copy-button:focus-visible,
+.primary-button:focus-visible,
+.segmented-control button:focus-visible,
+.crypto-section input:focus-visible,
+.crypto-section textarea:focus-visible,
 .icon-button:focus-visible {
 	outline: 1px solid var(--vscode-focusBorder);
 	outline-offset: 2px;
@@ -191,9 +214,164 @@ h2 {
 
 .refresh-button:disabled,
 .copy-button:disabled,
+.primary-button:disabled,
 .icon-button:disabled {
 	cursor: default;
 	opacity: 0.55;
+}
+
+.crypto-error {
+	margin-bottom: 20px;
+}
+
+.crypto-section {
+	border-top: 3px solid var(--vscode-charts-blue);
+	padding: 24px;
+	background: var(--vscode-sideBar-background);
+}
+
+.crypto-section + .crypto-section {
+	margin-top: 24px;
+}
+
+.ssh-section {
+	border-top-color: var(--vscode-charts-green);
+}
+
+.crypto-section-heading {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	margin-bottom: 22px;
+}
+
+.crypto-section-heading p {
+	margin-top: 4px;
+	color: var(--vscode-descriptionForeground);
+	font-size: 12px;
+}
+
+.crypto-heading-icon {
+	display: grid;
+	width: 36px;
+	height: 36px;
+	flex: 0 0 auto;
+	place-items: center;
+	color: var(--vscode-charts-blue);
+}
+
+.ssh-section .crypto-heading-icon {
+	color: var(--vscode-charts-green);
+}
+
+.segmented-field {
+	margin: 0 0 18px;
+	border: 0;
+	padding: 0;
+}
+
+.segmented-field legend,
+.field-label,
+.result-heading span {
+	display: block;
+	margin-bottom: 7px;
+	color: var(--vscode-descriptionForeground);
+	font-size: 11px;
+	font-weight: 600;
+}
+
+.segmented-control {
+	display: inline-grid;
+	grid-auto-flow: column;
+	grid-auto-columns: minmax(86px, auto);
+	border: 1px solid var(--vscode-widget-border);
+	background: var(--vscode-editor-background);
+}
+
+.segmented-control button {
+	min-height: 32px;
+	border: 0;
+	border-right: 1px solid var(--vscode-widget-border);
+	padding: 0 12px;
+	background: transparent;
+	color: var(--vscode-foreground);
+	cursor: pointer;
+}
+
+.segmented-control button:last-child {
+	border-right: 0;
+}
+
+.segmented-control button.active {
+	background: var(--vscode-button-secondaryBackground);
+	color: var(--vscode-textLink-foreground);
+}
+
+.crypto-section input,
+.crypto-section textarea {
+	display: block;
+	width: 100%;
+	border: 1px solid var(--vscode-input-border, var(--vscode-widget-border));
+	border-radius: 0;
+	padding: 9px 10px;
+	background: var(--vscode-input-background);
+	color: var(--vscode-input-foreground);
+	font: inherit;
+}
+
+.crypto-section textarea {
+	min-height: 112px;
+	resize: vertical;
+}
+
+.crypto-section input::placeholder,
+.crypto-section textarea::placeholder {
+	color: var(--vscode-input-placeholderForeground);
+}
+
+.crypto-action-row {
+	display: flex;
+	justify-content: flex-end;
+	margin-top: 12px;
+}
+
+.crypto-result {
+	margin-top: 18px;
+	border: 1px solid var(--vscode-widget-border);
+	padding: 14px;
+	background: var(--vscode-editor-background);
+}
+
+.sensitive-result {
+	border-left: 3px solid var(--vscode-charts-yellow);
+}
+
+.result-heading {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+	margin-bottom: 9px;
+}
+
+.result-heading span {
+	margin: 0;
+}
+
+.crypto-result code,
+.crypto-result pre {
+	display: block;
+	margin: 0;
+	overflow-wrap: anywhere;
+	white-space: pre-wrap;
+	color: var(--vscode-textLink-foreground);
+	font-family: var(--vscode-editor-font-family);
+	font-size: 12px;
+}
+
+.key-results {
+	display: grid;
+	gap: 14px;
 }
 
 .generator-list {
@@ -394,6 +572,11 @@ h2 {
 		padding-top: 22px;
 	}
 
+	.crypto-panel {
+		width: min(100% - 24px, 980px);
+		padding-top: 22px;
+	}
+
 	.page-header,
 	.public-ip-heading {
 		align-items: flex-start;
@@ -406,8 +589,28 @@ h2 {
 	}
 
 	.refresh-button,
-	.copy-button {
+	.copy-button,
+	.primary-button {
 		width: 100%;
+	}
+
+	.crypto-section {
+		padding: 18px 14px;
+	}
+
+	.segmented-control {
+		display: grid;
+		grid-auto-flow: row;
+		grid-auto-columns: auto;
+	}
+
+	.segmented-control button {
+		border-right: 0;
+		border-bottom: 1px solid var(--vscode-widget-border);
+	}
+
+	.segmented-control button:last-child {
+		border-bottom: 0;
 	}
 
 	.facts-grid {

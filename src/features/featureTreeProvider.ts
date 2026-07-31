@@ -24,6 +24,14 @@ export class FeatureTreeProvider implements vscode.TreeDataProvider<vscode.TreeI
 			title: 'Open Generators',
 		};
 
-		return [networkItem, generatorsItem];
+		const cryptoItem = new vscode.TreeItem('Crypto', vscode.TreeItemCollapsibleState.None);
+		cryptoItem.description = 'SSH keys, hashes';
+		cryptoItem.iconPath = new vscode.ThemeIcon('key');
+		cryptoItem.command = {
+			command: 'vscode-powerkit.openCrypto',
+			title: 'Open Crypto',
+		};
+
+		return [networkItem, generatorsItem, cryptoItem];
 	}
 }
