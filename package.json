@@ -48,7 +48,8 @@
     "build": "npm run compile && npm run compile:webview",
     "compile": "rimraf out && tsc -p ./",
     "compile:webview": "tsc -p webview/tsconfig.json && vite build",
-    "package": "vsce package --allow-missing-repository --skip-license"
+    "package": "vsce package --no-yarn",
+    "publish": "vsce publish --no-yarn"
   },
   "devDependencies": {
     "@types/react": "^19.2.2",
