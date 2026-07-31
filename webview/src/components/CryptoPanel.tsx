@@ -2,6 +2,7 @@ import { Check, Copy, Fingerprint, KeyRound, LoaderCircle, ShieldCheck } from 'l
 import { useState } from 'react';
 import { useCrypto } from '../hooks/useCrypto';
 import type { HashAlgorithm, SshKeyType } from '../types';
+import { JwtSection } from './JwtSection';
 
 const hashAlgorithms: Array<{ value: HashAlgorithm; label: string }> = [
 	{ value: 'md5', label: 'MD5' },
@@ -21,7 +22,7 @@ export function CryptoPanel() {
 	const [hashInput, setHashInput] = useState('');
 	const [keyType, setKeyType] = useState<SshKeyType>('ed25519');
 	const [comment, setComment] = useState('');
-	const { hashResult, keyPair, copiedTarget, error, generatingKey, hash, generateSshKey, copy } = useCrypto();
+	const { hashResult, jwtToken, decodedJwt, keyPair, copiedTarget, error, generatingKey, hash, encodeJwt, decodeJwt, generateSshKey, copy } = useCrypto();
 
 	return (
 		<main className="crypto-panel">
@@ -59,6 +60,15 @@ export function CryptoPanel() {
 					<ResultField label={`${hashAlgorithm.toUpperCase()} digest`} value={hashResult} copied={copiedTarget === 'hash'} onCopy={() => copy('hash', hashResult)} />
 				)}
 			</section>
+
+			<JwtSection
+				token={jwtToken}
+				decoded={decodedJwt}
+				copiedTarget={copiedTarget}
+				onEncode={encodeJwt}
+				onDecode={decodeJwt}
+				onCopy={copy}
+			/>
 
 			<section className="crypto-section ssh-section">
 				<div className="crypto-section-heading">

@@ -238,6 +238,10 @@ h2 {
 	border-top-color: var(--vscode-charts-green);
 }
 
+.jwt-section {
+	border-top-color: var(--vscode-charts-yellow);
+}
+
 .crypto-section-heading {
 	display: flex;
 	align-items: center;
@@ -262,6 +266,10 @@ h2 {
 
 .ssh-section .crypto-heading-icon {
 	color: var(--vscode-charts-green);
+}
+
+.jwt-section .crypto-heading-icon {
+	color: var(--vscode-charts-yellow);
 }
 
 .segmented-field {
@@ -324,6 +332,11 @@ h2 {
 	resize: vertical;
 }
 
+.crypto-section .code-input {
+	font-family: var(--vscode-editor-font-family);
+	font-size: 12px;
+}
+
 .crypto-section input::placeholder,
 .crypto-section textarea::placeholder {
 	color: var(--vscode-input-placeholderForeground);
@@ -333,6 +346,14 @@ h2 {
 	display: flex;
 	justify-content: flex-end;
 	margin-top: 12px;
+}
+
+.jwt-secret-label {
+	margin-top: 16px;
+}
+
+.jwt-secret-label span {
+	font-weight: 400;
 }
 
 .crypto-result {
@@ -372,6 +393,32 @@ h2 {
 .key-results {
 	display: grid;
 	gap: 14px;
+}
+
+.jwt-results {
+	display: grid;
+	gap: 14px;
+	margin-top: 18px;
+}
+
+.jwt-results .crypto-result {
+	margin-top: 0;
+}
+
+.jwt-signature-status {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	font-size: 12px;
+	font-weight: 600;
+}
+
+.jwt-signature-status.valid {
+	color: var(--vscode-testing-iconPassed);
+}
+
+.jwt-signature-status.invalid {
+	color: var(--vscode-testing-iconFailed);
 }
 
 .generator-list {

@@ -38,8 +38,16 @@ export interface SshKeyPair {
 	privateKey: string;
 }
 
+export interface DecodedJwt {
+	header: string;
+	payload: string;
+	signatureValid?: boolean;
+}
+
 export type CryptoExtensionMessage =
 	| { type: 'hashed'; algorithm: HashAlgorithm; value: string }
+	| { type: 'jwtEncoded'; token: string }
+	| { type: 'jwtDecoded'; decoded: DecodedJwt }
 	| { type: 'sshKeyGenerated'; keyPair: SshKeyPair }
 	| { type: 'copied'; target: string }
 	| { type: 'error'; message: string };

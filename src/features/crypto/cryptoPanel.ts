@@ -1,10 +1,12 @@
 import * as vscode from 'vscode';
 import { getWebviewHtml } from '../../webview';
-import { generateSshKeyPair, hashText, type HashAlgorithm, type SshKeyType } from './cryptoService';
+import { decodeJwt, encodeJwt, generateSshKeyPair, hashText, type HashAlgorithm, type SshKeyType } from './cryptoService';
 
 type WebviewMessage =
 	| { type: 'ready' }
 	| { type: 'hash'; algorithm: HashAlgorithm; value: string }
+	| { type: 'encodeJwt'; payload: string; secret: string }
+	| { type: 'decodeJwt'; token: string; secret: string }
 	| { type: 'generateSshKey'; keyType: SshKeyType; comment: string }
 	| { type: 'copy'; target: string; value: string };
 
@@ -54,6 +56,18 @@ export class CryptoPanel {
 						type: 'hashed',
 						algorithm: message.algorithm,
 						value: hashText(message.value, message.algorithm),
+					});
+					break;
+				case 'encodeJwt':
+					await this.panel.webview.postMessage({
+						type: 'jwtEncoded',
+						token: encodeJwt(message.payload, message.secret),
+					});
+					break;
+				case 'decodeJwt':
+					await this.panel.webview.postMessage({
+						type: 'jwtDecoded',
+						decoded: decodeJwt(message.token, message.secret),
 					});
 					break;
 				case 'generateSshKey':
