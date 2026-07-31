@@ -1,10 +1,10 @@
-# Toolkit
+# Utilities
 
 A VS Code Activity Bar collection of focused developer utilities.
 
 ## Features
 
-- A dedicated Toolkit item in the Activity Bar.
+- A dedicated Utilities item in the Activity Bar.
 - A feature list designed to grow as more tools are added.
 - Network opens as a dedicated editor webview from the feature list.
 - The overview shows the public IP, address version, hostname, operating system, DNS servers, local interfaces, and last refresh time.

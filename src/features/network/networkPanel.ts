@@ -8,7 +8,7 @@ type WebviewMessage =
 	| { type: 'copyPublicIp' };
 
 export class NetworkPanel {
-	static readonly viewType = 'vscode-toolkit.network';
+	static readonly viewType = 'vscode-utilities.network';
 	private static currentPanel: NetworkPanel | undefined;
 	private publicIp = '';
 

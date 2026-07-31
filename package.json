@@ -1,6 +1,6 @@
 {
-  "name": "vscode-toolkit",
-  "displayName": "Toolkit",
+  "name": "vscode-utilities",
+  "displayName": "Utilities",
   "description": "A collection of practical tools for VS Code",
   "version": "0.0.1",
   "publisher": "huanent",
@@ -20,16 +20,16 @@
     "viewsContainers": {
       "activitybar": [
         {
-          "id": "vscode-toolkit",
-          "title": "Toolkit",
+          "id": "vscode-utilities",
+          "title": "Utilities",
           "icon": "$(tools)"
         }
       ]
     },
     "views": {
-      "vscode-toolkit": [
+      "vscode-utilities": [
         {
-          "id": "vscode-toolkit.features",
+          "id": "vscode-utilities.features",
           "name": "Features",
           "icon": "$(list-tree)"
         }
@@ -37,9 +37,9 @@
     },
     "commands": [
       {
-        "command": "vscode-toolkit.openNetwork",
+        "command": "vscode-utilities.openNetwork",
         "title": "Open Network",
-        "category": "Toolkit"
+        "category": "Utilities"
       }
     ]
   },

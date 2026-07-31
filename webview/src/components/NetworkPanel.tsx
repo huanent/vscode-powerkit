@@ -10,7 +10,7 @@ export function NetworkPanel() {
 				<div className="title-group">
 					<div className="title-icon"><Network size={22} aria-hidden="true" /></div>
 					<div>
-						<span className="eyebrow">Toolkit</span>
+						<span className="eyebrow">Utilities</span>
 						<h1>Network overview</h1>
 						<p>Current public identity and active local interfaces.</p>
 					</div>
