@@ -14,6 +14,7 @@ export function useNetwork() {
 				case 'loading':
 					setLoading(true);
 					setError('');
+					setSnapshot(undefined);
 					break;
 				case 'loaded':
 					setSnapshot(event.data.snapshot);
@@ -41,6 +42,7 @@ export function useNetwork() {
 		loading,
 		copied,
 		refresh: () => vscode.postMessage({ type: 'refresh' }),
+		lookup: (ip: string) => vscode.postMessage({ type: 'lookup', ip }),
 		copyPublicIp: () => vscode.postMessage({ type: 'copyPublicIp' }),
 	};
 }

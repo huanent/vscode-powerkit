@@ -1,6 +1,25 @@
 import { Check, CircleCheck, CircleX, Copy, FileKey } from 'lucide-react';
 import { useState } from 'react';
 import type { DecodedJwt } from '../types';
+import {
+	cryptoHeadingClass,
+	cryptoHeadingIconClass,
+	cryptoHeadingTextClass,
+	cryptoSectionClass,
+	fieldLabelClass,
+	iconButtonClass,
+	inputClass,
+	primaryButtonClass,
+	resultClass,
+	resultHeadingClass,
+	resultLabelClass,
+	resultValueClass,
+	segmentedActiveClass,
+	segmentedButtonClass,
+	segmentedControlClass,
+	segmentedFieldClass,
+	textareaClass,
+} from './cryptoStyles';
 
 interface JwtSectionProps {
 	token: string;
@@ -18,36 +37,36 @@ export function JwtSection({ token, decoded, copiedTarget, onEncode, onDecode, o
 	const [secret, setSecret] = useState('');
 
 	return (
-		<section className="crypto-section jwt-section">
-			<div className="crypto-section-heading">
-				<div className="crypto-heading-icon"><FileKey size={19} aria-hidden="true" /></div>
-				<div><h2>JWT</h2><p>Generate or decode HS256 JSON Web Tokens locally.</p></div>
+		<section className={`${cryptoSectionClass} border-t-(--vscode-charts-yellow)`}>
+			<div className={cryptoHeadingClass}>
+				<div className={`${cryptoHeadingIconClass} text-(--vscode-charts-yellow)`}><FileKey size={19} aria-hidden="true" /></div>
+				<div><h2 className="m-0 text-base font-semibold">JWT</h2><p className={cryptoHeadingTextClass}>Generate or decode HS256 JSON Web Tokens locally.</p></div>
 			</div>
 
-			<fieldset className="segmented-field">
-				<legend>Operation</legend>
-				<div className="segmented-control">
-					<button className={mode === 'encode' ? 'active' : ''} type="button" aria-pressed={mode === 'encode'} onClick={() => setMode('encode')}>Generate</button>
-					<button className={mode === 'decode' ? 'active' : ''} type="button" aria-pressed={mode === 'decode'} onClick={() => setMode('decode')}>Decode</button>
+			<fieldset className={segmentedFieldClass}>
+				<legend className={fieldLabelClass}>Operation</legend>
+				<div className={segmentedControlClass}>
+					<button className={`${segmentedButtonClass} ${mode === 'encode' ? segmentedActiveClass : ''}`} type="button" aria-pressed={mode === 'encode'} onClick={() => setMode('encode')}>Generate</button>
+					<button className={`${segmentedButtonClass} ${mode === 'decode' ? segmentedActiveClass : ''}`} type="button" aria-pressed={mode === 'decode'} onClick={() => setMode('decode')}>Decode</button>
 				</div>
 			</fieldset>
 
 			{mode === 'encode' ? (
 				<>
-					<label className="field-label" htmlFor="jwt-payload">Payload JSON</label>
-					<textarea id="jwt-payload" className="code-input" value={payload} onChange={event => setPayload(event.target.value)} spellCheck={false} />
+					<label className={fieldLabelClass} htmlFor="jwt-payload">Payload JSON</label>
+					<textarea id="jwt-payload" className={`${textareaClass} font-(--vscode-editor-font-family) text-xs`} value={payload} onChange={event => setPayload(event.target.value)} spellCheck={false} />
 				</>
 			) : (
 				<>
-					<label className="field-label" htmlFor="jwt-token">JWT</label>
-					<textarea id="jwt-token" className="code-input" value={jwtInput} onChange={event => setJwtInput(event.target.value)} placeholder="eyJhbGciOiJIUzI1NiIs..." spellCheck={false} />
+					<label className={fieldLabelClass} htmlFor="jwt-token">JWT</label>
+					<textarea id="jwt-token" className={`${textareaClass} font-(--vscode-editor-font-family) text-xs`} value={jwtInput} onChange={event => setJwtInput(event.target.value)} placeholder="eyJhbGciOiJIUzI1NiIs..." spellCheck={false} />
 				</>
 			)}
 
-			<label className="field-label jwt-secret-label" htmlFor="jwt-secret">Secret {mode === 'decode' && <span>(optional, used to verify signature)</span>}</label>
-			<input id="jwt-secret" type="password" value={secret} onChange={event => setSecret(event.target.value)} placeholder={mode === 'encode' ? 'Required' : 'Optional'} />
-			<div className="crypto-action-row">
-				<button className="primary-button" type="button" onClick={() => mode === 'encode' ? onEncode(payload, secret) : onDecode(jwtInput, secret)}>
+			<label className={`${fieldLabelClass} mt-4`} htmlFor="jwt-secret">Secret {mode === 'decode' && <span className="font-normal">(optional, used to verify signature)</span>}</label>
+			<input className={inputClass} id="jwt-secret" type="password" value={secret} onChange={event => setSecret(event.target.value)} placeholder={mode === 'encode' ? 'Required' : 'Optional'} />
+			<div className="mt-3 flex justify-end">
+				<button className={primaryButtonClass} type="button" onClick={() => mode === 'encode' ? onEncode(payload, secret) : onDecode(jwtInput, secret)}>
 					{mode === 'encode' ? 'Generate JWT' : 'Decode JWT'}
 				</button>
 			</div>
@@ -57,9 +76,9 @@ export function JwtSection({ token, decoded, copiedTarget, onEncode, onDecode, o
 			)}
 
 			{mode === 'decode' && decoded && (
-				<div className="jwt-results">
+				<div className="mt-4.5 grid gap-3.5">
 					{decoded.signatureValid !== undefined && (
-						<div className={`jwt-signature-status ${decoded.signatureValid ? 'valid' : 'invalid'}`}>
+						<div className={`flex items-center gap-2 text-xs font-semibold ${decoded.signatureValid ? 'text-(--vscode-testing-iconPassed)' : 'text-(--vscode-testing-iconFailed)'}`}>
 							{decoded.signatureValid ? <CircleCheck size={17} aria-hidden="true" /> : <CircleX size={17} aria-hidden="true" />}
 							<span>{decoded.signatureValid ? 'Signature valid' : 'Signature invalid'}</span>
 						</div>
@@ -81,14 +100,14 @@ interface JwtResultProps {
 
 function JwtResult({ label, value, copied, onCopy }: JwtResultProps) {
 	return (
-		<div className="crypto-result">
-			<div className="result-heading">
-				<span>{label}</span>
-				<button className="icon-button" type="button" onClick={onCopy} title={`Copy ${label}`} aria-label={`Copy ${label}`}>
+		<div className={`${resultClass} mt-0`}>
+			<div className={resultHeadingClass}>
+				<span className={resultLabelClass}>{label}</span>
+				<button className={iconButtonClass} type="button" onClick={onCopy} title={`Copy ${label}`} aria-label={`Copy ${label}`}>
 					{copied ? <Check size={16} aria-hidden="true" /> : <Copy size={16} aria-hidden="true" />}
 				</button>
 			</div>
-			<pre>{value}</pre>
+			<pre className={resultValueClass}>{value}</pre>
 		</div>
 	);
 }

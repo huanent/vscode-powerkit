@@ -2,7 +2,7 @@
   "name": "vscode-powerkit",
   "displayName": "PowerKit",
   "description": "A collection of practical tools for VS Code",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "publisher": "huanent",
   "icon": "resources/logo.png",
   "extensionKind": [
@@ -62,16 +62,18 @@
     "publish": "vsce publish --no-yarn"
   },
   "devDependencies": {
+    "@tailwindcss/vite": "^4.3.3",
+    "@types/node": "24.x",
     "@types/react": "^19.2.2",
     "@types/react-dom": "^19.2.2",
     "@types/vscode": "^1.125.0",
-    "@types/node": "24.x",
     "@vitejs/plugin-react": "^5.1.1",
     "@vscode/vsce": "^3.6.2",
     "lucide-react": "^0.468.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "rimraf": "^6.1.2",
+    "tailwindcss": "^4.3.3",
     "typescript": "^6.0.3",
     "vite": "^7.2.2"
   },

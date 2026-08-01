@@ -5,6 +5,7 @@ import { getNetworkSnapshot } from './networkService';
 type WebviewMessage =
 	| { type: 'ready' }
 	| { type: 'refresh' }
+	| { type: 'lookup'; ip: string }
 	| { type: 'copyPublicIp' };
 
 export class NetworkPanel {
@@ -50,6 +51,9 @@ export class NetworkPanel {
 			case 'refresh':
 				await this.loadNetworkSnapshot();
 				break;
+			case 'lookup':
+				await this.loadNetworkSnapshot(message.ip);
+				break;
 			case 'copyPublicIp':
 				if (this.publicIp) {
 					await vscode.env.clipboard.writeText(this.publicIp);
@@ -59,11 +63,11 @@ export class NetworkPanel {
 		}
 	}
 
-	private async loadNetworkSnapshot(): Promise<void> {
+	private async loadNetworkSnapshot(ip?: string): Promise<void> {
 		await this.panel.webview.postMessage({ type: 'loading' });
 
 		try {
-			const snapshot = await getNetworkSnapshot();
+			const snapshot = await getNetworkSnapshot(ip);
 			this.publicIp = snapshot.publicIp;
 			await this.panel.webview.postMessage({ type: 'loaded', snapshot });
 		} catch (error) {

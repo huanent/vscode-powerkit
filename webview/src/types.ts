@@ -1,16 +1,18 @@
-export interface NetworkAddress {
-	name: string;
-	address: string;
-	family: 'IPv4' | 'IPv6';
-}
-
 export interface NetworkSnapshot {
 	publicIp: string;
 	publicIpVersion: 'IPv4' | 'IPv6';
-	hostname: string;
-	operatingSystem: string;
-	dnsServers: string[];
-	localAddresses: NetworkAddress[];
+	continent: string;
+	country: string;
+	region: string;
+	city: string;
+	postalCode: string;
+	timezone: string;
+	coordinates: string;
+	asn: number | undefined;
+	organization: string;
+	isp: string;
+	domain: string;
+	reverseHostnames: string[];
 	checkedAt: string;
 }
 
