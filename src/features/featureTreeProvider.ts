@@ -32,6 +32,14 @@ export class FeatureTreeProvider implements vscode.TreeDataProvider<vscode.TreeI
 			title: 'Open Crypto',
 		};
 
-		return [networkItem, generatorsItem, cryptoItem];
+		const notebookItem = new vscode.TreeItem('Notebook', vscode.TreeItemCollapsibleState.None);
+		notebookItem.description = 'Auto-saved Markdown notes';
+		notebookItem.iconPath = new vscode.ThemeIcon('notebook');
+		notebookItem.command = {
+			command: 'vscode-powerkit.openNotebook',
+			title: 'Open Notebook',
+		};
+
+		return [networkItem, generatorsItem, cryptoItem, notebookItem];
 	}
 }

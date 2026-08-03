@@ -12,6 +12,7 @@ A VS Code Activity Bar collection of focused developer tools.
 - Generators for Unix timestamps, UUID v4 values, and secure random passwords.
 - Crypto tools for MD5, SHA-1, SHA-256, and SHA-512 text digests.
 - SSH key pair generation for Ed25519, RSA 2048, and RSA 4096 keys.
+- Notebook opens Markdown notes from extension storage, saves edits immediately, and provides a New Note action in the editor title bar.
 
 ## Requirements
 

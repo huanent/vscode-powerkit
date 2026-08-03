@@ -50,8 +50,28 @@
         "command": "vscode-powerkit.openCrypto",
         "title": "Open Crypto",
         "category": "PowerKit"
+      },
+      {
+        "command": "vscode-powerkit.openNotebook",
+        "title": "Open Notebook",
+        "category": "PowerKit"
+      },
+      {
+        "command": "vscode-powerkit.newNote",
+        "title": "New Note",
+        "category": "PowerKit",
+        "icon": "$(add)"
       }
-    ]
+    ],
+    "menus": {
+      "editor/title": [
+        {
+          "command": "vscode-powerkit.newNote",
+          "when": "vscode-powerkit.notebookActive",
+          "group": "navigation@1"
+        }
+      ]
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run build",
