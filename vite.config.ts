@@ -1,21 +1,26 @@
 import react from '@vitejs/plugin-react';
+import tailwindcss from '@tailwindcss/vite';
 import { defineConfig } from 'vite';
 
 export default defineConfig({
 	root: 'webview',
 	base: './',
-	plugins: [react()],
+	plugins: [react(), tailwindcss()],
 	build: {
 		outDir: '../media',
 		emptyOutDir: true,
 		rollupOptions: {
-			input: 'webview/src/main.tsx',
+			input: {
+				jwt: 'webview/src/main.tsx',
+				notebook: 'webview/src/notebookMain.tsx',
+			},
 			output: {
-				entryFileNames: 'jwt.js',
+				entryFileNames: '[name].js',
 				assetFileNames: assetInfo => assetInfo.names?.some(name => name.endsWith('.css'))
-					? 'jwt.css'
+					? '[name][extname]'
 					: 'assets/[name]-[hash][extname]',
 			},
 		},
+		cssCodeSplit: true,
 	},
 });

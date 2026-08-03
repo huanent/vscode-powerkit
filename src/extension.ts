@@ -16,9 +16,9 @@ export function activate(context: vscode.ExtensionContext): void {
 		),
 		vscode.commands.registerCommand('vscode-powerkit.openJwt', () => JwtPanel.show(context.extensionUri)),
 		vscode.commands.registerCommand('vscode-powerkit.openNotebook', () => notebook.open()),
-		vscode.commands.registerCommand('vscode-powerkit.newNote', () => notebook.create()),
-		vscode.commands.registerCommand('vscode-powerkit.selectNote', () => notebook.selectNote()),
-		vscode.commands.registerCommand('vscode-powerkit.manageNotes', () => notebook.manage()),
+		vscode.commands.registerCommand('vscode-powerkit.newNote', () => notebook.createAndOpen()),
+		vscode.commands.registerCommand('vscode-powerkit.selectNote', () => notebook.open()),
+		vscode.commands.registerCommand('vscode-powerkit.manageNotes', () => notebook.open()),
 	);
 }
 

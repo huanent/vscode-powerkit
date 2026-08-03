@@ -1,71 +1,61 @@
 import * as vscode from 'vscode';
+import { NotebookPanel } from './notebookPanel';
 
-interface NoteSummary {
+export interface NoteSummary {
+	id: string;
 	title: string;
 	modifiedAt: number;
-	uri: vscode.Uri;
 }
 
-interface NoteItem extends vscode.QuickPickItem, NoteSummary { }
+export interface Note extends NoteSummary {
+	content: string;
+}
 
 export class NotebookService implements vscode.Disposable {
-	private static readonly activeContext = 'vscode-powerkit.notebookActive';
 	private static readonly lastNoteKey = 'vscode-powerkit.lastNote';
-	private static readonly saveDelay = 400;
 	private readonly notesUri: vscode.Uri;
-	private readonly pendingSaves = new Map<string, Promise<void>>();
-	private readonly saveTimers = new Map<string, NodeJS.Timeout>();
-	private readonly disposables: vscode.Disposable[];
 	private readonly notesChangeEmitter = new vscode.EventEmitter<void>();
 	readonly onDidChangeNotes = this.notesChangeEmitter.event;
-	private activeDocument: vscode.TextDocument | undefined;
 
 	constructor(private readonly context: vscode.ExtensionContext) {
 		this.notesUri = vscode.Uri.joinPath(context.globalStorageUri, 'notes');
-		this.activeDocument = vscode.window.activeTextEditor?.document;
-		this.disposables = [
-			vscode.workspace.onDidChangeTextDocument(event => this.scheduleSave(event.document)),
-			vscode.window.onDidChangeActiveTextEditor(editor => this.changeActiveEditor(editor)),
-		];
-		void this.updateActiveContext(vscode.window.activeTextEditor);
 	}
 
 	async open(): Promise<void> {
-		await vscode.workspace.fs.createDirectory(this.notesUri);
-		const lastNote = this.context.globalState.get<string>(NotebookService.lastNoteKey);
-		if (lastNote) {
-			const uri = vscode.Uri.parse(lastNote);
-			try {
-				await vscode.workspace.fs.stat(uri);
-				await this.openDocument(uri);
-				return;
-			} catch {
-				await this.context.globalState.update(NotebookService.lastNoteKey, undefined);
-			}
-		}
-
-		await this.create(false);
+		await NotebookPanel.show(this.context.extensionUri, this);
 	}
 
-	async create(replaceCurrent = true): Promise<void> {
-		const activeDocument = vscode.window.activeTextEditor?.document;
-		if (activeDocument && this.isNote(activeDocument.uri) && !activeDocument.getText().trim()) {
-			return;
-		}
-
+	async create(): Promise<Note> {
 		await vscode.workspace.fs.createDirectory(this.notesUri);
 		const uri = await this.getAvailableNoteUri();
 		await vscode.workspace.fs.writeFile(uri, new Uint8Array());
+		await this.context.globalState.update(NotebookService.lastNoteKey, uri.toString());
 		this.notesChangeEmitter.fire();
-		await this.openDocument(uri, replaceCurrent);
+		return this.read(uri.toString());
+	}
+
+	async createAndOpen(): Promise<void> {
+		const note = await this.create();
+		await NotebookPanel.show(this.context.extensionUri, this, note.id);
+	}
+
+	async getInitialState(): Promise<{ notes: NoteSummary[]; activeNote?: Note }> {
+		const notes = await this.getNotes();
+		if (notes.length === 0) {
+			const activeNote = await this.create();
+			return { notes: await this.getNotes(), activeNote };
+		}
+
+		const lastNote = this.context.globalState.get<string>(NotebookService.lastNoteKey);
+		const activeId = lastNote && notes.some(note => note.id === lastNote) ? lastNote : notes[0].id;
+		return { notes, activeNote: await this.read(activeId) };
 	}
 
 	async getRecentNoteTitle(): Promise<string | undefined> {
-		await vscode.workspace.fs.createDirectory(this.notesUri);
 		return (await this.getNotes()).at(0)?.title;
 	}
 
-	private async getNotes(): Promise<NoteSummary[]> {
+	async getNotes(): Promise<NoteSummary[]> {
 		await vscode.workspace.fs.createDirectory(this.notesUri);
 		const entries = await vscode.workspace.fs.readDirectory(this.notesUri);
 		const notes = await Promise.all(entries
@@ -74,146 +64,86 @@ export class NotebookService implements vscode.Disposable {
 				const uri = vscode.Uri.joinPath(this.notesUri, name);
 				const stat = await vscode.workspace.fs.stat(uri);
 				return {
+					id: uri.toString(),
 					title: name.slice(0, -3),
 					modifiedAt: stat.mtime,
-					uri,
 				};
 			}));
 
 		return notes.sort((left, right) => right.modifiedAt - left.modifiedAt);
 	}
 
-	async selectNote(): Promise<void> {
-		const notes = (await this.getNotes()).map(note => ({
-			...note,
-			label: note.title,
-			description: new Date(note.modifiedAt).toLocaleString(),
-		}));
-		if (notes.length === 0) {
-			const action = await vscode.window.showInformationMessage('No notes found.', 'New Note');
-			if (action === 'New Note') {
-				await this.create();
-			}
-			return;
-		}
-
-		const selected = await vscode.window.showQuickPick(notes, {
-			placeHolder: 'Select a note to open',
-			matchOnDescription: true,
-		});
-		if (selected) {
-			await this.openDocument(selected.uri, true);
-		}
+	async read(id: string): Promise<Note> {
+		const uri = this.getNoteUri(id);
+		const [content, stat] = await Promise.all([
+			vscode.workspace.fs.readFile(uri),
+			vscode.workspace.fs.stat(uri),
+		]);
+		return {
+			id: uri.toString(),
+			title: this.getNoteTitle(uri),
+			modifiedAt: stat.mtime,
+			content: new TextDecoder().decode(content),
+		};
 	}
 
-	async manage(): Promise<void> {
-		await vscode.workspace.fs.createDirectory(this.notesUri);
-
-		while (true) {
-			const notes = (await this.getNotes()).map(note => ({
-				...note,
-				label: note.title,
-				description: new Date(note.modifiedAt).toLocaleString(),
-			}));
-			if (notes.length === 0) {
-				const action = await vscode.window.showInformationMessage('No notes found.', 'New Note');
-				if (action === 'New Note') {
-					await this.create();
-				}
-				return;
-			}
-
-			const selected = await vscode.window.showQuickPick(notes, {
-				placeHolder: 'Select a note to manage',
-				matchOnDescription: true,
-			});
-			if (!selected) {
-				return;
-			}
-
-			const action = await vscode.window.showQuickPick([
-				{ label: '$(edit) Rename', value: 'rename' },
-				{ label: '$(trash) Delete', value: 'delete' },
-			], {
-				placeHolder: selected.label,
-			});
-
-			switch (action?.value) {
-				case 'rename':
-					await this.rename(selected.uri);
-					break;
-				case 'delete':
-					await this.delete(selected.uri);
-					break;
-				default:
-					break;
-			}
-		}
-	}
-
-	dispose(): void {
-		this.saveTimers.forEach(timer => clearTimeout(timer));
-		this.disposables.forEach(disposable => disposable.dispose());
-		this.notesChangeEmitter.dispose();
-	}
-
-	private async rename(uri: vscode.Uri): Promise<void> {
-		const currentName = uri.path.split('/').at(-1)?.slice(0, -3) ?? '';
-		const name = await vscode.window.showInputBox({
-			prompt: 'Rename note',
-			value: currentName,
-			valueSelection: [0, currentName.length],
-			validateInput: value => this.validateNoteName(value, uri),
-		});
-		if (!name || name === currentName) {
-			return;
-		}
-
-		const document = vscode.workspace.textDocuments.find(item => item.uri.toString() === uri.toString());
-		if (document) {
-			await this.saveNow(document);
-		}
-
-		const target = vscode.Uri.joinPath(this.notesUri, `${name.trim()}.md`);
-		const edit = new vscode.WorkspaceEdit();
-		edit.renameFile(uri, target);
-		if (!await vscode.workspace.applyEdit(edit)) {
-			void vscode.window.showErrorMessage('Unable to rename the note.');
-			return;
-		}
-
-		if (this.context.globalState.get<string>(NotebookService.lastNoteKey) === uri.toString()) {
-			await this.context.globalState.update(NotebookService.lastNoteKey, target.toString());
-		}
+	async save(id: string, content: string): Promise<void> {
+		const uri = this.getNoteUri(id);
+		await vscode.workspace.fs.writeFile(uri, new TextEncoder().encode(content));
 		this.notesChangeEmitter.fire();
 	}
 
-	private async delete(uri: vscode.Uri): Promise<void> {
-		const name = uri.path.split('/').at(-1)?.slice(0, -3) ?? 'this note';
-		const confirmation = await vscode.window.showWarningMessage(
-			`Delete "${name}" permanently?`,
-			{ modal: true },
-			'Delete',
-		);
-		if (confirmation !== 'Delete') {
-			return;
+	async rename(id: string, requestedName: string): Promise<Note> {
+		const uri = this.getNoteUri(id);
+		const name = requestedName.trim();
+		const validationError = await this.validateNoteName(name, uri);
+		if (validationError) {
+			throw new Error(validationError);
+		}
+		if (name === this.getNoteTitle(uri)) {
+			return this.read(id);
 		}
 
-		const document = vscode.workspace.textDocuments.find(item => item.uri.toString() === uri.toString());
-		if (document) {
-			await this.saveNow(document);
-		}
-		await this.closeTabs(uri);
+		const target = vscode.Uri.joinPath(this.notesUri, `${name}.md`);
+		await vscode.workspace.fs.rename(uri, target);
+		await this.context.globalState.update(NotebookService.lastNoteKey, target.toString());
+		this.notesChangeEmitter.fire();
+		return this.read(target.toString());
+	}
+
+	async delete(id: string): Promise<void> {
+		const uri = this.getNoteUri(id);
 		await vscode.workspace.fs.delete(uri);
-
-		if (this.context.globalState.get<string>(NotebookService.lastNoteKey) === uri.toString()) {
+		if (this.context.globalState.get<string>(NotebookService.lastNoteKey) === id) {
 			await this.context.globalState.update(NotebookService.lastNoteKey, undefined);
 		}
 		this.notesChangeEmitter.fire();
 	}
 
-	private async validateNoteName(value: string, currentUri?: vscode.Uri): Promise<string | undefined> {
-		const name = value.trim();
+	async select(id: string): Promise<Note> {
+		const note = await this.read(id);
+		await this.context.globalState.update(NotebookService.lastNoteKey, note.id);
+		return note;
+	}
+
+	dispose(): void {
+		this.notesChangeEmitter.dispose();
+	}
+
+	private getNoteUri(id: string): vscode.Uri {
+		const uri = vscode.Uri.parse(id);
+		const notesPath = this.notesUri.path.endsWith('/') ? this.notesUri.path : `${this.notesUri.path}/`;
+		if (uri.scheme !== this.notesUri.scheme || !uri.path.startsWith(notesPath) || !uri.path.endsWith('.md')) {
+			throw new Error('Invalid note.');
+		}
+		return uri;
+	}
+
+	private getNoteTitle(uri: vscode.Uri): string {
+		return uri.path.split('/').at(-1)?.slice(0, -3) ?? 'Untitled';
+	}
+
+	private async validateNoteName(name: string, currentUri: vscode.Uri): Promise<string | undefined> {
 		if (!name) {
 			return 'Enter a note name.';
 		}
@@ -222,7 +152,7 @@ export class NotebookService implements vscode.Disposable {
 		}
 
 		const target = vscode.Uri.joinPath(this.notesUri, `${name}.md`);
-		if (target.toString() === currentUri?.toString()) {
+		if (target.toString() === currentUri.toString()) {
 			return undefined;
 		}
 		try {
@@ -245,101 +175,5 @@ export class NotebookService implements vscode.Disposable {
 				return uri;
 			}
 		}
-	}
-
-	private async closeTabs(uri: vscode.Uri): Promise<void> {
-		const tabs = vscode.window.tabGroups.all
-			.flatMap(group => group.tabs)
-			.filter(tab => tab.input instanceof vscode.TabInputText && tab.input.uri.toString() === uri.toString());
-		if (tabs.length > 0) {
-			await vscode.window.tabGroups.close(tabs);
-		}
-	}
-
-	private async openDocument(uri: vscode.Uri, replaceCurrent = false): Promise<void> {
-		const activeEditor = vscode.window.activeTextEditor;
-		const viewColumn = activeEditor?.viewColumn ?? vscode.ViewColumn.Active;
-		if (replaceCurrent && activeEditor && this.isNote(activeEditor.document.uri)) {
-			await this.saveNow(activeEditor.document);
-			const activeTab = vscode.window.tabGroups.activeTabGroup.activeTab;
-			if (activeTab) {
-				await vscode.window.tabGroups.close(activeTab);
-			}
-		}
-
-		const document = await vscode.workspace.openTextDocument(uri);
-		await vscode.window.showTextDocument(document, { viewColumn, preview: false });
-		await this.context.globalState.update(NotebookService.lastNoteKey, uri.toString());
-	}
-
-	private scheduleSave(document: vscode.TextDocument): void {
-		if (!document.isDirty || !this.isNote(document.uri)) {
-			return;
-		}
-
-		const key = document.uri.toString();
-		const existingTimer = this.saveTimers.get(key);
-		if (existingTimer) {
-			clearTimeout(existingTimer);
-		}
-
-		this.saveTimers.set(key, setTimeout(() => {
-			this.saveTimers.delete(key);
-			void this.queueSave(document);
-		}, NotebookService.saveDelay));
-	}
-
-	private async saveNow(document: vscode.TextDocument): Promise<void> {
-		const key = document.uri.toString();
-		const timer = this.saveTimers.get(key);
-		if (timer) {
-			clearTimeout(timer);
-			this.saveTimers.delete(key);
-		}
-		await this.queueSave(document);
-	}
-
-	private queueSave(document: vscode.TextDocument): Promise<void> {
-		const key = document.uri.toString();
-		const pending = this.pendingSaves.get(key) ?? Promise.resolve();
-		const next = pending
-			.catch(() => undefined)
-			.then(async () => {
-				if (document.isDirty && !document.isClosed) {
-					if (await document.save()) {
-						this.notesChangeEmitter.fire();
-					}
-				}
-			})
-			.catch(() => undefined)
-			.finally(() => {
-				if (this.pendingSaves.get(key) === next) {
-					this.pendingSaves.delete(key);
-				}
-			});
-		this.pendingSaves.set(key, next);
-		return next;
-	}
-
-	private changeActiveEditor(editor: vscode.TextEditor | undefined): void {
-		const previousDocument = this.activeDocument;
-		this.activeDocument = editor?.document;
-		if (previousDocument && previousDocument !== editor?.document && this.isNote(previousDocument.uri)) {
-			void this.saveNow(previousDocument);
-		}
-		void this.updateActiveContext(editor);
-	}
-
-	private async updateActiveContext(editor: vscode.TextEditor | undefined): Promise<void> {
-		await vscode.commands.executeCommand(
-			'setContext',
-			NotebookService.activeContext,
-			editor !== undefined && this.isNote(editor.document.uri),
-		);
-	}
-
-	private isNote(uri: vscode.Uri): boolean {
-		const notesPath = this.notesUri.path.endsWith('/') ? this.notesUri.path : `${this.notesUri.path}/`;
-		return uri.scheme === this.notesUri.scheme && uri.path.startsWith(notesPath) && uri.path.endsWith('.md');
 	}
 }

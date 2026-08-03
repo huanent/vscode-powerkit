@@ -75,7 +75,7 @@ export function App() {
 	};
 
 	return (
-		<main>
+		<main className="jwt-app">
 			<header>
 				<div className="title-icon"><KeyRound size={22} aria-hidden="true" /></div>
 				<div>

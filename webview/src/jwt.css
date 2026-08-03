@@ -1,0 +1,57 @@
+:root {
+	font-family: var(--vscode-font-family);
+	color: var(--vscode-foreground);
+	background: var(--vscode-editor-background);
+	color-scheme: light dark;
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; }
+button, input, textarea { font: inherit; }
+button { cursor: pointer; }
+
+.jwt-app {
+	width: min(880px, calc(100% - 40px));
+	margin: 0 auto;
+	padding: 32px 0 56px;
+}
+
+.jwt-app header { display: flex; align-items: center; gap: 14px; margin-bottom: 26px; }
+.jwt-app .title-icon { display: grid; width: 44px; height: 44px; place-items: center; border: 1px solid var(--vscode-widget-border); color: var(--vscode-charts-yellow); }
+.jwt-app h1 { margin: 0; font-size: 24px; font-weight: 650; letter-spacing: 0; }
+.jwt-app header p { margin: 5px 0 0; color: var(--vscode-descriptionForeground); font-size: 13px; }
+
+.jwt-app .mode-control { display: grid; grid-template-columns: 1fr 1fr; width: 260px; margin-bottom: 16px; border: 1px solid var(--vscode-widget-border); }
+.jwt-app .mode-control button { min-height: 34px; border: 0; color: var(--vscode-foreground); background: transparent; }
+.jwt-app .mode-control button + button { border-left: 1px solid var(--vscode-widget-border); }
+.jwt-app .mode-control button.active { color: var(--vscode-button-foreground); background: var(--vscode-button-background); }
+
+.jwt-app .workspace { border-top: 3px solid var(--vscode-charts-yellow); background: var(--vscode-sideBar-background); padding: 22px; }
+.jwt-app label { display: block; }
+.jwt-app label > span { display: block; margin-bottom: 8px; font-size: 12px; font-weight: 600; }
+.jwt-app small { color: var(--vscode-descriptionForeground); font-weight: 400; }
+.jwt-app textarea, .jwt-app input { width: 100%; border: 1px solid var(--vscode-input-border, var(--vscode-widget-border)); outline: none; color: var(--vscode-input-foreground); background: var(--vscode-input-background); }
+.jwt-app textarea:focus, .jwt-app input:focus { border-color: var(--vscode-focusBorder); }
+.jwt-app textarea { min-height: 180px; resize: vertical; padding: 12px; font-family: var(--vscode-editor-font-family); font-size: 12px; line-height: 1.55; }
+.jwt-app input { height: 34px; padding: 0 10px; }
+.jwt-app .secret-field { margin-top: 18px; }
+
+.jwt-app .error { margin-top: 14px; border-left: 3px solid var(--vscode-errorForeground); padding: 10px 12px; color: var(--vscode-errorForeground); background: var(--vscode-inputValidation-errorBackground); }
+.jwt-app .results { display: grid; gap: 14px; margin-top: 18px; }
+.jwt-app .signature { display: flex; align-items: center; gap: 7px; font-size: 12px; font-weight: 600; }
+.jwt-app .signature.valid { color: var(--vscode-testing-iconPassed); }
+.jwt-app .signature.invalid { color: var(--vscode-testing-iconFailed); }
+.jwt-app .result { margin-top: 18px; border: 1px solid var(--vscode-widget-border); background: var(--vscode-sideBar-background); }
+.jwt-app .results .result { margin-top: 0; }
+.jwt-app .result-heading { display: flex; align-items: center; justify-content: space-between; min-height: 40px; border-bottom: 1px solid var(--vscode-widget-border); padding: 0 10px 0 14px; }
+.jwt-app .result h2 { margin: 0; font-size: 12px; font-weight: 650; letter-spacing: 0; }
+.jwt-app .result pre { margin: 0; overflow-wrap: anywhere; white-space: pre-wrap; padding: 14px; font-family: var(--vscode-editor-font-family); font-size: 12px; line-height: 1.55; }
+.jwt-app .icon-button { display: grid; width: 30px; height: 30px; place-items: center; border: 0; color: var(--vscode-icon-foreground); background: transparent; }
+.jwt-app .icon-button:hover { background: var(--vscode-toolbar-hoverBackground); }
+
+@media (max-width: 600px) {
+	.jwt-app { width: calc(100% - 24px); padding-top: 20px; }
+	.jwt-app header { align-items: flex-start; }
+	.jwt-app .mode-control { width: 100%; }
+	.jwt-app .workspace { padding: 16px; }
+}
