@@ -48,17 +48,13 @@ export class NotebookService implements vscode.Disposable {
 	}
 
 	async create(replaceCurrent = true): Promise<void> {
-		await vscode.workspace.fs.createDirectory(this.notesUri);
-		const name = await vscode.window.showInputBox({
-			prompt: 'Enter a name for the new note',
-			placeHolder: 'Note name',
-			validateInput: value => this.validateNoteName(value),
-		});
-		if (!name) {
+		const activeDocument = vscode.window.activeTextEditor?.document;
+		if (activeDocument && this.isNote(activeDocument.uri) && !activeDocument.getText().trim()) {
 			return;
 		}
 
-		const uri = vscode.Uri.joinPath(this.notesUri, `${name.trim()}.md`);
+		await vscode.workspace.fs.createDirectory(this.notesUri);
+		const uri = await this.getAvailableNoteUri();
 		await vscode.workspace.fs.writeFile(uri, new Uint8Array());
 		this.notesChangeEmitter.fire();
 		await this.openDocument(uri, replaceCurrent);
@@ -234,6 +230,20 @@ export class NotebookService implements vscode.Disposable {
 			return 'A note with this name already exists.';
 		} catch {
 			return undefined;
+		}
+	}
+
+	private async getAvailableNoteUri(): Promise<vscode.Uri> {
+		let suffix = 1;
+		while (true) {
+			const title = suffix === 1 ? 'Untitled' : `Untitled ${suffix}`;
+			const uri = vscode.Uri.joinPath(this.notesUri, `${title}.md`);
+			try {
+				await vscode.workspace.fs.stat(uri);
+				suffix += 1;
+			} catch {
+				return uri;
+			}
 		}
 	}
 

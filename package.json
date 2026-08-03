@@ -2,7 +2,7 @@
   "name": "vscode-powerkit",
   "displayName": "PowerKit",
   "description": "Focused Notebook and JWT tools for VS Code",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "publisher": "huanent",
   "icon": "resources/logo.png",
   "extensionKind": [
@@ -83,7 +83,15 @@
           "group": "navigation@3"
         }
       ]
-    }
+    },
+    "keybindings": [
+      {
+        "command": "vscode-powerkit.newNote",
+        "key": "ctrl+n",
+        "mac": "cmd+n",
+        "when": "vscode-powerkit.notebookActive"
+      }
+    ]
   },
   "scripts": {
     "vscode:prepublish": "npm run build",
