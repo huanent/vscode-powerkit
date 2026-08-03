@@ -1,8 +1,8 @@
 {
   "name": "vscode-powerkit",
   "displayName": "PowerKit",
-  "description": "A collection of practical tools for VS Code",
-  "version": "0.0.4",
+  "description": "Focused Notebook and JWT tools for VS Code",
+  "version": "0.1.0",
   "publisher": "huanent",
   "icon": "resources/logo.png",
   "extensionKind": [
@@ -30,25 +30,15 @@
       "vscode-powerkit": [
         {
           "id": "vscode-powerkit.features",
-          "name": "Features",
+          "name": "PowerKit",
           "icon": "$(list-tree)"
         }
       ]
     },
     "commands": [
       {
-        "command": "vscode-powerkit.openNetwork",
-        "title": "Open Network",
-        "category": "PowerKit"
-      },
-      {
-        "command": "vscode-powerkit.openGenerators",
-        "title": "Open Generators",
-        "category": "PowerKit"
-      },
-      {
-        "command": "vscode-powerkit.openCrypto",
-        "title": "Open Crypto",
+        "command": "vscode-powerkit.openJwt",
+        "title": "Open JWT Token",
         "category": "PowerKit"
       },
       {
@@ -61,6 +51,18 @@
         "title": "New Note",
         "category": "PowerKit",
         "icon": "$(add)"
+      },
+      {
+        "command": "vscode-powerkit.selectNote",
+        "title": "Open Note",
+        "category": "PowerKit",
+        "icon": "$(list-selection)"
+      },
+      {
+        "command": "vscode-powerkit.manageNotes",
+        "title": "Manage Notes",
+        "category": "PowerKit",
+        "icon": "$(gear)"
       }
     ],
     "menus": {
@@ -69,6 +71,16 @@
           "command": "vscode-powerkit.newNote",
           "when": "vscode-powerkit.notebookActive",
           "group": "navigation@1"
+        },
+        {
+          "command": "vscode-powerkit.selectNote",
+          "when": "vscode-powerkit.notebookActive",
+          "group": "navigation@2"
+        },
+        {
+          "command": "vscode-powerkit.manageNotes",
+          "when": "vscode-powerkit.notebookActive",
+          "group": "navigation@3"
         }
       ]
     }
@@ -82,18 +94,16 @@
     "publish": "vsce publish --no-yarn"
   },
   "devDependencies": {
-    "@tailwindcss/vite": "^4.3.3",
+    "@vitejs/plugin-react": "^5.1.1",
     "@types/node": "24.x",
     "@types/react": "^19.2.2",
     "@types/react-dom": "^19.2.2",
     "@types/vscode": "^1.125.0",
-    "@vitejs/plugin-react": "^5.1.1",
     "@vscode/vsce": "^3.6.2",
     "lucide-react": "^0.468.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "rimraf": "^6.1.2",
-    "tailwindcss": "^4.3.3",
     "typescript": "^6.0.3",
     "vite": "^7.2.2"
   },

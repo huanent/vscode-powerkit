@@ -1,10 +1,9 @@
 import * as vscode from 'vscode';
 
-export function getWebviewHtml(webview: vscode.Webview, extensionUri: vscode.Uri, view: 'network' | 'generators' | 'crypto'): string {
+export function getWebviewHtml(webview: vscode.Webview, extensionUri: vscode.Uri): string {
 	const nonce = getNonce();
-	const styleUri = webview.asWebviewUri(vscode.Uri.joinPath(extensionUri, 'media', 'network.css'));
-	const scriptUri = webview.asWebviewUri(vscode.Uri.joinPath(extensionUri, 'media', 'network.js'));
-	const title = view === 'network' ? 'Network' : view === 'generators' ? 'Generators' : 'Crypto';
+	const styleUri = webview.asWebviewUri(vscode.Uri.joinPath(extensionUri, 'media', 'jwt.css'));
+	const scriptUri = webview.asWebviewUri(vscode.Uri.joinPath(extensionUri, 'media', 'jwt.js'));
 
 	return `<!DOCTYPE html>
 <html lang="en">
@@ -13,9 +12,9 @@ export function getWebviewHtml(webview: vscode.Webview, extensionUri: vscode.Uri
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src ${webview.cspSource}; script-src 'nonce-${nonce}';">
 	<link rel="stylesheet" href="${styleUri}">
-	<title>${title}</title>
+	<title>JWT Token</title>
 </head>
-<body data-view="${view}">
+<body>
 	<div id="root"></div>
 	<script nonce="${nonce}" type="module" src="${scriptUri}"></script>
 </body>
