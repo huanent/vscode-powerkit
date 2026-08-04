@@ -1,8 +1,8 @@
 {
   "name": "vscode-powerkit",
   "displayName": "PowerKit",
-  "description": "Focused Notebook and JWT tools for VS Code",
-  "version": "0.1.2",
+  "description": "JWT tools for VS Code",
+  "version": "0.1.3",
   "publisher": "huanent",
   "icon": "resources/logo.png",
   "extensionKind": [
@@ -40,50 +40,8 @@
         "command": "vscode-powerkit.openJwt",
         "title": "Open JWT Token",
         "category": "PowerKit"
-      },
-      {
-        "command": "vscode-powerkit.openNotebook",
-        "title": "Open Notebook",
-        "category": "PowerKit"
-      },
-      {
-        "command": "vscode-powerkit.newNote",
-        "title": "New Note",
-        "category": "PowerKit",
-        "icon": "$(add)"
-      },
-      {
-        "command": "vscode-powerkit.selectNote",
-        "title": "Open Note",
-        "category": "PowerKit",
-        "icon": "$(list-selection)"
-      },
-      {
-        "command": "vscode-powerkit.manageNotes",
-        "title": "Manage Notes",
-        "category": "PowerKit",
-        "icon": "$(gear)"
       }
-    ],
-    "menus": {
-      "editor/title": [
-        {
-          "command": "vscode-powerkit.newNote",
-          "when": "vscode-powerkit.notebookActive",
-          "group": "navigation@1"
-        },
-        {
-          "command": "vscode-powerkit.selectNote",
-          "when": "vscode-powerkit.notebookActive",
-          "group": "navigation@2"
-        },
-        {
-          "command": "vscode-powerkit.manageNotes",
-          "when": "vscode-powerkit.notebookActive",
-          "group": "navigation@3"
-        }
-      ]
-    }
+    ]
   },
   "scripts": {
     "vscode:prepublish": "npm run build",
@@ -112,8 +70,5 @@
   "overrides": {
     "diff": "^8.0.4",
     "serialize-javascript": "^7.0.6"
-  },
-  "dependencies": {
-    "@milkdown/crepe": "^7.22.0"
   }
 }
