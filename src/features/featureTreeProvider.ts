@@ -17,7 +17,18 @@ export class FeatureTreeProvider implements vscode.TreeDataProvider<vscode.TreeI
                         command: 'vscode-powerkit.openJwt',
                         title: 'Open JWT Token',
                 };
-                return [jwtItem];
+                const items = [jwtItem];
+                if (process.platform === 'darwin') {
+                        const launchdItem = new vscode.TreeItem('LaunchAgents', vscode.TreeItemCollapsibleState.None);
+                        launchdItem.description = 'Manage startup items';
+                        launchdItem.iconPath = new vscode.ThemeIcon('server-process');
+                        launchdItem.command = {
+                                command: 'vscode-powerkit.openLaunchd',
+                                title: 'Open LaunchAgents',
+                        };
+                        items.push(launchdItem);
+                }
+                return items;
         }
 
         dispose(): void {

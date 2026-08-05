@@ -12,6 +12,7 @@ export default defineConfig({
                 rollupOptions: {
                         input: {
                                 jwt: 'webview/src/main.tsx',
+                                launchd: 'webview/src/launchdMain.tsx',
                         },
                         output: {
                                 entryFileNames: '[name].js',

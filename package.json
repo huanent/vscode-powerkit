@@ -1,8 +1,8 @@
 {
   "name": "vscode-powerkit",
   "displayName": "PowerKit",
-  "description": "JWT tools for VS Code",
-  "version": "0.2.0",
+  "description": "Developer utilities for VS Code",
+  "version": "0.3.0",
   "publisher": "huanent",
   "icon": "resources/logo.png",
   "extensionKind": [
@@ -42,6 +42,12 @@
         "command": "vscode-powerkit.openJwt",
         "title": "Open JWT Token",
         "category": "PowerKit"
+      },
+      {
+        "command": "vscode-powerkit.openLaunchd",
+        "title": "Open LaunchAgents",
+        "category": "PowerKit",
+        "enablement": "isMac"
       }
     ]
   },
