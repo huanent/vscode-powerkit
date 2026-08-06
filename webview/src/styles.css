@@ -1,0 +1,32 @@
+@import "tailwindcss";
+
+@theme {
+	--animate-spin: spin 0.8s linear infinite;
+}
+
+@layer base {
+	:root {
+		font-family: var(--vscode-font-family);
+		color: var(--vscode-foreground);
+		background: var(--vscode-editor-background);
+		color-scheme: light dark;
+	}
+
+	* {
+		box-sizing: border-box;
+	}
+
+	body {
+		margin: 0;
+	}
+
+	button,
+	input,
+	textarea {
+		font: inherit;
+	}
+
+	button:not(:disabled) {
+		cursor: pointer;
+	}
+}

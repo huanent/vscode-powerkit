@@ -11,8 +11,8 @@ export default defineConfig({
                 emptyOutDir: true,
                 rollupOptions: {
                         input: {
-                                jwt: 'webview/src/main.tsx',
-                                launchd: 'webview/src/launchdMain.tsx',
+                                jwt: 'webview/src/entries/jwt.tsx',
+                                launchd: 'webview/src/entries/launchd.tsx',
                         },
                         output: {
                                 entryFileNames: '[name].js',

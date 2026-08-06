@@ -2,7 +2,7 @@
   "name": "vscode-powerkit",
   "displayName": "PowerKit",
   "description": "Developer utilities for VS Code",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "publisher": "huanent",
   "icon": "resources/logo.png",
   "extensionKind": [
@@ -48,6 +48,11 @@
         "title": "Open LaunchAgents",
         "category": "PowerKit",
         "enablement": "isMac"
+      },
+      {
+        "command": "vscode-powerkit.generateGitignore",
+        "title": "Generate .gitignore File",
+        "category": "PowerKit"
       }
     ]
   },

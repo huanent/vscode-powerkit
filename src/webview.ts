@@ -10,7 +10,7 @@ export function getLaunchdWebviewHtml(webview: vscode.Webview, extensionUri: vsc
 
 function getHtml(webview: vscode.Webview, extensionUri: vscode.Uri, entry: string, title: string): string {
         const nonce = getNonce();
-        const styleUri = webview.asWebviewUri(vscode.Uri.joinPath(extensionUri, 'media', `${entry}.css`));
+        const styleUri = webview.asWebviewUri(vscode.Uri.joinPath(extensionUri, 'media', 'styles.css'));
         const scriptUri = webview.asWebviewUri(vscode.Uri.joinPath(extensionUri, 'media', `${entry}.js`));
 
         return `<!DOCTYPE html>
