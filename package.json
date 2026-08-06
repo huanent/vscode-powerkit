@@ -2,7 +2,7 @@
   "name": "vscode-powerkit",
   "displayName": "PowerKit",
   "description": "Developer utilities for VS Code",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "publisher": "huanent",
   "icon": "resources/logo.png",
   "extensionKind": [
@@ -53,8 +53,28 @@
         "command": "vscode-powerkit.generateGitignore",
         "title": "Generate .gitignore File",
         "category": "PowerKit"
+      },
+      {
+        "command": "vscode-powerkit.runScript",
+        "title": "Run Script",
+        "category": "PowerKit"
       }
-    ]
+    ],
+    "menus": {
+      "explorer/context": [
+        {
+          "command": "vscode-powerkit.runScript",
+          "when": "resourceExtname == .sh && !isWindows || resourceExtname == .bat && isWindows",
+          "group": "navigation@10"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "vscode-powerkit.runScript",
+          "when": "false"
+        }
+      ]
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run build",

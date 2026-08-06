@@ -17,14 +17,7 @@ export class FeatureTreeProvider implements vscode.TreeDataProvider<vscode.TreeI
                         command: 'vscode-powerkit.openJwt',
                         title: 'Open JWT Token',
                 };
-                const gitignoreItem = new vscode.TreeItem('.gitignore Generator', vscode.TreeItemCollapsibleState.None);
-                gitignoreItem.description = 'Create or update';
-                gitignoreItem.iconPath = new vscode.ThemeIcon('git-branch');
-                gitignoreItem.command = {
-                        command: 'vscode-powerkit.generateGitignore',
-                        title: 'Generate .gitignore File',
-                };
-                const items = [jwtItem, gitignoreItem];
+                const items = [jwtItem];
                 if (process.platform === 'darwin') {
                         const launchdItem = new vscode.TreeItem('LaunchAgents', vscode.TreeItemCollapsibleState.None);
                         launchdItem.description = 'Manage startup items';
