@@ -2,7 +2,7 @@
   "name": "vscode-powerkit",
   "displayName": "PowerKit",
   "description": "Developer utilities for VS Code",
-  "version": "0.4.2",
+  "version": "0.4.4",
   "publisher": "huanent",
   "icon": "resources/logo.png",
   "extensionKind": [
@@ -15,7 +15,8 @@
     "Other"
   ],
   "activationEvents": [
-    "onDebugAdapterProtocolTracker"
+    "onDebugAdapterProtocolTracker",
+    "onStartupFinished"
   ],
   "main": "./out/extension.js",
   "contributes": {
@@ -57,6 +58,19 @@
       {
         "command": "vscode-powerkit.runScript",
         "title": "Run Script",
+        "icon": "$(play)",
+        "category": "PowerKit"
+      },
+      {
+        "command": "vscode-powerkit.debugScript",
+        "title": "Debug Script",
+        "icon": "$(debug)",
+        "category": "PowerKit"
+      },
+      {
+        "command": "vscode-powerkit.runNpmScript",
+        "title": "Run npm Script",
+        "icon": "$(terminal)",
         "category": "PowerKit"
       }
     ],
@@ -64,17 +78,51 @@
       "explorer/context": [
         {
           "command": "vscode-powerkit.runScript",
-          "when": "resourceExtname == .sh && !isWindows || resourceExtname == .bat && isWindows",
+          "when": "resourceLangId == javascript || resourceLangId == typescript || resourceExtname == .sh && !isWindows || resourceExtname == .bat && isWindows",
           "group": "navigation@10"
+        },
+        {
+          "command": "vscode-powerkit.debugScript",
+          "when": "resourceLangId == javascript || resourceLangId == typescript",
+          "group": "navigation@11"
+        },
+        {
+          "command": "vscode-powerkit.runNpmScript",
+          "when": "explorerResourceIsFolder && resourcePath in vscode-powerkit.npmScriptFolders",
+          "group": "navigation@12"
+        }
+      ],
+      "editor/title": [
+        {
+          "command": "vscode-powerkit.runScript",
+          "when": "resourceLangId == javascript || resourceLangId == typescript",
+          "group": "navigation@10"
+        },
+        {
+          "command": "vscode-powerkit.debugScript",
+          "when": "resourceLangId == javascript || resourceLangId == typescript",
+          "group": "navigation@11"
         }
       ],
       "commandPalette": [
         {
-          "command": "vscode-powerkit.runScript",
+          "command": "vscode-powerkit.runNpmScript",
           "when": "false"
         }
       ]
-    }
+    },
+    "keybindings": [
+      {
+        "command": "vscode-powerkit.runScript",
+        "key": "ctrl+n",
+        "when": "resourceLangId == javascript || resourceLangId == typescript"
+      },
+      {
+        "command": "vscode-powerkit.debugScript",
+        "key": "ctrl+alt+n",
+        "when": "resourceLangId == javascript || resourceLangId == typescript"
+      }
+    ]
   },
   "scripts": {
     "vscode:prepublish": "npm run build",

@@ -12,6 +12,8 @@ Focused developer tools for VS Code.
 - .gitignore Generator creates or updates `.gitignore` files from 185 curated operating system, language, editor, framework, and tool templates while preserving custom rules. Generation works fully offline.
 - LaunchAgents on macOS lists user startup items from `~/Library/LaunchAgents`, shows launch status, and supports starting, stopping, creating, editing, and deleting agents.
 - LaunchAgent configuration includes `RunAtLoad`, `KeepAlive`, `ThrottleInterval`, program arguments, environment variables, working directory, and output paths.
+- Run Script executes and debugs JavaScript and TypeScript files, including untitled editors, and runs shell scripts from the Explorer or PowerKit view.
+- Run npm Script discovers folders with package scripts and provides an Explorer menu for choosing a script to run.
 
 ## Development
 

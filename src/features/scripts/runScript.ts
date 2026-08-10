@@ -1,58 +1,95 @@
 import * as path from 'node:path';
 import * as vscode from 'vscode';
+import { getTypeScriptRuntimeArgs } from './nodeRuntime';
+import { getRunnableFileUri, isNodeScriptUri, isTypeScriptDocument, resolveNodeDocument } from './scriptDocument';
+
+const terminalName = 'PowerKit Script';
 
 export async function runScript(
+	context: vscode.ExtensionContext,
 	scriptUri: vscode.Uri | undefined,
 	selectedUris: readonly vscode.Uri[] | undefined,
 ): Promise<void> {
-	const localScriptUri = await resolveScriptUri(scriptUri, selectedUris);
+	try {
+		await runResolvedScript(context, scriptUri, selectedUris);
+	} catch (error) {
+		const message = error instanceof Error ? error.message : String(error);
+		void vscode.window.showErrorMessage(message);
+	}
+}
+
+async function runResolvedScript(
+	context: vscode.ExtensionContext,
+	scriptUri: vscode.Uri | undefined,
+	selectedUris: readonly vscode.Uri[] | undefined,
+): Promise<void> {
+	const contextualUri = scriptUri && isSupportedScript(scriptUri)
+		? scriptUri
+		: selectedUris?.find(isSupportedScript);
+	const nodeDocument = await resolveNodeDocument(contextualUri);
+	if (nodeDocument) {
+		await runNodeDocument(context, nodeDocument);
+		return;
+	}
+
+	const localScriptUri = await resolveShellScriptUri(contextualUri);
 	if (!localScriptUri) {
+		return;
+	}
+	if (isNodeScriptUri(localScriptUri)) {
+		await runNodeDocument(context, await vscode.workspace.openTextDocument(localScriptUri));
 		return;
 	}
 
 	const extension = path.extname(localScriptUri.fsPath).toLowerCase();
-	const cwd = path.dirname(localScriptUri.fsPath);
-	let terminal: vscode.Terminal;
+	let command: string;
 
 	if (process.platform === 'win32' && extension === '.bat') {
-		terminal = vscode.window.createTerminal({
-			name: `Run ${path.basename(localScriptUri.fsPath)}`,
-			cwd,
-			shellPath: process.env.ComSpec || 'cmd.exe',
-			shellArgs: ['/d', '/c', localScriptUri.fsPath],
-		});
+		command = `cmd.exe /d /c call "${localScriptUri.fsPath}"`;
 	} else if (process.platform !== 'win32' && extension === '.sh') {
-		terminal = vscode.window.createTerminal({
-			name: `Run ${path.basename(localScriptUri.fsPath)}`,
-			cwd,
-			shellPath: '/bin/bash',
-			shellArgs: [localScriptUri.fsPath],
-		});
+		command = `/bin/bash ${quoteShellArgument(localScriptUri.fsPath)}`;
 	} else {
 		void vscode.window.showErrorMessage('This script type is not supported on the current platform.');
 		return;
 	}
 
-	terminal.show();
+	runInTerminal(localScriptUri, command);
 }
 
-async function resolveScriptUri(
-	scriptUri: vscode.Uri | undefined,
-	selectedUris: readonly vscode.Uri[] | undefined,
-): Promise<vscode.Uri | undefined> {
-	const contextualUri = isSupportedScript(scriptUri)
-		? scriptUri
-		: selectedUris?.find(isSupportedScript);
-	if (contextualUri) {
+async function runNodeDocument(context: vscode.ExtensionContext, document: vscode.TextDocument): Promise<void> {
+	const runnableUri = await getRunnableFileUri(context, document);
+	const runtimeArgs = isTypeScriptDocument(document) ? getTypeScriptRuntimeArgs() : [];
+	runInTerminal(runnableUri, ['node', ...runtimeArgs, quoteShellArgument(runnableUri.fsPath)].join(' '));
+}
+
+function runInTerminal(scriptUri: vscode.Uri, command: string): void {
+	vscode.window.terminals.find(terminal => terminal.name === terminalName)?.dispose();
+
+	const terminal = vscode.window.createTerminal({ name: terminalName, cwd: path.dirname(scriptUri.fsPath) });
+	terminal.show();
+	terminal.sendText(command);
+}
+
+function quoteShellArgument(value: string): string {
+	if (process.platform === 'win32') {
+		return `"${value.replaceAll('"', '\\"')}"`;
+	}
+	return `'${value.replaceAll("'", `'\\''`)}'`;
+}
+
+async function resolveShellScriptUri(contextualUri: vscode.Uri | undefined): Promise<vscode.Uri | undefined> {
+	if (contextualUri && isShellScriptUri(contextualUri)) {
 		return contextualUri;
 	}
 
 	const activeUri = vscode.window.activeTextEditor?.document.uri;
-	if (isSupportedScript(activeUri)) {
+	if (activeUri && isShellScriptUri(activeUri)) {
 		return activeUri;
 	}
 
-	const extensions = process.platform === 'win32' ? ['bat'] : ['sh'];
+	const extensions = process.platform === 'win32'
+		? ['bat', 'js', 'mjs', 'cjs', 'ts', 'mts', 'cts']
+		: ['sh', 'js', 'mjs', 'cjs', 'ts', 'mts', 'cts'];
 	const pickedUris = await vscode.window.showOpenDialog({
 		canSelectFiles: true,
 		canSelectFolders: false,
@@ -64,7 +101,11 @@ async function resolveScriptUri(
 }
 
 function isSupportedScript(uri: vscode.Uri | undefined): uri is vscode.Uri {
-	if (uri?.scheme !== 'file') {
+	return Boolean(uri && (isNodeScriptUri(uri) || isShellScriptUri(uri)));
+}
+
+function isShellScriptUri(uri: vscode.Uri): boolean {
+	if (uri.scheme !== 'file') {
 		return false;
 	}
 
