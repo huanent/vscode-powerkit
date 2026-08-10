@@ -105,7 +105,7 @@ function isSupportedScript(uri: vscode.Uri | undefined): uri is vscode.Uri {
 }
 
 function isShellScriptUri(uri: vscode.Uri): boolean {
-	if (uri.scheme !== 'file') {
+	if (uri.scheme !== 'file' && uri.scheme !== 'vscode-remote') {
 		return false;
 	}
 

@@ -36,7 +36,8 @@ export function isTypeScriptDocument(document: vscode.TextDocument): boolean {
 }
 
 export function isNodeScriptUri(uri: vscode.Uri): boolean {
-	return uri.scheme === 'untitled' || (uri.scheme === 'file' && nodeExtensions.has(path.extname(uri.fsPath).toLowerCase()));
+	const isFileSystemUri = uri.scheme === 'file' || uri.scheme === 'vscode-remote';
+	return uri.scheme === 'untitled' || (isFileSystemUri && nodeExtensions.has(path.extname(uri.fsPath).toLowerCase()));
 }
 
 function isNodeScriptDocument(document: vscode.TextDocument): boolean {
