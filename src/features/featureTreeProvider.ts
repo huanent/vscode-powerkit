@@ -18,7 +18,7 @@ export class FeatureTreeProvider implements vscode.TreeDataProvider<vscode.TreeI
                         title: 'Open JWT Token',
                 };
                 const runScriptItem = new vscode.TreeItem('Run Script', vscode.TreeItemCollapsibleState.None);
-                runScriptItem.description = 'Node.js, TypeScript, and shell';
+                runScriptItem.description = 'Node.js, TypeScript, .NET, and shell';
                 runScriptItem.iconPath = new vscode.ThemeIcon('run');
                 runScriptItem.command = {
                         command: 'vscode-powerkit.runScript',

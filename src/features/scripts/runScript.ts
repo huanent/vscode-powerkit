@@ -32,7 +32,7 @@ async function runResolvedScript(
 		return;
 	}
 
-	const localScriptUri = await resolveShellScriptUri(contextualUri);
+	const localScriptUri = await resolveScriptUri(contextualUri);
 	if (!localScriptUri) {
 		return;
 	}
@@ -48,6 +48,8 @@ async function runResolvedScript(
 		command = `cmd.exe /d /c call "${localScriptUri.fsPath}"`;
 	} else if (process.platform !== 'win32' && extension === '.sh') {
 		command = `/bin/bash ${quoteShellArgument(localScriptUri.fsPath)}`;
+	} else if (extension === '.cs') {
+		command = `dotnet run --file ${quoteShellArgument(localScriptUri.fsPath)}`;
 	} else {
 		void vscode.window.showErrorMessage('This script type is not supported on the current platform.');
 		return;
@@ -77,19 +79,19 @@ function quoteShellArgument(value: string): string {
 	return `'${value.replaceAll("'", `'\\''`)}'`;
 }
 
-async function resolveShellScriptUri(contextualUri: vscode.Uri | undefined): Promise<vscode.Uri | undefined> {
-	if (contextualUri && isShellScriptUri(contextualUri)) {
+async function resolveScriptUri(contextualUri: vscode.Uri | undefined): Promise<vscode.Uri | undefined> {
+	if (contextualUri && isLocalScriptUri(contextualUri)) {
 		return contextualUri;
 	}
 
 	const activeUri = vscode.window.activeTextEditor?.document.uri;
-	if (activeUri && isShellScriptUri(activeUri)) {
+	if (activeUri && isLocalScriptUri(activeUri)) {
 		return activeUri;
 	}
 
 	const extensions = process.platform === 'win32'
-		? ['bat', 'js', 'mjs', 'cjs', 'ts', 'mts', 'cts']
-		: ['sh', 'js', 'mjs', 'cjs', 'ts', 'mts', 'cts'];
+		? ['bat', 'cs', 'js', 'mjs', 'cjs', 'ts', 'mts', 'cts']
+		: ['sh', 'cs', 'js', 'mjs', 'cjs', 'ts', 'mts', 'cts'];
 	const pickedUris = await vscode.window.showOpenDialog({
 		canSelectFiles: true,
 		canSelectFolders: false,
@@ -101,14 +103,14 @@ async function resolveShellScriptUri(contextualUri: vscode.Uri | undefined): Pro
 }
 
 function isSupportedScript(uri: vscode.Uri | undefined): uri is vscode.Uri {
-	return Boolean(uri && (isNodeScriptUri(uri) || isShellScriptUri(uri)));
+	return Boolean(uri && (isNodeScriptUri(uri) || isLocalScriptUri(uri)));
 }
 
-function isShellScriptUri(uri: vscode.Uri): boolean {
+function isLocalScriptUri(uri: vscode.Uri): boolean {
 	if (uri.scheme !== 'file' && uri.scheme !== 'vscode-remote') {
 		return false;
 	}
 
 	const extension = path.extname(uri.fsPath).toLowerCase();
-	return process.platform === 'win32' ? extension === '.bat' : extension === '.sh';
+	return extension === '.cs' || (process.platform === 'win32' ? extension === '.bat' : extension === '.sh');
 }

@@ -2,7 +2,7 @@
   "name": "vscode-powerkit",
   "displayName": "PowerKit",
   "description": "Developer utilities for VS Code",
-  "version": "0.4.5",
+  "version": "0.4.6",
   "publisher": "huanent",
   "icon": "resources/logo.png",
   "extensionKind": [
@@ -78,7 +78,7 @@
       "explorer/context": [
         {
           "command": "vscode-powerkit.runScript",
-          "when": "resourceLangId == javascript || resourceLangId == typescript || resourceExtname == .sh && !isWindows || resourceExtname == .bat && isWindows",
+          "when": "resourceLangId == javascript || resourceLangId == typescript || resourceLangId == csharp || resourceExtname == .sh && !isWindows || resourceExtname == .bat && isWindows",
           "group": "navigation@10"
         },
         {
@@ -95,7 +95,7 @@
       "editor/title": [
         {
           "command": "vscode-powerkit.runScript",
-          "when": "resourceLangId == javascript || resourceLangId == typescript",
+          "when": "resourceLangId == javascript || resourceLangId == typescript || resourceLangId == csharp",
           "group": "navigation@10"
         },
         {
@@ -115,7 +115,7 @@
       {
         "command": "vscode-powerkit.runScript",
         "key": "ctrl+n",
-        "when": "resourceLangId == javascript || resourceLangId == typescript"
+        "when": "resourceLangId == javascript || resourceLangId == typescript || resourceLangId == csharp"
       },
       {
         "command": "vscode-powerkit.debugScript",
