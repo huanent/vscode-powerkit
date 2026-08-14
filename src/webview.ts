@@ -1,16 +1,12 @@
 import * as vscode from 'vscode';
 
-export function getWebviewHtml(webview: vscode.Webview, extensionUri: vscode.Uri): string {
-        return getHtml(webview, extensionUri, 'jwt', 'JWT Token');
-}
-
 export function getLaunchdWebviewHtml(webview: vscode.Webview, extensionUri: vscode.Uri): string {
         return getHtml(webview, extensionUri, 'launchd', 'LaunchAgents');
 }
 
 function getHtml(webview: vscode.Webview, extensionUri: vscode.Uri, entry: string, title: string): string {
         const nonce = getNonce();
-        const styleUri = webview.asWebviewUri(vscode.Uri.joinPath(extensionUri, 'media', 'styles.css'));
+        const styleUri = webview.asWebviewUri(vscode.Uri.joinPath(extensionUri, 'media', `${entry}.css`));
         const scriptUri = webview.asWebviewUri(vscode.Uri.joinPath(extensionUri, 'media', `${entry}.js`));
 
         return `<!DOCTYPE html>

@@ -40,11 +40,6 @@
     },
     "commands": [
       {
-        "command": "vscode-powerkit.openJwt",
-        "title": "Open JWT Token",
-        "category": "PowerKit"
-      },
-      {
         "command": "vscode-powerkit.openLaunchd",
         "title": "Open LaunchAgents",
         "category": "PowerKit",

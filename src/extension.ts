@@ -1,7 +1,6 @@
 import * as vscode from 'vscode';
 import { FeatureTreeProvider } from './features/featureTreeProvider';
 import { generateGitignore } from './features/gitignore/gitignoreService';
-import { JwtPanel } from './features/jwt/jwtPanel';
 import { LaunchdPanel } from './features/launchd/launchdPanel';
 import { PerfTipsProvider } from './features/perftips/perftips';
 import { debugScript } from './features/scripts/debugScript';
@@ -17,7 +16,6 @@ export function activate(context: vscode.ExtensionContext): void {
 			FeatureTreeProvider.viewType,
 			featureTree,
 		),
-		vscode.commands.registerCommand('vscode-powerkit.openJwt', () => JwtPanel.show(context.extensionUri)),
 		vscode.commands.registerCommand('vscode-powerkit.openLaunchd', () => LaunchdPanel.show(context.extensionUri)),
 		vscode.commands.registerCommand('vscode-powerkit.generateGitignore', () => generateGitignore(context.extensionUri)),
 		vscode.commands.registerCommand('vscode-powerkit.runScript', (uri, selectedUris) => runScript(context, uri, selectedUris)),

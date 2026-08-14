@@ -10,21 +10,7 @@ export class FeatureTreeProvider implements vscode.TreeDataProvider<vscode.TreeI
         }
 
         async getChildren(): Promise<vscode.TreeItem[]> {
-                const jwtItem = new vscode.TreeItem('JWT Token', vscode.TreeItemCollapsibleState.None);
-                jwtItem.description = 'Generate and decode';
-                jwtItem.iconPath = new vscode.ThemeIcon('key');
-                jwtItem.command = {
-                        command: 'vscode-powerkit.openJwt',
-                        title: 'Open JWT Token',
-                };
-                const runScriptItem = new vscode.TreeItem('Run Script', vscode.TreeItemCollapsibleState.None);
-                runScriptItem.description = 'Node.js, TypeScript, .NET, and shell';
-                runScriptItem.iconPath = new vscode.ThemeIcon('run');
-                runScriptItem.command = {
-                        command: 'vscode-powerkit.runScript',
-                        title: 'Run Script',
-                };
-                const items = [jwtItem, runScriptItem];
+                const items: vscode.TreeItem[] = [];
                 if (process.platform === 'darwin') {
                         const launchdItem = new vscode.TreeItem('LaunchAgents', vscode.TreeItemCollapsibleState.None);
                         launchdItem.description = 'Manage startup items';

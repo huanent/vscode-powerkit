@@ -6,7 +6,7 @@ import { AgentList } from './components/AgentList';
 import { LaunchdDetails } from './components/LaunchdDetails';
 import { useLaunchd } from './hooks/useLaunchd';
 
-export function LaunchdApp() {
+export function App() {
 	const launchd = useLaunchd();
 	return (
 		<main className="mx-auto w-[min(1180px,calc(100%-40px))] py-[30px] pb-12 max-[760px]:w-[calc(100%-24px)] max-[760px]:pt-5">
