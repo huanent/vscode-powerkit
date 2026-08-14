@@ -2,7 +2,7 @@
   "name": "vscode-powerkit",
   "displayName": "PowerKit",
   "description": "Developer utilities for VS Code",
-  "version": "0.4.6",
+  "version": "0.4.7",
   "publisher": "huanent",
   "icon": "resources/logo.png",
   "extensionKind": [
@@ -47,7 +47,7 @@
       },
       {
         "command": "vscode-powerkit.generateGitignore",
-        "title": "Generate .gitignore File",
+        "title": "Generate .gitignore",
         "category": "PowerKit"
       },
       {
@@ -87,37 +87,13 @@
           "group": "navigation@12"
         }
       ],
-      "editor/title": [
-        {
-          "command": "vscode-powerkit.runScript",
-          "when": "resourceLangId == javascript || resourceLangId == typescript || resourceLangId == csharp",
-          "group": "navigation@10"
-        },
-        {
-          "command": "vscode-powerkit.debugScript",
-          "when": "resourceLangId == javascript || resourceLangId == typescript",
-          "group": "navigation@11"
-        }
-      ],
       "commandPalette": [
         {
           "command": "vscode-powerkit.runNpmScript",
           "when": "false"
         }
       ]
-    },
-    "keybindings": [
-      {
-        "command": "vscode-powerkit.runScript",
-        "key": "ctrl+n",
-        "when": "resourceLangId == javascript || resourceLangId == typescript || resourceLangId == csharp"
-      },
-      {
-        "command": "vscode-powerkit.debugScript",
-        "key": "ctrl+alt+n",
-        "when": "resourceLangId == javascript || resourceLangId == typescript"
-      }
-    ]
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run build",
@@ -145,9 +121,5 @@
   },
   "dependencies": {
     "@vscode/debugprotocol": "^1.68.0"
-  },
-  "overrides": {
-    "diff": "^8.0.4",
-    "serialize-javascript": "^7.0.6"
   }
 }
