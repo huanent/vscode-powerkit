@@ -14,7 +14,7 @@ export function AgentEditor({ draft, argumentsText, environmentText, busy, onArg
 }) {
 	return (
 		<section className="min-w-0 bg-(--vscode-editor-background)" aria-label="LaunchAgent configuration">
-			<div className="flex min-h-17 items-center justify-between gap-4 border-b border-b-(--powerkit-border) bg-(--vscode-editorWidget-background) px-5 py-3">
+			<div className="flex min-h-17 items-center justify-between gap-4 border-b border-b-(--vscode-panel-border) bg-(--vscode-editorWidget-background) px-5 py-3">
 				<div className="min-w-0"><Eyebrow>{draft.fileName ? 'Edit agent' : 'New agent'}</Eyebrow><h2 className="m-0 truncate text-[16px] font-semibold">{draft.label || 'Untitled LaunchAgent'}</h2></div>
 				<PrimaryButton type="button" disabled={busy} onClick={onSave}>{busy ? <LoaderCircle className="animate-spin" size={16} /> : <Save size={16} />}Save</PrimaryButton>
 			</div>
@@ -44,5 +44,5 @@ function FormField({ className = '', label, hint, children }: { className?: stri
 }
 
 function ToggleField({ label, description, checked, onChange }: { label: string; description: string; checked: boolean; onChange(value: boolean): void }) {
-	return <label className="group flex min-h-14 items-center justify-between gap-4 rounded-[2px] border border-(--powerkit-border) bg-(--vscode-editorWidget-background) px-3 py-2.5 hover:border-(--vscode-focusBorder)"><span><strong className="block text-xs font-medium">{label}</strong><small className="mt-0.5 block text-[11px] text-(--vscode-descriptionForeground)">{description}</small></span><span className={`relative h-4.5 w-8 shrink-0 rounded-full border transition-colors duration-100 ${checked ? 'border-(--vscode-button-background) bg-(--vscode-button-background)' : 'border-(--vscode-checkbox-border,var(--powerkit-border)) bg-(--vscode-checkbox-background)'}`}><span className={`absolute top-0.5 size-3 rounded-full bg-(--vscode-button-foreground) shadow-sm transition-[left] duration-100 ${checked ? 'left-4' : 'left-0.5'}`} /></span><input className="sr-only" type="checkbox" role="switch" checked={checked} onChange={event => onChange(event.target.checked)} /></label>;
+	return <label className="group flex min-h-14 items-center justify-between gap-4 rounded-[2px] border border-(--vscode-panel-border) bg-(--vscode-editorWidget-background) px-3 py-2.5 hover:border-(--vscode-focusBorder)"><span><strong className="block text-xs font-medium">{label}</strong><small className="mt-0.5 block text-[11px] text-(--vscode-descriptionForeground)">{description}</small></span><span className={`relative h-4.5 w-8 shrink-0 rounded-full border transition-colors duration-100 ${checked ? 'border-(--vscode-button-background) bg-(--vscode-button-background)' : 'border-(--vscode-checkbox-border,var(--vscode-panel-border)) bg-(--vscode-checkbox-background)'}`}><span className={`absolute top-0.5 size-3 rounded-full bg-(--vscode-button-foreground) shadow-sm transition-[left] duration-100 ${checked ? 'left-4' : 'left-0.5'}`} /></span><input className="sr-only" type="checkbox" role="switch" checked={checked} onChange={event => onChange(event.target.checked)} /></label>;
 }

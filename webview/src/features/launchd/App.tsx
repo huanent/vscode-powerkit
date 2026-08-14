@@ -15,7 +15,7 @@ export function App() {
 		{launchd.error && <Message kind="error">{launchd.error}</Message>}
 		{launchd.notice && <Message kind="success">{launchd.notice}</Message>}
 
-		<div className="grid min-h-155 grid-cols-[minmax(260px,31%)_minmax(0,1fr)] overflow-hidden rounded-[4px] border border-(--powerkit-border) bg-(--vscode-editor-background) shadow-[0_1px_3px_color-mix(in_srgb,var(--vscode-widget-shadow)_12%,transparent)] max-[760px]:grid-cols-1">
+		<div className="grid min-h-155 grid-cols-[minmax(260px,31%)_minmax(0,1fr)] overflow-hidden rounded-[4px] border border-(--vscode-panel-border) bg-(--vscode-editor-background) shadow-sm max-[760px]:grid-cols-1">
 			<AgentList agents={launchd.agents} selectedFileName={launchd.selectedFileName} busy={launchd.busy} detailsLoading={launchd.detailsLoading} onSelect={launchd.selectAgent} onAction={launchd.runAction} onDetails={launchd.showDetails} onRemove={launchd.remove} />
 			<AgentEditor draft={launchd.draft} argumentsText={launchd.argumentsText} environmentText={launchd.environmentText} busy={launchd.busy} onArgumentsChange={launchd.setArgumentsText} onEnvironmentChange={launchd.setEnvironmentText} onUpdate={launchd.update} onSave={launchd.save} />
 		</div>
