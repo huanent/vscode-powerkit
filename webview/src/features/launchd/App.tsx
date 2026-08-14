@@ -9,13 +9,13 @@ import { useLaunchd } from './hooks/useLaunchd';
 export function App() {
 	const launchd = useLaunchd();
 	return (
-		<main className="mx-auto w-[min(1180px,calc(100%-40px))] py-[30px] pb-12 max-[760px]:w-[calc(100%-24px)] max-[760px]:pt-5">
+		<main className="mx-auto w-[min(1220px,calc(100%-40px))] py-6 pb-10 max-[760px]:w-[calc(100%-20px)] max-[760px]:pt-4">
 			<PageHeading icon={<Rocket size={22} aria-hidden="true" />} title="LaunchAgents" description="Manage per-user background services in ~/Library/LaunchAgents." accentClassName="text-(--vscode-charts-green)" actions={<div className="flex shrink-0 items-center gap-2"><IconButton type="button" title="Open LaunchAgents folder" aria-label="Open LaunchAgents folder" onClick={() => vscode.postMessage({ type: 'openDirectory' })}><FolderOpen size={17} /></IconButton><IconButton type="button" title="Refresh status" aria-label="Refresh status" disabled={launchd.busy} onClick={() => launchd.runAction({ type: 'refresh' })}><RefreshCw className={launchd.busy ? 'animate-spin' : ''} size={17} /></IconButton><PrimaryButton className="max-[760px]:size-8.5 max-[760px]:px-0" type="button" aria-label="New agent" onClick={launchd.createNew}><Plus size={16} /><span className="max-[760px]:hidden">New agent</span></PrimaryButton></div>} />
 
 		{launchd.error && <Message kind="error">{launchd.error}</Message>}
 		{launchd.notice && <Message kind="success">{launchd.notice}</Message>}
 
-		<div className="grid min-h-155 grid-cols-[minmax(250px,32%)_minmax(0,1fr)] border border-(--vscode-widget-border) max-[760px]:grid-cols-1">
+		<div className="grid min-h-155 grid-cols-[minmax(260px,31%)_minmax(0,1fr)] overflow-hidden rounded-[4px] border border-(--powerkit-border) bg-(--vscode-editor-background) shadow-[0_1px_3px_color-mix(in_srgb,var(--vscode-widget-shadow)_12%,transparent)] max-[760px]:grid-cols-1">
 			<AgentList agents={launchd.agents} selectedFileName={launchd.selectedFileName} busy={launchd.busy} detailsLoading={launchd.detailsLoading} onSelect={launchd.selectAgent} onAction={launchd.runAction} onDetails={launchd.showDetails} onRemove={launchd.remove} />
 			<AgentEditor draft={launchd.draft} argumentsText={launchd.argumentsText} environmentText={launchd.environmentText} busy={launchd.busy} onArgumentsChange={launchd.setArgumentsText} onEnvironmentChange={launchd.setEnvironmentText} onUpdate={launchd.update} onSave={launchd.save} />
 		</div>
@@ -27,5 +27,5 @@ export function App() {
 
 function Message({ kind, children }: { kind: 'error' | 'success'; children: React.ReactNode }) {
 	const kindClassName = kind === 'error' ? 'border-(--vscode-errorForeground) bg-(--vscode-inputValidation-errorBackground) text-(--vscode-errorForeground)' : 'border-(--vscode-testing-iconPassed) bg-(--vscode-editorWidget-background)';
-	return <div className={`mb-3.5 border-l-[3px] px-3 py-2.5 text-xs ${kindClassName}`} role={kind === 'error' ? 'alert' : 'status'}>{children}</div>;
+	return <div className={`mb-3.5 rounded-[2px] border border-l-[3px] px-3 py-2.5 text-xs ${kindClassName}`} role={kind === 'error' ? 'alert' : 'status'}>{children}</div>;
 }

@@ -7,8 +7,11 @@
 @layer base {
 	:root {
 		font-family: var(--vscode-font-family);
+		font-size: var(--vscode-font-size);
 		color: var(--vscode-foreground);
 		background: var(--vscode-editor-background);
+		--powerkit-border: color-mix(in srgb, var(--vscode-foreground) 12%, transparent);
+		--powerkit-border-subtle: color-mix(in srgb, var(--vscode-foreground) 7%, transparent);
 		color-scheme: light dark;
 	}
 
@@ -18,6 +21,10 @@
 
 	body {
 		margin: 0;
+		min-width: 320px;
+		min-height: 100vh;
+		background: var(--vscode-editor-background);
+		-webkit-font-smoothing: antialiased;
 	}
 
 	button,
@@ -28,5 +35,36 @@
 
 	button:not(:disabled) {
 		cursor: pointer;
+	}
+
+	::selection {
+		background: var(--vscode-editor-selectionBackground);
+	}
+
+	::placeholder {
+		color: var(--vscode-input-placeholderForeground);
+		opacity: 1;
+	}
+
+	:focus-visible {
+		outline: 1px solid var(--vscode-focusBorder);
+		outline-offset: -1px;
+	}
+
+	::-webkit-scrollbar {
+		width: 10px;
+		height: 10px;
+	}
+
+	::-webkit-scrollbar-thumb {
+		background: var(--vscode-scrollbarSlider-background);
+	}
+
+	::-webkit-scrollbar-thumb:hover {
+		background: var(--vscode-scrollbarSlider-hoverBackground);
+	}
+
+	::-webkit-scrollbar-thumb:active {
+		background: var(--vscode-scrollbarSlider-activeBackground);
 	}
 }
