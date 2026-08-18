@@ -13,6 +13,7 @@ Focused developer tools for VS Code.
 - LaunchAgent configuration includes `RunAtLoad`, `KeepAlive`, `ThrottleInterval`, program arguments, environment variables, working directory, and output paths.
 - Run Script executes and debugs JavaScript and TypeScript files, including untitled editors, runs single-file C# programs with `dotnet run --file`, and runs shell scripts from the Explorer or PowerKit view.
 - Run npm Script discovers folders with package scripts and provides an Explorer menu for choosing a script to run.
+- XML formatting supports VS Code's Format Document command and follows the editor's indentation and line-ending settings.
 
 ## Development
 

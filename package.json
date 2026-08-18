@@ -2,7 +2,7 @@
   "name": "vscode-powerkit",
   "displayName": "PowerKit",
   "description": "Developer utilities for VS Code",
-  "version": "0.4.8",
+  "version": "0.4.9",
   "publisher": "huanent",
   "icon": "resources/logo.png",
   "extensionKind": [
@@ -120,6 +120,7 @@
     "vite": "^7.2.2"
   },
   "dependencies": {
-    "@vscode/debugprotocol": "^1.68.0"
+    "@vscode/debugprotocol": "^1.68.0",
+    "xml-formatter": "^3.7.0"
   }
 }
