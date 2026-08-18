@@ -3,7 +3,6 @@ import { FeatureTreeProvider } from './features/featureTreeProvider';
 import { generateGitignore } from './features/gitignore/gitignoreService';
 import { LaunchdPanel } from './features/launchd/launchdPanel';
 import { PerfTipsProvider } from './features/perftips/perftips';
-import { debugScript } from './features/scripts/debugScript';
 import { registerNpmScriptWatcher, runNpmScript } from './features/scripts/npmScripts';
 import { runScript } from './features/scripts/runScript';
 import { registerXmlFormatter } from './features/xml/xmlFormatter';
@@ -19,8 +18,9 @@ export function activate(context: vscode.ExtensionContext): void {
 		),
 		vscode.commands.registerCommand('vscode-powerkit.openLaunchd', () => LaunchdPanel.show(context.extensionUri)),
 		vscode.commands.registerCommand('vscode-powerkit.generateGitignore', () => generateGitignore(context.extensionUri)),
-		vscode.commands.registerCommand('vscode-powerkit.runScript', (uri, selectedUris) => runScript(context, uri, selectedUris)),
-		vscode.commands.registerCommand('vscode-powerkit.debugScript', uri => debugScript(context, uri)),
+		...['runDotnetScript', 'runShScript', 'runBatScript', 'runNodeScript'].map(command =>
+			vscode.commands.registerCommand(`vscode-powerkit.${command}`, (uri, selectedUris) => runScript(context, uri, selectedUris)),
+		),
 		vscode.commands.registerCommand('vscode-powerkit.runNpmScript', runNpmScript),
 		registerXmlFormatter(),
 	);
