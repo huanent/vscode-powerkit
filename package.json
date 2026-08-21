@@ -2,7 +2,7 @@
   "name": "vscode-powerkit",
   "displayName": "PowerKit",
   "description": "Developer utilities for VS Code",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "publisher": "huanent",
   "icon": "resources/logo.png",
   "extensionKind": [
@@ -70,7 +70,7 @@
       },
       {
         "command": "vscode-powerkit.runNodeScript",
-        "title": "Run no Script",
+        "title": "Run node Script",
         "icon": "$(play)",
         "category": "PowerKit"
       },
@@ -82,7 +82,13 @@
       },
       {
         "command": "vscode-powerkit.runNpmScript",
-        "title": "Run npm Script",
+        "title": "Run package Script",
+        "icon": "$(terminal)",
+        "category": "PowerKit"
+      },
+      {
+        "command": "vscode-powerkit.runBunPackageScript",
+        "title": "Run package Script",
         "icon": "$(terminal)",
         "category": "PowerKit"
       }
@@ -116,7 +122,12 @@
         },
         {
           "command": "vscode-powerkit.runNpmScript",
-          "when": "explorerResourceIsFolder && resourcePath in vscode-powerkit.npmScriptFolders",
+          "when": "explorerResourceIsFolder && vscode-powerkit.npmAvailable && resourcePath in vscode-powerkit.npmScriptFolders",
+          "group": "navigation@12"
+        },
+        {
+          "command": "vscode-powerkit.runBunPackageScript",
+          "when": "explorerResourceIsFolder && vscode-powerkit.bunAvailable && resourcePath in vscode-powerkit.bunScriptFolders",
           "group": "navigation@12"
         }
       ],
@@ -131,6 +142,10 @@
         },
         {
           "command": "vscode-powerkit.runNpmScript",
+          "when": "false"
+        },
+        {
+          "command": "vscode-powerkit.runBunPackageScript",
           "when": "false"
         }
       ]

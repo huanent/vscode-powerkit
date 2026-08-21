@@ -2,6 +2,7 @@ import { execFileSync } from 'node:child_process';
 import * as vscode from 'vscode';
 
 const nodeAvailableContext = 'vscode-powerkit.nodeAvailable';
+const npmAvailableContext = 'vscode-powerkit.npmAvailable';
 const bunAvailableContext = 'vscode-powerkit.bunAvailable';
 const bunWorkspaceContext = 'vscode-powerkit.bunWorkspace';
 const bunMarkers = ['bun.lock', 'bunfig.toml'];
@@ -28,7 +29,7 @@ export async function getScriptRuntime(uri: vscode.Uri): Promise<ScriptRuntime> 
 	return 'node';
 }
 
-function isCommandAvailable(command: ScriptRuntime): boolean {
+function isCommandAvailable(command: ScriptRuntime | 'npm'): boolean {
 	try {
 		execFileSync(command, ['--version'], { stdio: 'ignore' });
 		return true;
@@ -44,6 +45,7 @@ async function refreshScriptRuntimeContexts(): Promise<void> {
 
 	await Promise.all([
 		vscode.commands.executeCommand('setContext', nodeAvailableContext, isCommandAvailable('node')),
+		vscode.commands.executeCommand('setContext', npmAvailableContext, isCommandAvailable('npm')),
 		vscode.commands.executeCommand('setContext', bunAvailableContext, isCommandAvailable('bun')),
 		vscode.commands.executeCommand('setContext', bunWorkspaceContext, bunWorkspace),
 	]);

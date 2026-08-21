@@ -23,6 +23,7 @@ export function activate(context: vscode.ExtensionContext): void {
 			vscode.commands.registerCommand(`vscode-powerkit.${command}`, (uri, selectedUris) => runScript(context, uri, selectedUris)),
 		),
 		vscode.commands.registerCommand('vscode-powerkit.runNpmScript', runNpmScript),
+		vscode.commands.registerCommand('vscode-powerkit.runBunPackageScript', runNpmScript),
 		registerXmlFormatter(),
 	);
 	registerNpmScriptWatcher(context);

@@ -1,7 +1,8 @@
 import * as vscode from 'vscode';
+import { getScriptRuntime } from './scriptRuntime';
 
 const npmScriptFoldersContext = 'vscode-powerkit.npmScriptFolders';
-const terminalName = 'PowerKit npm';
+const bunScriptFoldersContext = 'vscode-powerkit.bunScriptFolders';
 
 type PackageJson = {
 	scripts?: Record<string, unknown>;
@@ -12,9 +13,10 @@ export async function runNpmScript(folderUri: vscode.Uri | undefined): Promise<v
 		return;
 	}
 
+	const runtime = await getScriptRuntime(folderUri);
 	const scripts = await getScripts(folderUri);
 	if (scripts.length === 0) {
-		void vscode.window.showInformationMessage('No npm scripts found in this folder.');
+		void vscode.window.showInformationMessage('No package scripts found in this folder.');
 		await refreshNpmScriptFolders();
 		return;
 	}
@@ -22,25 +24,34 @@ export async function runNpmScript(folderUri: vscode.Uri | undefined): Promise<v
 	const selected = await vscode.window.showQuickPick(
 		scripts.map(([label, description]) => ({ label, description })),
 		{
-			placeHolder: 'Select an npm script to run',
-			title: 'Run npm Script',
+			placeHolder: `Select a script to run with ${runtime}`,
+			title: runtime === 'bun' ? 'Run Bun Script' : 'Run npm Script',
 		},
 	);
 	if (!selected) {
 		return;
 	}
 
-	const terminal = vscode.window.createTerminal({ name: terminalName, cwd: folderUri });
+	const terminal = vscode.window.createTerminal({ name: `PowerKit ${runtime}`, cwd: folderUri });
 	terminal.show();
-	terminal.sendText(`npm run ${quoteArgument(selected.label)}`);
+	terminal.sendText(`${runtime === 'bun' ? 'bun' : 'npm'} run ${quoteArgument(selected.label)}`);
 }
 
 export function registerNpmScriptWatcher(context: vscode.ExtensionContext): void {
-	const watcher = vscode.workspace.createFileSystemWatcher('**/package.json');
-	watcher.onDidCreate(refreshNpmScriptFolders, undefined, context.subscriptions);
-	watcher.onDidChange(refreshNpmScriptFolders, undefined, context.subscriptions);
-	watcher.onDidDelete(refreshNpmScriptFolders, undefined, context.subscriptions);
-	context.subscriptions.push(watcher);
+	const packageJsonWatcher = vscode.workspace.createFileSystemWatcher('**/package.json');
+	packageJsonWatcher.onDidCreate(refreshNpmScriptFolders, undefined, context.subscriptions);
+	packageJsonWatcher.onDidChange(refreshNpmScriptFolders, undefined, context.subscriptions);
+	packageJsonWatcher.onDidDelete(refreshNpmScriptFolders, undefined, context.subscriptions);
+
+	const bunMarkerWatcher = vscode.workspace.createFileSystemWatcher('**/{bun.lock,bunfig.toml}');
+	bunMarkerWatcher.onDidCreate(refreshNpmScriptFolders, undefined, context.subscriptions);
+	bunMarkerWatcher.onDidDelete(refreshNpmScriptFolders, undefined, context.subscriptions);
+
+	context.subscriptions.push(
+		packageJsonWatcher,
+		bunMarkerWatcher,
+		vscode.workspace.onDidChangeWorkspaceFolders(refreshNpmScriptFolders),
+	);
 	void refreshNpmScriptFolders();
 }
 
@@ -62,16 +73,21 @@ async function getScripts(folderUri: vscode.Uri): Promise<Array<[string, string]
 
 async function refreshNpmScriptFolders(): Promise<void> {
 	const packageJsonUris = await vscode.workspace.findFiles('**/package.json', '**/node_modules/**');
-	const folders: Record<string, boolean> = {};
+	const npmFolders: Record<string, boolean> = {};
+	const bunFolders: Record<string, boolean> = {};
 
 	await Promise.all(packageJsonUris.map(async packageJsonUri => {
 		const folderUri = vscode.Uri.joinPath(packageJsonUri, '..');
 		if ((await getScripts(folderUri)).length > 0) {
+			const folders = await getScriptRuntime(folderUri) === 'bun' ? bunFolders : npmFolders;
 			folders[folderUri.fsPath] = true;
 		}
 	}));
 
-	await vscode.commands.executeCommand('setContext', npmScriptFoldersContext, folders);
+	await Promise.all([
+		vscode.commands.executeCommand('setContext', npmScriptFoldersContext, npmFolders),
+		vscode.commands.executeCommand('setContext', bunScriptFoldersContext, bunFolders),
+	]);
 }
 
 function quoteArgument(value: string): string {
