@@ -5,6 +5,7 @@ import { LaunchdPanel } from './features/launchd/launchdPanel';
 import { PerfTipsProvider } from './features/perftips/perftips';
 import { registerNpmScriptWatcher, runNpmScript } from './features/scripts/npmScripts';
 import { runScript } from './features/scripts/runScript';
+import { registerScriptRuntimeWatcher } from './features/scripts/scriptRuntime';
 import { registerXmlFormatter } from './features/xml/xmlFormatter';
 
 export function activate(context: vscode.ExtensionContext): void {
@@ -18,13 +19,14 @@ export function activate(context: vscode.ExtensionContext): void {
 		),
 		vscode.commands.registerCommand('vscode-powerkit.openLaunchd', () => LaunchdPanel.show(context.extensionUri)),
 		vscode.commands.registerCommand('vscode-powerkit.generateGitignore', () => generateGitignore(context.extensionUri)),
-		...['runDotnetScript', 'runShScript', 'runBatScript', 'runNodeScript'].map(command =>
+		...['runDotnetScript', 'runShScript', 'runBatScript', 'runNodeScript', 'runBunScript'].map(command =>
 			vscode.commands.registerCommand(`vscode-powerkit.${command}`, (uri, selectedUris) => runScript(context, uri, selectedUris)),
 		),
 		vscode.commands.registerCommand('vscode-powerkit.runNpmScript', runNpmScript),
 		registerXmlFormatter(),
 	);
 	registerNpmScriptWatcher(context);
+	registerScriptRuntimeWatcher(context);
 
 	const perfTipsProvider = new PerfTipsProvider();
 	context.subscriptions.push(

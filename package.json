@@ -2,7 +2,7 @@
   "name": "vscode-powerkit",
   "displayName": "PowerKit",
   "description": "Developer utilities for VS Code",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "publisher": "huanent",
   "icon": "resources/logo.png",
   "extensionKind": [
@@ -70,7 +70,13 @@
       },
       {
         "command": "vscode-powerkit.runNodeScript",
-        "title": "Run node Script",
+        "title": "Run no Script",
+        "icon": "$(play)",
+        "category": "PowerKit"
+      },
+      {
+        "command": "vscode-powerkit.runBunScript",
+        "title": "Run bun Script",
         "icon": "$(play)",
         "category": "PowerKit"
       },
@@ -100,7 +106,12 @@
         },
         {
           "command": "vscode-powerkit.runNodeScript",
-          "when": "resourceLangId == javascript || resourceLangId == typescript",
+          "when": "(resourceLangId == javascript || resourceLangId == typescript) && vscode-powerkit.nodeAvailable && !vscode-powerkit.bunWorkspace",
+          "group": "navigation@10"
+        },
+        {
+          "command": "vscode-powerkit.runBunScript",
+          "when": "(resourceLangId == javascript || resourceLangId == typescript) && vscode-powerkit.bunAvailable && vscode-powerkit.bunWorkspace",
           "group": "navigation@10"
         },
         {
@@ -110,6 +121,14 @@
         }
       ],
       "commandPalette": [
+        {
+          "command": "vscode-powerkit.runNodeScript",
+          "when": "vscode-powerkit.nodeAvailable && !vscode-powerkit.bunWorkspace"
+        },
+        {
+          "command": "vscode-powerkit.runBunScript",
+          "when": "vscode-powerkit.bunAvailable && vscode-powerkit.bunWorkspace"
+        },
         {
           "command": "vscode-powerkit.runNpmScript",
           "when": "false"

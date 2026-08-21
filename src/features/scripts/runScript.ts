@@ -2,6 +2,7 @@ import * as path from 'node:path';
 import * as vscode from 'vscode';
 import { getTypeScriptRuntimeArgs } from './nodeRuntime';
 import { getRunnableFileUri, isNodeScriptUri, isTypeScriptDocument, resolveNodeDocument } from './scriptDocument';
+import { getScriptRuntime } from './scriptRuntime';
 
 const terminalName = 'PowerKit Script';
 
@@ -60,8 +61,9 @@ async function runResolvedScript(
 
 async function runNodeDocument(context: vscode.ExtensionContext, document: vscode.TextDocument): Promise<void> {
 	const runnableUri = await getRunnableFileUri(context, document);
-	const runtimeArgs = isTypeScriptDocument(document) ? getTypeScriptRuntimeArgs() : [];
-	runInTerminal(runnableUri, ['node', ...runtimeArgs, quoteShellArgument(runnableUri.fsPath)].join(' '));
+	const runtime = await getScriptRuntime(runnableUri);
+	const runtimeArgs = runtime === 'node' && isTypeScriptDocument(document) ? getTypeScriptRuntimeArgs() : [];
+	runInTerminal(runnableUri, [runtime, ...runtimeArgs, quoteShellArgument(runnableUri.fsPath)].join(' '));
 }
 
 function runInTerminal(scriptUri: vscode.Uri, command: string): void {
