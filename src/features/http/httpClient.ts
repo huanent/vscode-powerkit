@@ -3,6 +3,7 @@ import * as vscode from 'vscode';
 import { HttpDocumentStore } from './httpDocumentStore';
 import { registerHttpFormatter } from './httpFormatter';
 import { HTTP_METHODS, HttpLanguageService, registerHttpHoverProvider, registerHttpLanguageDiagnostics } from './httpLanguageService';
+import { HttpResultPanel } from './httpResultPanel';
 
 const headers = [
 	['Accept', 'application/json'],
@@ -16,14 +17,16 @@ const temporaryHttpSaveDelay = 500;
 const temporaryHttpEditorContext = 'vscode-powerkit.temporaryHttpEditor';
 
 export function registerHttpClient(context: vscode.ExtensionContext): void {
-	const output = vscode.window.createOutputChannel('PowerKit HTTP');
+	const resultPanel = new HttpResultPanel();
 	const requestStatus = new HttpRequestStatus();
 	const selector: vscode.DocumentSelector = { language: 'http' };
 	const documentStore = new HttpDocumentStore(context);
 	const documentStoreReady = documentStore.initialize();
 
 	context.subscriptions.push(
-		output,
+		vscode.window.registerWebviewViewProvider(HttpResultPanel.viewType, resultPanel, {
+			webviewOptions: { retainContextWhenHidden: true },
+		}),
 		requestStatus,
 		documentStore,
 		vscode.commands.registerCommand('vscode-powerkit.openHttpClient', async () => {
@@ -37,7 +40,7 @@ export function registerHttpClient(context: vscode.ExtensionContext): void {
 		vscode.commands.registerCommand('vscode-powerkit.renameTemporaryHttpFile', () => renameTemporaryHttpFile(documentStore)),
 		vscode.commands.registerCommand('vscode-powerkit.deleteTemporaryHttpFile', () => deleteTemporaryHttpFile(documentStore)),
 		vscode.commands.registerCommand('vscode-powerkit.sendHttpRequest', async (uri?: vscode.Uri, line?: number) => {
-			await sendRequest(output, requestStatus, uri, line);
+			await sendRequest(resultPanel, requestStatus, uri, line);
 		}),
 		vscode.commands.registerCommand('vscode-powerkit.cancelHttpRequest', () => requestStatus.cancel()),
 		vscode.languages.registerCodeLensProvider(selector, new HttpCodeLensProvider()),
@@ -258,7 +261,7 @@ class HttpCompletionProvider implements vscode.CompletionItemProvider {
 }
 
 async function sendRequest(
-	output: vscode.OutputChannel,
+	resultPanel: HttpResultPanel,
 	requestStatus: HttpRequestStatus,
 	uri?: vscode.Uri,
 	line?: number,
@@ -286,9 +289,11 @@ async function sendRequest(
 
 	const controller = new AbortController();
 	const startedAt = Date.now();
-	output.clear();
-	output.appendLine(`> ${request.method} ${request.url}`);
-	output.show(true);
+	await resultPanel.show({
+		method: request.method,
+		url: request.url,
+		state: 'loading',
+	});
 	requestStatus.start(controller, request.method);
 
 	try {
@@ -302,16 +307,32 @@ async function sendRequest(
 		const elapsed = Date.now() - startedAt;
 		const body = await formatResponseBody(response);
 
-		output.appendLine(`< HTTP ${response.status} ${response.statusText} (${elapsed} ms)`);
-		response.headers.forEach((value, name) => output.appendLine(`${name}: ${value}`));
-		output.appendLine('');
-		output.appendLine(body);
+		await resultPanel.show({
+			method: request.method,
+			url: request.url,
+			state: 'success',
+			status: response.status,
+			statusText: response.statusText,
+			elapsed,
+			headers: Array.from(response.headers.entries()),
+			body,
+		});
 	} catch (error) {
 		if (controller.signal.aborted) {
-			output.appendLine('! Request cancelled.');
+			await resultPanel.show({
+				method: request.method,
+				url: request.url,
+				state: 'cancelled',
+				message: 'Request cancelled.',
+			});
 		} else {
 			const message = error instanceof Error ? error.message : String(error);
-			output.appendLine(`! Request failed: ${message}`);
+			await resultPanel.show({
+				method: request.method,
+				url: request.url,
+				state: 'error',
+				message: `Request failed: ${message}`,
+			});
 		}
 	} finally {
 		requestStatus.finish(controller);

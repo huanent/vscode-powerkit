@@ -2,7 +2,7 @@
   "name": "vscode-powerkit",
   "displayName": "PowerKit",
   "description": "Developer utilities for VS Code",
-  "version": "0.6.3",
+  "version": "0.6.4",
   "publisher": "huanent",
   "icon": "resources/logo.png",
   "extensionKind": [
@@ -48,6 +48,13 @@
           "title": "PowerKit",
           "icon": "$(tools)"
         }
+      ],
+      "panel": [
+        {
+          "id": "vscode-powerkit-result",
+          "title": "Result",
+          "icon": "$(output)"
+        }
       ]
     },
     "views": {
@@ -56,6 +63,14 @@
           "id": "vscode-powerkit.features",
           "name": "PowerKit",
           "icon": "$(list-tree)"
+        }
+      ],
+      "vscode-powerkit-result": [
+        {
+          "id": "vscode-powerkit.httpResult",
+          "name": "Result",
+          "type": "webview",
+          "when": "vscode-powerkit.httpResultVisible"
         }
       ]
     },
