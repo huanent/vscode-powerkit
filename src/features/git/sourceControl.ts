@@ -4,6 +4,8 @@ import * as vscode from 'vscode';
 
 const gitRepositoryFoldersContext = 'vscode-powerkit.gitRepositoryFolders';
 const execFileAsync = promisify(execFile);
+const gitRepositoryBranches = new Map<string, string>();
+const gitDecorationEmitter = new vscode.EventEmitter<vscode.Uri | vscode.Uri[] | undefined>();
 
 const gitCommands = {
 	pullGitRepository: 'git pull',
@@ -27,10 +29,18 @@ export function registerSourceControl(context: vscode.ExtensionContext): void {
 	}
 	context.subscriptions.push(
 		vscode.commands.registerCommand('vscode-powerkit.checkoutGitRepository', checkoutGitRepository),
+		vscode.window.registerFileDecorationProvider({
+			onDidChangeFileDecorations: gitDecorationEmitter.event,
+			provideFileDecoration(uri) {
+				const branch = gitRepositoryBranches.get(uri.fsPath);
+				return branch ? new vscode.FileDecoration(undefined, `Git branch: ${branch}`) : undefined;
+			},
+		}),
 	);
 
 	const gitWatcher = vscode.workspace.createFileSystemWatcher('**/.git/{HEAD,index}');
 	gitWatcher.onDidCreate(refreshGitRepositoryFolders, undefined, context.subscriptions);
+	gitWatcher.onDidChange(refreshGitRepositoryFolders, undefined, context.subscriptions);
 	gitWatcher.onDidDelete(refreshGitRepositoryFolders, undefined, context.subscriptions);
 
 	const gitFileWatcher = vscode.workspace.createFileSystemWatcher('**/.git');
@@ -38,6 +48,7 @@ export function registerSourceControl(context: vscode.ExtensionContext): void {
 	gitFileWatcher.onDidDelete(refreshGitRepositoryFolders, undefined, context.subscriptions);
 
 	context.subscriptions.push(
+		gitDecorationEmitter,
 		gitWatcher,
 		gitFileWatcher,
 		vscode.workspace.onDidChangeWorkspaceFolders(refreshGitRepositoryFolders),
@@ -97,6 +108,7 @@ async function refreshGitRepositoryFolders(): Promise<void> {
 		vscode.workspace.findFiles('**/.git', null),
 	]);
 	const repositoryFolders: Record<string, boolean> = {};
+	const repositoryUris: vscode.Uri[] = [];
 
 	for (const markerUri of [...headUris, ...gitFileUris]) {
 		const gitUri = markerUri.path.endsWith('/HEAD')
@@ -104,9 +116,31 @@ async function refreshGitRepositoryFolders(): Promise<void> {
 			: markerUri;
 		const repositoryUri = vscode.Uri.joinPath(gitUri, '..');
 		repositoryFolders[repositoryUri.fsPath] = true;
+		repositoryUris.push(repositoryUri);
+	}
+
+	const branches = await Promise.all(repositoryUris.map(getCurrentBranch));
+	gitRepositoryBranches.clear();
+	for (let index = 0; index < repositoryUris.length; index++) {
+		const branch = branches[index];
+		if (branch) {
+			gitRepositoryBranches.set(repositoryUris[index].fsPath, branch);
+		}
 	}
 
 	await vscode.commands.executeCommand('setContext', gitRepositoryFoldersContext, repositoryFolders);
+	gitDecorationEmitter.fire(undefined);
+}
+
+async function getCurrentBranch(repositoryUri: vscode.Uri): Promise<string | undefined> {
+	try {
+		const { stdout } = await execFileAsync('git', ['symbolic-ref', '--short', 'HEAD'], {
+			cwd: repositoryUri.fsPath,
+		});
+		return stdout.trim() || undefined;
+	} catch {
+		return undefined;
+	}
 }
 
 function quoteShellArgument(value: string): string {
