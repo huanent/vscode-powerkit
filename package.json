@@ -59,6 +59,12 @@
         }
       ]
     },
+    "submenus": [
+      {
+        "id": "vscode-powerkit.sourceControl",
+        "label": "Source Control"
+      }
+    ],
     "commands": [
       {
         "command": "vscode-powerkit.openHttpClient",
@@ -146,6 +152,30 @@
         "title": "Run package Script",
         "icon": "$(terminal)",
         "category": "PowerKit"
+      },
+      {
+        "command": "vscode-powerkit.pullGitRepository",
+        "title": "Pull",
+        "icon": "$(cloud-download)",
+        "category": "PowerKit"
+      },
+      {
+        "command": "vscode-powerkit.pushGitRepository",
+        "title": "Push",
+        "icon": "$(cloud-upload)",
+        "category": "PowerKit"
+      },
+      {
+        "command": "vscode-powerkit.fetchGitRepository",
+        "title": "Fetch",
+        "icon": "$(sync)",
+        "category": "PowerKit"
+      },
+      {
+        "command": "vscode-powerkit.checkoutGitRepository",
+        "title": "Checkout to...",
+        "icon": "$(git-branch)",
+        "category": "PowerKit"
       }
     ],
     "menus": {
@@ -167,6 +197,11 @@
         }
       ],
       "explorer/context": [
+        {
+          "submenu": "vscode-powerkit.sourceControl",
+          "when": "explorerResourceIsFolder && resourcePath in vscode-powerkit.gitRepositoryFolders",
+          "group": "navigation@9"
+        },
         {
           "command": "vscode-powerkit.runDotnetScript",
           "when": "resourceExtname == .cs",
@@ -203,6 +238,24 @@
           "group": "navigation@12"
         }
       ],
+      "vscode-powerkit.sourceControl": [
+        {
+          "command": "vscode-powerkit.pullGitRepository",
+          "group": "1_remote@1"
+        },
+        {
+          "command": "vscode-powerkit.pushGitRepository",
+          "group": "1_remote@2"
+        },
+        {
+          "command": "vscode-powerkit.fetchGitRepository",
+          "group": "1_remote@3"
+        },
+        {
+          "command": "vscode-powerkit.checkoutGitRepository",
+          "group": "2_local@1"
+        }
+      ],
       "commandPalette": [
         {
           "command": "vscode-powerkit.newHttpClient",
@@ -230,6 +283,22 @@
         },
         {
           "command": "vscode-powerkit.runBunPackageScript",
+          "when": "false"
+        },
+        {
+          "command": "vscode-powerkit.pullGitRepository",
+          "when": "false"
+        },
+        {
+          "command": "vscode-powerkit.pushGitRepository",
+          "when": "false"
+        },
+        {
+          "command": "vscode-powerkit.fetchGitRepository",
+          "when": "false"
+        },
+        {
+          "command": "vscode-powerkit.checkoutGitRepository",
           "when": "false"
         }
       ]

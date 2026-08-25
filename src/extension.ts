@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import { FeatureTreeProvider } from './features/featureTreeProvider';
+import { registerSourceControl } from './features/git/sourceControl';
 import { generateGitignore } from './features/gitignore/gitignoreService';
 import { registerHttpClient } from './features/http/httpClient';
 import { LaunchdPanel } from './features/launchd/launchdPanel';
@@ -29,6 +30,7 @@ export function activate(context: vscode.ExtensionContext): void {
 	);
 	registerNpmScriptWatcher(context);
 	registerScriptRuntimeWatcher(context);
+	registerSourceControl(context);
 	registerHttpClient(context);
 
 	const perfTipsProvider = new PerfTipsProvider();
