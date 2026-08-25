@@ -17,12 +17,14 @@ const temporaryHttpEditorContext = 'vscode-powerkit.temporaryHttpEditor';
 
 export function registerHttpClient(context: vscode.ExtensionContext): void {
 	const output = vscode.window.createOutputChannel('PowerKit HTTP');
+	const requestStatus = new HttpRequestStatus();
 	const selector: vscode.DocumentSelector = { language: 'http' };
 	const documentStore = new HttpDocumentStore(context);
 	const documentStoreReady = documentStore.initialize();
 
 	context.subscriptions.push(
 		output,
+		requestStatus,
 		documentStore,
 		vscode.commands.registerCommand('vscode-powerkit.openHttpClient', async () => {
 			await documentStoreReady;
@@ -35,8 +37,9 @@ export function registerHttpClient(context: vscode.ExtensionContext): void {
 		vscode.commands.registerCommand('vscode-powerkit.renameTemporaryHttpFile', () => renameTemporaryHttpFile(documentStore)),
 		vscode.commands.registerCommand('vscode-powerkit.deleteTemporaryHttpFile', () => deleteTemporaryHttpFile(documentStore)),
 		vscode.commands.registerCommand('vscode-powerkit.sendHttpRequest', async (uri?: vscode.Uri, line?: number) => {
-			await sendRequest(output, uri, line);
+			await sendRequest(output, requestStatus, uri, line);
 		}),
+		vscode.commands.registerCommand('vscode-powerkit.cancelHttpRequest', () => requestStatus.cancel()),
 		vscode.languages.registerCodeLensProvider(selector, new HttpCodeLensProvider()),
 		vscode.languages.registerCompletionItemProvider(selector, new HttpCompletionProvider(), '{', ':', '@'),
 		registerHttpHoverProvider(languageService),
@@ -45,6 +48,48 @@ export function registerHttpClient(context: vscode.ExtensionContext): void {
 		registerTemporaryHttpEditorContext(documentStore),
 	);
 	registerHttpLanguageDiagnostics(context, languageService);
+}
+
+class HttpRequestStatus implements vscode.Disposable {
+	private readonly sendingItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 100);
+	private readonly cancelItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 99);
+	private readonly controllers = new Set<AbortController>();
+
+	constructor() {
+		this.sendingItem.name = 'PowerKit HTTP Request';
+		this.cancelItem.name = 'Cancel PowerKit HTTP Request';
+		this.cancelItem.text = '$(debug-stop)';
+		this.cancelItem.tooltip = 'Cancel HTTP request';
+		this.cancelItem.command = 'vscode-powerkit.cancelHttpRequest';
+	}
+
+	start(controller: AbortController, method: string): void {
+		this.controllers.add(controller);
+		this.sendingItem.text = `$(sync~spin) HTTP ${method}`;
+		this.sendingItem.tooltip = 'HTTP request is sending';
+		this.sendingItem.show();
+		this.cancelItem.show();
+	}
+
+	finish(controller: AbortController): void {
+		this.controllers.delete(controller);
+		if (this.controllers.size === 0) {
+			this.sendingItem.hide();
+			this.cancelItem.hide();
+		}
+	}
+
+	cancel(): void {
+		for (const controller of this.controllers) {
+			controller.abort();
+		}
+	}
+
+	dispose(): void {
+		this.cancel();
+		this.sendingItem.dispose();
+		this.cancelItem.dispose();
+	}
 }
 
 async function renameTemporaryHttpFile(documentStore: HttpDocumentStore): Promise<void> {
@@ -219,7 +264,12 @@ class HttpCompletionProvider implements vscode.CompletionItemProvider {
 	}
 }
 
-async function sendRequest(output: vscode.OutputChannel, uri?: vscode.Uri, line?: number): Promise<void> {
+async function sendRequest(
+	output: vscode.OutputChannel,
+	requestStatus: HttpRequestStatus,
+	uri?: vscode.Uri,
+	line?: number,
+): Promise<void> {
 	if (!vscode.workspace.isTrusted) {
 		void vscode.window.showErrorMessage('Trust this workspace before sending HTTP requests.');
 		return;
@@ -242,40 +292,36 @@ async function sendRequest(output: vscode.OutputChannel, uri?: vscode.Uri, line?
 	}
 
 	const controller = new AbortController();
-	const timeout = setTimeout(() => controller.abort(), 30_000);
 	const startedAt = Date.now();
-	output.appendLine(`\n> ${request.method} ${request.url}`);
+	output.clear();
+	output.appendLine(`> ${request.method} ${request.url}`);
 	output.show(true);
+	requestStatus.start(controller, request.method);
 
 	try {
-		await vscode.window.withProgress({
-			location: vscode.ProgressLocation.Notification,
-			title: `${request.method} ${request.url}`,
-			cancellable: true,
-		}, async (_progress, token) => {
-			token.onCancellationRequested(() => controller.abort());
-			const response = await fetch(request.url, {
-				method: request.method,
-				headers: request.headers,
-				body: request.body,
-				signal: controller.signal,
-				redirect: 'follow',
-			});
-			const elapsed = Date.now() - startedAt;
-			const body = await formatResponseBody(response);
-
-			output.appendLine(`< HTTP ${response.status} ${response.statusText} (${elapsed} ms)`);
-			response.headers.forEach((value, name) => output.appendLine(`${name}: ${value}`));
-			output.appendLine('');
-			output.appendLine(body);
-			void vscode.window.showInformationMessage(`${request.method} completed: ${response.status} ${response.statusText} (${elapsed} ms)`);
+		const response = await fetch(request.url, {
+			method: request.method,
+			headers: request.headers,
+			body: request.body,
+			signal: controller.signal,
+			redirect: 'follow',
 		});
+		const elapsed = Date.now() - startedAt;
+		const body = await formatResponseBody(response);
+
+		output.appendLine(`< HTTP ${response.status} ${response.statusText} (${elapsed} ms)`);
+		response.headers.forEach((value, name) => output.appendLine(`${name}: ${value}`));
+		output.appendLine('');
+		output.appendLine(body);
 	} catch (error) {
-		const message = error instanceof Error ? error.message : String(error);
-		output.appendLine(`! Request failed: ${message}`);
-		void vscode.window.showErrorMessage(`HTTP request failed: ${message}`);
+		if (controller.signal.aborted) {
+			output.appendLine('! Request cancelled.');
+		} else {
+			const message = error instanceof Error ? error.message : String(error);
+			output.appendLine(`! Request failed: ${message}`);
+		}
 	} finally {
-		clearTimeout(timeout);
+		requestStatus.finish(controller);
 	}
 }
 
