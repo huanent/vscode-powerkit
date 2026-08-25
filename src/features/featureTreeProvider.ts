@@ -11,6 +11,15 @@ export class FeatureTreeProvider implements vscode.TreeDataProvider<vscode.TreeI
 
         async getChildren(): Promise<vscode.TreeItem[]> {
                 const items: vscode.TreeItem[] = [];
+                const httpClientItem = new vscode.TreeItem('HTTP Client', vscode.TreeItemCollapsibleState.None);
+                httpClientItem.description = 'Create a temporary request';
+                httpClientItem.iconPath = new vscode.ThemeIcon('globe');
+                httpClientItem.command = {
+                        command: 'vscode-powerkit.openHttpClient',
+                        title: 'Open HTTP Client',
+                };
+                items.push(httpClientItem);
+
                 if (process.platform === 'darwin') {
                         const launchdItem = new vscode.TreeItem('LaunchAgents', vscode.TreeItemCollapsibleState.None);
                         launchdItem.description = 'Manage startup items';

@@ -20,6 +20,27 @@
   ],
   "main": "./out/extension.js",
   "contributes": {
+    "languages": [
+      {
+        "id": "http",
+        "aliases": [
+          "HTTP",
+          "http"
+        ],
+        "extensions": [
+          ".http",
+          ".rest"
+        ],
+        "configuration": "./resources/http/language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "http",
+        "scopeName": "source.http",
+        "path": "./resources/http/http.tmLanguage.json"
+      }
+    ],
     "viewsContainers": {
       "activitybar": [
         {
@@ -40,6 +61,26 @@
     },
     "commands": [
       {
+        "command": "vscode-powerkit.openHttpClient",
+        "title": "Open HTTP Client",
+        "icon": "$(globe)",
+        "category": "PowerKit"
+      },
+      {
+        "command": "vscode-powerkit.renameTemporaryHttpFile",
+        "title": "Rename Temporary HTTP Request",
+        "icon": "$(edit)",
+        "category": "PowerKit",
+        "enablement": "vscode-powerkit.temporaryHttpEditor"
+      },
+      {
+        "command": "vscode-powerkit.deleteTemporaryHttpFile",
+        "title": "Delete Temporary HTTP Request",
+        "icon": "$(trash)",
+        "category": "PowerKit",
+        "enablement": "vscode-powerkit.temporaryHttpEditor"
+      },
+      {
         "command": "vscode-powerkit.openLaunchd",
         "title": "Open LaunchAgents",
         "category": "PowerKit",
@@ -49,6 +90,13 @@
         "command": "vscode-powerkit.generateGitignore",
         "title": "Generate .gitignore",
         "category": "PowerKit"
+      },
+      {
+        "command": "vscode-powerkit.sendHttpRequest",
+        "title": "Send HTTP Request",
+        "icon": "$(play)",
+        "category": "PowerKit",
+  		"enablement": "editorLangId == http && isWorkspaceTrusted"
       },
       {
         "command": "vscode-powerkit.runDotnetScript",
@@ -94,6 +142,18 @@
       }
     ],
     "menus": {
+      "editor/title": [
+        {
+          "command": "vscode-powerkit.renameTemporaryHttpFile",
+          "when": "vscode-powerkit.temporaryHttpEditor",
+          "group": "navigation@10"
+        },
+        {
+          "command": "vscode-powerkit.deleteTemporaryHttpFile",
+          "when": "vscode-powerkit.temporaryHttpEditor",
+          "group": "navigation@11"
+        }
+      ],
       "explorer/context": [
         {
           "command": "vscode-powerkit.runDotnetScript",
@@ -132,6 +192,14 @@
         }
       ],
       "commandPalette": [
+        {
+          "command": "vscode-powerkit.renameTemporaryHttpFile",
+          "when": "false"
+        },
+        {
+          "command": "vscode-powerkit.deleteTemporaryHttpFile",
+          "when": "false"
+        },
         {
           "command": "vscode-powerkit.runNodeScript",
           "when": "vscode-powerkit.nodeAvailable && !vscode-powerkit.bunWorkspace"

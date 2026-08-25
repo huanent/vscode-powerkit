@@ -1,0 +1,128 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "HTTP",
+  "scopeName": "source.http",
+  "patterns": [
+    { "include": "#request-separator" },
+    { "include": "#request-line" },
+    { "include": "#variable-definition" },
+    { "include": "#comment" },
+    { "include": "#header" },
+    { "include": "#template-variable" },
+    { "include": "#url" },
+    { "include": "#json" },
+    { "include": "#strings" }
+  ],
+  "repository": {
+    "request-separator": {
+      "name": "meta.separator.http",
+      "match": "^\\s*(###)(?:\\s+(.*))?$",
+      "captures": {
+        "1": { "name": "punctuation.separator.http" },
+        "2": { "name": "entity.name.section.http" }
+      }
+    },
+    "request-line": {
+      "name": "meta.request-line.http",
+      "match": "^\\s*(GET|HEAD|POST|PUT|PATCH|DELETE|OPTIONS|CONNECT|TRACE|PROPFIND|PROPPATCH|MKCOL|COPY|MOVE|LOCK|UNLOCK|CHECKOUT|CHECKIN|REPORT|MERGE|MKACTIVITY|MKWORKSPACE|VERSION-CONTROL|BASELINE-CONTROL|ORDERPATCH|ACL|SEARCH|PURGE|LINK|UNLINK|VIEW|NOTIFY|SUBSCRIBE|UNSUBSCRIBE)(?:\\s+)(\\S+)(?:\\s+(HTTP)/(\\d(?:\\.\\d)?))?\\s*$",
+      "captures": {
+        "1": { "name": "keyword.control.http" },
+        "2": { "name": "string.unquoted.url.http" },
+        "3": { "name": "constant.language.protocol.http" },
+        "4": { "name": "constant.numeric.version.http" }
+      }
+    },
+    "variable-definition": {
+      "name": "meta.variable.assignment.http",
+      "match": "^\\s*(@[A-Za-z_][\\w.-]*)(\\s*=\\s*)(.*)$",
+      "captures": {
+        "1": { "name": "variable.other.definition.http" },
+        "2": { "name": "keyword.operator.assignment.http" },
+        "3": { "name": "string.unquoted.http" }
+      }
+    },
+    "comment": {
+      "patterns": [
+        {
+          "name": "comment.line.number-sign.http",
+          "match": "^\\s*#(?!##).*$"
+        },
+        {
+          "name": "comment.line.double-slash.http",
+          "match": "^\\s*//.*$"
+        }
+      ]
+    },
+    "header": {
+      "name": "meta.header.http",
+      "match": "^\\s*([!#$%&'*+.^_`|~0-9A-Za-z-]+)(\\s*:\\s*)(.*)$",
+      "captures": {
+        "1": { "name": "entity.name.tag.http" },
+        "2": { "name": "punctuation.separator.key-value.http" },
+        "3": {
+          "name": "string.unquoted.header-value.http",
+          "patterns": [
+            { "include": "#template-variable" },
+            { "include": "#authorization" }
+          ]
+        }
+      }
+    },
+    "authorization": {
+      "patterns": [
+        {
+          "name": "support.type.authorization.http",
+          "match": "\\b(Basic|Bearer|Digest|HOBA|Mutual|Negotiate|OAuth|SCRAM-SHA-1|SCRAM-SHA-256|vapid)\\b"
+        }
+      ]
+    },
+    "template-variable": {
+      "name": "variable.other.template.http",
+      "match": "\\{\\{[^{}]+\\}\\}"
+    },
+    "url": {
+      "name": "string.unquoted.url.http",
+      "match": "\\bhttps?://[^\\s<>\"']+"
+    },
+    "json": {
+      "patterns": [
+        {
+          "name": "string.quoted.double.json.http",
+          "begin": "\"",
+          "beginCaptures": {
+            "0": { "name": "punctuation.definition.string.begin.json.http" }
+          },
+          "end": "\"",
+          "endCaptures": {
+            "0": { "name": "punctuation.definition.string.end.json.http" }
+          },
+          "patterns": [
+            { "name": "constant.character.escape.json.http", "match": "\\\\(?:[\"\\\\/bfnrt]|u[0-9A-Fa-f]{4})" },
+            { "include": "#template-variable" }
+          ]
+        },
+        {
+          "name": "constant.language.json.http",
+          "match": "\\b(?:true|false|null)\\b"
+        },
+        {
+          "name": "constant.numeric.json.http",
+          "match": "(?<![\\w.-])-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?(?![\\w.-])"
+        }
+      ]
+    },
+    "strings": {
+      "patterns": [
+        {
+          "name": "string.quoted.single.http",
+          "begin": "'",
+          "end": "'",
+          "patterns": [
+            { "name": "constant.character.escape.http", "match": "\\\\." },
+            { "include": "#template-variable" }
+          ]
+        }
+      ]
+    }
+  }
+}
