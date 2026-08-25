@@ -1,6 +1,6 @@
-import { tmpdir } from 'node:os';
-import { basename, isAbsolute, join, relative } from 'node:path';
+import { basename } from 'node:path';
 import * as vscode from 'vscode';
+import { HttpDocumentStore } from './httpDocumentStore';
 import { registerHttpFormatter } from './httpFormatter';
 import { HTTP_METHODS, HttpLanguageService, registerHttpHoverProvider, registerHttpLanguageDiagnostics } from './httpLanguageService';
 
@@ -12,19 +12,28 @@ const headers = [
 	['Cache-Control', 'no-cache'],
 ];
 const languageService = new HttpLanguageService();
-const temporaryHttpDirectory = join(tmpdir(), 'vscode-powerkit-http-client');
 const temporaryHttpSaveDelay = 500;
 const temporaryHttpEditorContext = 'vscode-powerkit.temporaryHttpEditor';
 
 export function registerHttpClient(context: vscode.ExtensionContext): void {
 	const output = vscode.window.createOutputChannel('PowerKit HTTP');
 	const selector: vscode.DocumentSelector = { language: 'http' };
+	const documentStore = new HttpDocumentStore(context);
+	const documentStoreReady = documentStore.initialize();
 
 	context.subscriptions.push(
 		output,
-		vscode.commands.registerCommand('vscode-powerkit.openHttpClient', openTemporaryHttpFile),
-		vscode.commands.registerCommand('vscode-powerkit.renameTemporaryHttpFile', renameTemporaryHttpFile),
-		vscode.commands.registerCommand('vscode-powerkit.deleteTemporaryHttpFile', deleteTemporaryHttpFile),
+		documentStore,
+		vscode.commands.registerCommand('vscode-powerkit.openHttpClient', async () => {
+			await documentStoreReady;
+			await documentStore.openLastOrCreate();
+		}),
+		vscode.commands.registerCommand('vscode-powerkit.newHttpClient', async () => {
+			await documentStoreReady;
+			await documentStore.createAndOpen();
+		}),
+		vscode.commands.registerCommand('vscode-powerkit.renameTemporaryHttpFile', () => renameTemporaryHttpFile(documentStore)),
+		vscode.commands.registerCommand('vscode-powerkit.deleteTemporaryHttpFile', () => deleteTemporaryHttpFile(documentStore)),
 		vscode.commands.registerCommand('vscode-powerkit.sendHttpRequest', async (uri?: vscode.Uri, line?: number) => {
 			await sendRequest(output, uri, line);
 		}),
@@ -32,64 +41,15 @@ export function registerHttpClient(context: vscode.ExtensionContext): void {
 		vscode.languages.registerCompletionItemProvider(selector, new HttpCompletionProvider(), '{', ':', '@'),
 		registerHttpHoverProvider(languageService),
 		registerHttpFormatter(),
-		registerTemporaryHttpAutoSave(),
-		registerTemporaryHttpEditorContext(),
+		registerTemporaryHttpAutoSave(documentStore),
+		registerTemporaryHttpEditorContext(documentStore),
 	);
 	registerHttpLanguageDiagnostics(context, languageService);
 }
 
-async function openTemporaryHttpFile(): Promise<void> {
-	const temporaryDirectory = vscode.Uri.file(temporaryHttpDirectory);
-	const template = [
-		'### New request',
-		'GET https://example.com HTTP/1.1',
-		'Accept: application/json',
-		'',
-	].join('\n');
-
-	try {
-		await vscode.workspace.fs.createDirectory(temporaryDirectory);
-		const temporaryFile = await createTemporaryHttpUri(temporaryDirectory);
-		await vscode.workspace.fs.writeFile(temporaryFile, Buffer.from(template, 'utf8'));
-		const document = await vscode.workspace.openTextDocument(temporaryFile);
-		await vscode.window.showTextDocument(document);
-	} catch (error) {
-		const message = error instanceof Error ? error.message : String(error);
-		void vscode.window.showErrorMessage(`Unable to open HTTP Client: ${message}`);
-	}
-}
-
-async function createTemporaryHttpUri(directory: vscode.Uri): Promise<vscode.Uri> {
-	return createAvailableTemporaryHttpUri(directory, formatLocalTimestamp(new Date()));
-}
-
-async function createAvailableTemporaryHttpUri(directory: vscode.Uri, baseName: string): Promise<vscode.Uri> {
-	let suffix = 1;
-	while (true) {
-		const name = suffix === 1 ? `${baseName}.http` : `${baseName}-${suffix}.http`;
-		const uri = vscode.Uri.joinPath(directory, name);
-		if (!await uriExists(uri)) {
-			return uri;
-		}
-		suffix++;
-	}
-}
-
-function formatLocalTimestamp(date: Date): string {
-	const parts = [
-		date.getFullYear(),
-		date.getMonth() + 1,
-		date.getDate(),
-		date.getHours(),
-		date.getMinutes(),
-		date.getSeconds(),
-	];
-	return parts.map((part, index) => index === 0 ? String(part) : String(part).padStart(2, '0')).join('');
-}
-
-async function renameTemporaryHttpFile(): Promise<void> {
+async function renameTemporaryHttpFile(documentStore: HttpDocumentStore): Promise<void> {
 	const document = vscode.window.activeTextEditor?.document;
-	if (!document || !isTemporaryHttpDocument(document)) {
+	if (!document || !documentStore.isManagedUri(document.uri)) {
 		return;
 	}
 
@@ -99,26 +59,9 @@ async function renameTemporaryHttpFile(): Promise<void> {
 		title: 'Rename HTTP Request',
 		value: currentBaseName,
 		prompt: 'Enter a file name without the .http extension. Leave empty to use the current timestamp.',
-		validateInput: async value => {
-			const baseName = normalizeHttpBaseName(value);
-			if (!baseName) {
-				return undefined;
-			}
-			if (baseName !== basename(baseName) || baseName.includes('/') || baseName.includes('\\')) {
-				return 'Enter a file name without a directory path.';
-			}
-			const target = vscode.Uri.file(join(temporaryHttpDirectory, `${baseName}.http`));
-			if (target.fsPath !== document.uri.fsPath && await uriExists(target)) {
-				return 'A temporary HTTP request with this name already exists.';
-			}
-			return undefined;
-		},
+		validateInput: value => documentStore.validateName(document.uri, value),
 	});
 	if (input === undefined) {
-		return;
-	}
-	const requestedBaseName = normalizeHttpBaseName(input);
-	if (requestedBaseName === currentBaseName) {
 		return;
 	}
 
@@ -127,64 +70,48 @@ async function renameTemporaryHttpFile(): Promise<void> {
 		return;
 	}
 
-	const target = requestedBaseName
-		? vscode.Uri.file(join(temporaryHttpDirectory, `${requestedBaseName}.http`))
-		: await createAvailableTemporaryHttpUri(vscode.Uri.file(temporaryHttpDirectory), formatLocalTimestamp(new Date()));
-	const edit = new vscode.WorkspaceEdit();
-	edit.renameFile(document.uri, target);
-	if (!await vscode.workspace.applyEdit(edit)) {
-		void vscode.window.showErrorMessage('Unable to rename the temporary HTTP request.');
-		return;
-	}
-	if (vscode.window.activeTextEditor?.document.uri.toString() !== target.toString()) {
-		const renamedDocument = await vscode.workspace.openTextDocument(target);
-		await vscode.window.showTextDocument(renamedDocument);
+	try {
+		await documentStore.renameDocument(document.uri, input);
+	} catch (error) {
+		const message = error instanceof Error ? error.message : String(error);
+		void vscode.window.showErrorMessage(`Unable to rename the HTTP request: ${message}`);
 	}
 }
 
-function normalizeHttpBaseName(value: string): string {
-	return value.trim().replace(/\.http$/i, '');
-}
-
-async function deleteTemporaryHttpFile(): Promise<void> {
+async function deleteTemporaryHttpFile(documentStore: HttpDocumentStore): Promise<void> {
 	const document = vscode.window.activeTextEditor?.document;
-	if (!document || !isTemporaryHttpDocument(document)) {
+	if (!document || !documentStore.isManagedUri(document.uri)) {
 		return;
 	}
 
-	const edit = new vscode.WorkspaceEdit();
-	edit.deleteFile(document.uri, { ignoreIfNotExists: false, recursive: false });
-	if (!await vscode.workspace.applyEdit(edit)) {
-		void vscode.window.showErrorMessage('Unable to delete the temporary HTTP request.');
-		return;
-	}
-	if (vscode.window.activeTextEditor?.document.uri.toString() === document.uri.toString()) {
+	try {
+		if (document.isDirty) {
+			await document.save();
+		}
 		await vscode.commands.executeCommand('workbench.action.closeActiveEditor');
+		await documentStore.deleteAndOpenPrevious(document.uri);
+	} catch (error) {
+		const message = error instanceof Error ? error.message : String(error);
+		void vscode.window.showErrorMessage(`Unable to delete the HTTP request: ${message}`);
 	}
 }
 
-function registerTemporaryHttpEditorContext(): vscode.Disposable {
+function registerTemporaryHttpEditorContext(documentStore: HttpDocumentStore): vscode.Disposable {
 	const update = (editor: vscode.TextEditor | undefined): void => {
+		if (editor && documentStore.isManagedUri(editor.document.uri)) {
+			void documentStore.markVisited(editor.document.uri);
+		}
 		void vscode.commands.executeCommand(
 			'setContext',
 			temporaryHttpEditorContext,
-			Boolean(editor && isTemporaryHttpDocument(editor.document)),
+			Boolean(editor && documentStore.isManagedUri(editor.document.uri)),
 		);
 	};
 	update(vscode.window.activeTextEditor);
 	return vscode.window.onDidChangeActiveTextEditor(update);
 }
 
-async function uriExists(uri: vscode.Uri): Promise<boolean> {
-	try {
-		await vscode.workspace.fs.stat(uri);
-		return true;
-	} catch {
-		return false;
-	}
-}
-
-function registerTemporaryHttpAutoSave(): vscode.Disposable {
+function registerTemporaryHttpAutoSave(documentStore: HttpDocumentStore): vscode.Disposable {
 	const saveTimers = new Map<string, NodeJS.Timeout>();
 	const clearSaveTimer = (document: vscode.TextDocument): void => {
 		const key = document.uri.toString();
@@ -197,7 +124,7 @@ function registerTemporaryHttpAutoSave(): vscode.Disposable {
 
 	const changeSubscription = vscode.workspace.onDidChangeTextDocument(event => {
 		const document = event.document;
-		if (!isTemporaryHttpDocument(document) || event.contentChanges.length === 0) {
+		if (!documentStore.isManagedUri(document.uri) || event.contentChanges.length === 0) {
 			return;
 		}
 
@@ -226,16 +153,6 @@ function registerTemporaryHttpAutoSave(): vscode.Disposable {
 		}
 		saveTimers.clear();
 	});
-}
-
-function isTemporaryHttpDocument(document: vscode.TextDocument): boolean {
-	if (document.languageId !== 'http' || document.uri.scheme !== 'file') {
-		return false;
-	}
-	const pathFromTemporaryDirectory = relative(temporaryHttpDirectory, document.uri.fsPath);
-	return pathFromTemporaryDirectory !== ''
-		&& !pathFromTemporaryDirectory.startsWith('..')
-		&& !isAbsolute(pathFromTemporaryDirectory);
 }
 
 class HttpCodeLensProvider implements vscode.CodeLensProvider {

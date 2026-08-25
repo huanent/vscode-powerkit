@@ -2,7 +2,7 @@
   "name": "vscode-powerkit",
   "displayName": "PowerKit",
   "description": "Developer utilities for VS Code",
-  "version": "0.5.2",
+  "version": "0.6.0",
   "publisher": "huanent",
   "icon": "resources/logo.png",
   "extensionKind": [
@@ -65,6 +65,13 @@
         "title": "Open HTTP Client",
         "icon": "$(globe)",
         "category": "PowerKit"
+      },
+      {
+        "command": "vscode-powerkit.newHttpClient",
+        "title": "New HTTP Request",
+        "icon": "$(new-file)",
+        "category": "PowerKit",
+        "enablement": "vscode-powerkit.temporaryHttpEditor"
       },
       {
         "command": "vscode-powerkit.renameTemporaryHttpFile",
@@ -144,6 +151,11 @@
     "menus": {
       "editor/title": [
         {
+          "command": "vscode-powerkit.newHttpClient",
+          "when": "vscode-powerkit.temporaryHttpEditor",
+          "group": "navigation@9"
+        },
+        {
           "command": "vscode-powerkit.renameTemporaryHttpFile",
           "when": "vscode-powerkit.temporaryHttpEditor",
           "group": "navigation@10"
@@ -192,6 +204,10 @@
         }
       ],
       "commandPalette": [
+        {
+          "command": "vscode-powerkit.newHttpClient",
+          "when": "false"
+        },
         {
           "command": "vscode-powerkit.renameTemporaryHttpFile",
           "when": "false"

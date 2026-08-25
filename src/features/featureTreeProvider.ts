@@ -12,7 +12,7 @@ export class FeatureTreeProvider implements vscode.TreeDataProvider<vscode.TreeI
         async getChildren(): Promise<vscode.TreeItem[]> {
                 const items: vscode.TreeItem[] = [];
                 const httpClientItem = new vscode.TreeItem('HTTP Client', vscode.TreeItemCollapsibleState.None);
-                httpClientItem.description = 'Create a temporary request';
+                httpClientItem.description = 'Open last request';
                 httpClientItem.iconPath = new vscode.ThemeIcon('globe');
                 httpClientItem.command = {
                         command: 'vscode-powerkit.openHttpClient',
