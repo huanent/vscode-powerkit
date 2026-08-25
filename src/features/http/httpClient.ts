@@ -51,31 +51,25 @@ export function registerHttpClient(context: vscode.ExtensionContext): void {
 }
 
 class HttpRequestStatus implements vscode.Disposable {
-	private readonly sendingItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 100);
-	private readonly cancelItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 99);
+	private readonly sendingItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, Number.MIN_SAFE_INTEGER);
 	private readonly controllers = new Set<AbortController>();
 
 	constructor() {
 		this.sendingItem.name = 'PowerKit HTTP Request';
-		this.cancelItem.name = 'Cancel PowerKit HTTP Request';
-		this.cancelItem.text = '$(debug-stop)';
-		this.cancelItem.tooltip = 'Cancel HTTP request';
-		this.cancelItem.command = 'vscode-powerkit.cancelHttpRequest';
+		this.sendingItem.tooltip = '取消请求';
+		this.sendingItem.command = 'vscode-powerkit.cancelHttpRequest';
 	}
 
 	start(controller: AbortController, method: string): void {
 		this.controllers.add(controller);
-		this.sendingItem.text = `$(sync~spin) HTTP ${method}`;
-		this.sendingItem.tooltip = 'HTTP request is sending';
+		this.sendingItem.text = `HTTP ${method} $(sync~spin)`;
 		this.sendingItem.show();
-		this.cancelItem.show();
 	}
 
 	finish(controller: AbortController): void {
 		this.controllers.delete(controller);
 		if (this.controllers.size === 0) {
 			this.sendingItem.hide();
-			this.cancelItem.hide();
 		}
 	}
 
@@ -88,7 +82,6 @@ class HttpRequestStatus implements vscode.Disposable {
 	dispose(): void {
 		this.cancel();
 		this.sendingItem.dispose();
-		this.cancelItem.dispose();
 	}
 }
 
@@ -103,7 +96,7 @@ async function renameTemporaryHttpFile(documentStore: HttpDocumentStore): Promis
 	const input = await vscode.window.showInputBox({
 		title: 'Rename HTTP Request',
 		value: currentBaseName,
-		prompt: 'Enter a file name without the .http extension. Leave empty to use the current timestamp.',
+		prompt: 'File name; empty uses timestamp.',
 		validateInput: value => documentStore.validateName(document.uri, value),
 	});
 	if (input === undefined) {
