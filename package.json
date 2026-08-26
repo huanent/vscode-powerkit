@@ -2,7 +2,7 @@
   "name": "vscode-powerkit",
   "displayName": "PowerKit",
   "description": "Developer utilities for VS Code",
-  "version": "0.6.4",
+  "version": "0.6.5",
   "publisher": "huanent",
   "icon": "resources/logo.png",
   "extensionKind": [
@@ -70,6 +70,7 @@
           "id": "vscode-powerkit.httpResult",
           "name": "Result",
           "type": "webview",
+          "icon": "$(output)",
           "when": "vscode-powerkit.httpResultVisible"
         }
       ]
@@ -92,21 +93,21 @@
         "title": "New HTTP Request",
         "icon": "$(new-file)",
         "category": "PowerKit",
-        "enablement": "vscode-powerkit.temporaryHttpEditor"
+        "enablement": "vscode-powerkit.httpEditor"
       },
       {
-        "command": "vscode-powerkit.renameTemporaryHttpFile",
-        "title": "Rename Temporary HTTP Request",
+        "command": "vscode-powerkit.renameHttpFile",
+        "title": "Rename HTTP Request",
         "icon": "$(edit)",
         "category": "PowerKit",
-        "enablement": "vscode-powerkit.temporaryHttpEditor"
+        "enablement": "vscode-powerkit.httpEditor"
       },
       {
-        "command": "vscode-powerkit.deleteTemporaryHttpFile",
-        "title": "Delete Temporary HTTP Request",
+        "command": "vscode-powerkit.deleteHttpFile",
+        "title": "Delete HTTP Request",
         "icon": "$(trash)",
         "category": "PowerKit",
-        "enablement": "vscode-powerkit.temporaryHttpEditor"
+        "enablement": "vscode-powerkit.httpEditor"
       },
       {
         "command": "vscode-powerkit.openLaunchd",
@@ -158,13 +159,13 @@
       },
       {
         "command": "vscode-powerkit.runNpmScript",
-        "title": "Run package Script",
+        "title": "Run package.json Script",
         "icon": "$(terminal)",
         "category": "PowerKit"
       },
       {
         "command": "vscode-powerkit.runBunPackageScript",
-        "title": "Run package Script",
+        "title": "Run package.json Script",
         "icon": "$(terminal)",
         "category": "PowerKit"
       },
@@ -197,17 +198,17 @@
       "editor/title": [
         {
           "command": "vscode-powerkit.newHttpClient",
-          "when": "vscode-powerkit.temporaryHttpEditor",
+          "when": "vscode-powerkit.httpEditor",
           "group": "navigation@9"
         },
         {
-          "command": "vscode-powerkit.renameTemporaryHttpFile",
-          "when": "vscode-powerkit.temporaryHttpEditor",
+          "command": "vscode-powerkit.renameHttpFile",
+          "when": "vscode-powerkit.httpEditor",
           "group": "navigation@10"
         },
         {
-          "command": "vscode-powerkit.deleteTemporaryHttpFile",
-          "when": "vscode-powerkit.temporaryHttpEditor",
+          "command": "vscode-powerkit.deleteHttpFile",
+          "when": "vscode-powerkit.httpEditor",
           "group": "navigation@11"
         }
       ],
@@ -277,11 +278,11 @@
           "when": "false"
         },
         {
-          "command": "vscode-powerkit.renameTemporaryHttpFile",
+          "command": "vscode-powerkit.renameHttpFile",
           "when": "false"
         },
         {
-          "command": "vscode-powerkit.deleteTemporaryHttpFile",
+          "command": "vscode-powerkit.deleteHttpFile",
           "when": "false"
         },
         {

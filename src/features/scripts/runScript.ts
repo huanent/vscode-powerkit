@@ -67,8 +67,6 @@ async function runNodeDocument(context: vscode.ExtensionContext, document: vscod
 }
 
 function runInTerminal(scriptUri: vscode.Uri, command: string): void {
-	vscode.window.terminals.find(terminal => terminal.name === terminalName)?.dispose();
-
 	const terminal = vscode.window.createTerminal({ name: terminalName, cwd: path.dirname(scriptUri.fsPath) });
 	terminal.show();
 	terminal.sendText(command);

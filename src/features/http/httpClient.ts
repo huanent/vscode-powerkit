@@ -13,8 +13,8 @@ const headers = [
 	['Cache-Control', 'no-cache'],
 ];
 const languageService = new HttpLanguageService();
-const temporaryHttpSaveDelay = 500;
-const temporaryHttpEditorContext = 'vscode-powerkit.temporaryHttpEditor';
+const httpSaveDelay = 500;
+const httpEditorContext = 'vscode-powerkit.httpEditor';
 
 export function registerHttpClient(context: vscode.ExtensionContext): void {
 	const resultPanel = new HttpResultPanel();
@@ -37,8 +37,8 @@ export function registerHttpClient(context: vscode.ExtensionContext): void {
 			await documentStoreReady;
 			await documentStore.createAndOpen();
 		}),
-		vscode.commands.registerCommand('vscode-powerkit.renameTemporaryHttpFile', () => renameTemporaryHttpFile(documentStore)),
-		vscode.commands.registerCommand('vscode-powerkit.deleteTemporaryHttpFile', () => deleteTemporaryHttpFile(documentStore)),
+		vscode.commands.registerCommand('vscode-powerkit.renameHttpFile', () => renameHttpFile(documentStore)),
+		vscode.commands.registerCommand('vscode-powerkit.deleteHttpFile', () => deleteHttpFile(documentStore)),
 		vscode.commands.registerCommand('vscode-powerkit.sendHttpRequest', async (uri?: vscode.Uri, line?: number) => {
 			await sendRequest(resultPanel, requestStatus, uri, line);
 		}),
@@ -47,8 +47,8 @@ export function registerHttpClient(context: vscode.ExtensionContext): void {
 		vscode.languages.registerCompletionItemProvider(selector, new HttpCompletionProvider(), '{', ':', '@'),
 		registerHttpHoverProvider(languageService),
 		registerHttpFormatter(),
-		registerTemporaryHttpAutoSave(documentStore),
-		registerTemporaryHttpEditorContext(documentStore),
+		registerHttpAutoSave(documentStore),
+		registerHttpEditorContext(documentStore),
 	);
 	registerHttpLanguageDiagnostics(context, languageService);
 }
@@ -88,7 +88,7 @@ class HttpRequestStatus implements vscode.Disposable {
 	}
 }
 
-async function renameTemporaryHttpFile(documentStore: HttpDocumentStore): Promise<void> {
+async function renameHttpFile(documentStore: HttpDocumentStore): Promise<void> {
 	const document = vscode.window.activeTextEditor?.document;
 	if (!document || !documentStore.isManagedUri(document.uri)) {
 		return;
@@ -119,7 +119,7 @@ async function renameTemporaryHttpFile(documentStore: HttpDocumentStore): Promis
 	}
 }
 
-async function deleteTemporaryHttpFile(documentStore: HttpDocumentStore): Promise<void> {
+async function deleteHttpFile(documentStore: HttpDocumentStore): Promise<void> {
 	const document = vscode.window.activeTextEditor?.document;
 	if (!document || !documentStore.isManagedUri(document.uri)) {
 		return;
@@ -137,14 +137,14 @@ async function deleteTemporaryHttpFile(documentStore: HttpDocumentStore): Promis
 	}
 }
 
-function registerTemporaryHttpEditorContext(documentStore: HttpDocumentStore): vscode.Disposable {
+function registerHttpEditorContext(documentStore: HttpDocumentStore): vscode.Disposable {
 	const update = (editor: vscode.TextEditor | undefined): void => {
 		if (editor && documentStore.isManagedUri(editor.document.uri)) {
 			void documentStore.markVisited(editor.document.uri);
 		}
 		void vscode.commands.executeCommand(
 			'setContext',
-			temporaryHttpEditorContext,
+			httpEditorContext,
 			Boolean(editor && documentStore.isManagedUri(editor.document.uri)),
 		);
 	};
@@ -152,7 +152,7 @@ function registerTemporaryHttpEditorContext(documentStore: HttpDocumentStore): v
 	return vscode.window.onDidChangeActiveTextEditor(update);
 }
 
-function registerTemporaryHttpAutoSave(documentStore: HttpDocumentStore): vscode.Disposable {
+function registerHttpAutoSave(documentStore: HttpDocumentStore): vscode.Disposable {
 	const saveTimers = new Map<string, NodeJS.Timeout>();
 	const clearSaveTimer = (document: vscode.TextDocument): void => {
 		const key = document.uri.toString();
@@ -176,11 +176,11 @@ function registerTemporaryHttpAutoSave(documentStore: HttpDocumentStore): vscode
 			if (!document.isClosed && document.isDirty) {
 				void document.save().then(saved => {
 					if (!saved && !document.isClosed) {
-						void vscode.window.showWarningMessage('Unable to auto-save the temporary HTTP request.');
+						void vscode.window.showWarningMessage('Unable to auto-save the HTTP request.');
 					}
 				});
 			}
-		}, temporaryHttpSaveDelay));
+		}, httpSaveDelay));
 	});
 	const saveSubscription = vscode.workspace.onDidSaveTextDocument(clearSaveTimer);
 	const closeSubscription = vscode.workspace.onDidCloseTextDocument(clearSaveTimer);
