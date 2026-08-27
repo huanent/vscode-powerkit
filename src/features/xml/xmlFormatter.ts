@@ -12,6 +12,7 @@ export function registerXmlFormatter(): vscode.Disposable {
 				const formatted = formatXml(source, {
 					indentation,
 					lineSeparator,
+					collapseContent: true,
 					strictMode: true,
 				});
 
