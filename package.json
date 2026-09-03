@@ -2,7 +2,7 @@
   "name": "vscode-powerkit",
   "displayName": "PowerKit",
   "description": "Developer utilities for VS Code",
-  "version": "0.6.6",
+  "version": "0.7.0",
   "publisher": "huanent",
   "icon": "resources/logo.png",
   "extensionKind": [
@@ -20,6 +20,18 @@
   ],
   "main": "./out/extension.js",
   "contributes": {
+    "customEditors": [
+      {
+        "viewType": "vscode-powerkit.chatEditor",
+        "displayName": "Chat",
+        "selector": [
+          {
+            "filenamePattern": "*.chat"
+          }
+        ],
+        "priority": "option"
+      }
+    ],
     "languages": [
       {
         "id": "http",
@@ -125,7 +137,7 @@
         "title": "Send HTTP Request",
         "icon": "$(play)",
         "category": "PowerKit",
-  		"enablement": "editorLangId == http && isWorkspaceTrusted"
+        "enablement": "editorLangId == http && isWorkspaceTrusted"
       },
       {
         "command": "vscode-powerkit.runDotnetScript",
@@ -192,6 +204,22 @@
         "title": "Checkout to...",
         "icon": "$(git-branch)",
         "category": "PowerKit"
+      },
+      {
+        "command": "vscode-powerkit.openChat",
+        "title": "Open Chat",
+        "category": "PowerKit"
+      },
+      {
+        "command": "vscode-powerkit.newChat",
+        "title": "New Chat",
+        "category": "PowerKit",
+        "icon": "$(add)"
+      },
+      {
+        "command": "vscode-powerkit.newChatTab",
+        "title": "New Chat Tab",
+        "category": "PowerKit"
       }
     ],
     "menus": {
@@ -210,6 +238,11 @@
           "command": "vscode-powerkit.deleteHttpFile",
           "when": "vscode-powerkit.httpEditor",
           "group": "navigation@11"
+        },
+        {
+          "command": "vscode-powerkit.newChat",
+          "when": "activeCustomEditorId == vscode-powerkit.chatEditor",
+          "group": "navigation"
         }
       ],
       "explorer/context": [
@@ -318,6 +351,43 @@
           "when": "false"
         }
       ]
+    },
+    "keybindings": [
+      {
+        "command": "vscode-powerkit.openChat",
+        "key": "ctrl+shift+i",
+        "mac": "cmd+shift+i",
+        "when": "!vscode-powerkit.chatWebviewFocus"
+      },
+      {
+        "command": "vscode-powerkit.newChat",
+        "key": "ctrl+shift+i",
+        "mac": "cmd+shift+i",
+        "when": "activeCustomEditorId == vscode-powerkit.chatEditor && vscode-powerkit.chatWebviewFocus"
+      },
+      {
+        "command": "vscode-powerkit.newChatTab",
+        "key": "ctrl+t",
+        "mac": "cmd+t",
+        "when": "activeCustomEditorId == vscode-powerkit.chatEditor && vscode-powerkit.chatWebviewFocus"
+      }
+    ],
+    "configuration": {
+      "title": "PowerKit",
+      "properties": {
+        "vscode-powerkit.storagePath": {
+          "type": "string",
+          "default": "",
+          "markdownDescription": "Root directory for PowerKit data. Supports `~`. Chat sessions and HTTP requests are stored in the `chat` and `http` subdirectories. Leave empty to use the extension's global storage.",
+          "scope": "machine"
+        },
+        "vscode-powerkit.chat.prompt": {
+          "type": "string",
+          "default": "",
+          "markdownDescription": "The prompt used for chats.",
+          "scope": "window"
+        }
+      }
     }
   },
   "scripts": {
@@ -330,13 +400,20 @@
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.3.3",
+    "@types/markdown-it": "^14.1.2",
     "@types/node": "24.x",
+    "@types/prismjs": "^1.26.6",
     "@types/react": "^19.2.2",
     "@types/react-dom": "^19.2.2",
     "@types/vscode": "^1.125.0",
     "@vitejs/plugin-react": "^5.1.1",
     "@vscode/vsce": "^3.6.2",
+    "dompurify": "^3.4.13",
+    "katex": "^0.18.4",
     "lucide-react": "^0.468.0",
+    "markdown-it": "^15.0.0",
+    "markdown-it-texmath": "^1.0.0",
+    "prismjs": "^1.30.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "rimraf": "^6.1.2",
@@ -346,6 +423,7 @@
   },
   "dependencies": {
     "@vscode/debugprotocol": "^1.68.0",
+    "@vscode/codicons": "^0.0.46-24",
     "xml-formatter": "^3.7.0"
   }
 }

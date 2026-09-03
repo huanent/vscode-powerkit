@@ -1,5 +1,6 @@
 import { basename } from 'node:path';
 import * as vscode from 'vscode';
+import { getStorageUri } from '../../storagePath';
 
 const scheme = 'powerkit-http';
 const historyKey = 'vscode-powerkit.httpClient.history';
@@ -11,7 +12,7 @@ export class HttpDocumentStore implements vscode.FileSystemProvider, vscode.Disp
 	private readonly registration: vscode.Disposable;
 
 	constructor(private readonly context: vscode.ExtensionContext) {
-		this.storageDirectory = vscode.Uri.joinPath(context.globalStorageUri, 'http-client');
+		this.storageDirectory = getStorageUri(context, 'http');
 		this.registration = vscode.workspace.registerFileSystemProvider(scheme, this, {
 			isCaseSensitive: true,
 		});

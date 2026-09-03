@@ -12,6 +12,7 @@ export default defineConfig({
                 rollupOptions: {
                         input: {
                                 launchd: 'webview/src/features/launchd/main.tsx',
+                                chat: 'webview/src/features/chat/main.tsx',
                         },
                         output: {
                                 entryFileNames: '[name].js',

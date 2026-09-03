@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import { homedir } from 'node:os';
-import { getLaunchdWebviewHtml } from '../../webview';
+import { getWebviewHtml } from '../../webview';
 import { LaunchAgentConfig, LaunchdService } from './launchdService';
 
 type WebviewMessage =
@@ -46,7 +46,11 @@ export class LaunchdPanel {
 		extensionUri: vscode.Uri,
 	) {
 		panel.iconPath = new vscode.ThemeIcon('server-process');
-		panel.webview.html = getLaunchdWebviewHtml(panel.webview, extensionUri);
+		panel.webview.html = getWebviewHtml(panel.webview, extensionUri, {
+			entry: 'launchd',
+			title: 'LaunchAgents',
+			allowImages: true,
+		});
 		panel.onDidDispose(() => {
 			LaunchdPanel.currentPanel = undefined;
 		});

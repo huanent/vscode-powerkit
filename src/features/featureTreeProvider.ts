@@ -11,6 +11,15 @@ export class FeatureTreeProvider implements vscode.TreeDataProvider<vscode.TreeI
 
         async getChildren(): Promise<vscode.TreeItem[]> {
                 const items: vscode.TreeItem[] = [];
+                const chatItem = new vscode.TreeItem('Chat', vscode.TreeItemCollapsibleState.None);
+                chatItem.description = 'Open chat';
+                chatItem.iconPath = new vscode.ThemeIcon('comment-discussion');
+                chatItem.command = {
+                        command: 'vscode-powerkit.openChat',
+                        title: 'Open Chat',
+                };
+                items.push(chatItem);
+
                 const httpClientItem = new vscode.TreeItem('HTTP Client', vscode.TreeItemCollapsibleState.None);
                 httpClientItem.description = 'Open last request';
                 httpClientItem.iconPath = new vscode.ThemeIcon('globe');

@@ -1,16 +1,17 @@
 import * as vscode from 'vscode';
 import { FeatureTreeProvider } from './features/featureTreeProvider';
 import { registerSourceControl } from './features/git/sourceControl';
-import { generateGitignore } from './features/gitignore/gitignoreService';
+import { generateGitignore } from './features/git/gitignoreService';
 import { registerHttpClient } from './features/http/httpClient';
 import { LaunchdPanel } from './features/launchd/launchdPanel';
+import { registerChat } from './features/chat/registerChat';
 import { PerfTipsProvider } from './features/perftips/perftips';
 import { registerNpmScriptWatcher, runNpmScript } from './features/scripts/npmScripts';
 import { runScript } from './features/scripts/runScript';
 import { registerScriptRuntimeWatcher } from './features/scripts/scriptRuntime';
 import { registerXmlFormatter } from './features/xml/xmlFormatter';
 
-export function activate(context: vscode.ExtensionContext): void {
+export async function activate(context: vscode.ExtensionContext): Promise<void> {
 	const featureTree = new FeatureTreeProvider();
 
 	context.subscriptions.push(
@@ -32,6 +33,7 @@ export function activate(context: vscode.ExtensionContext): void {
 	registerScriptRuntimeWatcher(context);
 	registerSourceControl(context);
 	registerHttpClient(context);
+	await registerChat(context);
 
 	const perfTipsProvider = new PerfTipsProvider();
 	context.subscriptions.push(
