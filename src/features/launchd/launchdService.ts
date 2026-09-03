@@ -70,7 +70,7 @@ export class LaunchdService {
 		]);
 		const fileName = `${normalized.label}.plist`;
 		const targetPath = this.agentPath(fileName);
-		const temporaryDirectory = await mkdtemp(join(this.agentsDirectory, '.vscode-powerkit-'));
+		const temporaryDirectory = await mkdtemp(join(this.agentsDirectory, '.vscode-toolkit-'));
 		const jsonPath = join(temporaryDirectory, 'agent.json');
 		const plistPath = join(temporaryDirectory, 'agent.plist');
 

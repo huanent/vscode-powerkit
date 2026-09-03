@@ -1,8 +1,8 @@
 import * as vscode from 'vscode';
 import { getScriptRuntime } from './scriptRuntime';
 
-const npmScriptFoldersContext = 'vscode-powerkit.npmScriptFolders';
-const bunScriptFoldersContext = 'vscode-powerkit.bunScriptFolders';
+const npmScriptFoldersContext = 'vscode-toolkit.npmScriptFolders';
+const bunScriptFoldersContext = 'vscode-toolkit.bunScriptFolders';
 
 type PackageJson = {
 	scripts?: Record<string, unknown>;
@@ -32,7 +32,7 @@ export async function runNpmScript(folderUri: vscode.Uri | undefined): Promise<v
 		return;
 	}
 
-	const terminal = vscode.window.createTerminal({ name: `PowerKit ${runtime}`, cwd: folderUri });
+	const terminal = vscode.window.createTerminal({ name: `Toolkit ${runtime}`, cwd: folderUri });
 	terminal.show();
 	terminal.sendText(`${runtime === 'bun' ? 'bun' : 'npm'} run ${quoteArgument(selected.label)}`);
 }

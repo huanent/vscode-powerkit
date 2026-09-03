@@ -120,7 +120,7 @@ export class ChatManager implements vscode.Disposable {
 
 function createEditorUri(): vscode.Uri {
 	return vscode.Uri.from({
-		scheme: 'vscode-powerkit-chat',
+		scheme: 'vscode-toolkit-chat',
 		path: '/Chat',
 		query: new URLSearchParams({ id: randomUUID() }).toString(),
 	});

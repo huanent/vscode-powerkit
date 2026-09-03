@@ -1,10 +1,10 @@
 import { execFileSync } from 'node:child_process';
 import * as vscode from 'vscode';
 
-const nodeAvailableContext = 'vscode-powerkit.nodeAvailable';
-const npmAvailableContext = 'vscode-powerkit.npmAvailable';
-const bunAvailableContext = 'vscode-powerkit.bunAvailable';
-const bunWorkspaceContext = 'vscode-powerkit.bunWorkspace';
+const nodeAvailableContext = 'vscode-toolkit.nodeAvailable';
+const npmAvailableContext = 'vscode-toolkit.npmAvailable';
+const bunAvailableContext = 'vscode-toolkit.bunAvailable';
+const bunWorkspaceContext = 'vscode-toolkit.bunWorkspace';
 const bunMarkers = ['bun.lock', 'bunfig.toml'];
 
 export type ScriptRuntime = 'node' | 'bun';

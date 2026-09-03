@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 
-const favoritesStorageKey = 'vscode-powerkit.explorerFavorites';
+const favoritesStorageKey = 'vscode-toolkit.explorerFavorites';
 const storageFileName = 'favorites.json';
 
 type FavoritesData = {

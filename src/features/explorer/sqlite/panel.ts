@@ -7,7 +7,7 @@ import type { SqliteRequest } from './types';
 export function openSqlitePanel(context: vscode.ExtensionContext, uri: vscode.Uri): void {
 	const name = getDisplayName(uri);
 	const panel = vscode.window.createWebviewPanel(
-		'vscode-powerkit.explorerSqliteManager',
+		'vscode-toolkit.explorerSqliteManager',
 		name,
 		vscode.ViewColumn.Active,
 		{

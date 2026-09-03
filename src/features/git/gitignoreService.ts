@@ -4,7 +4,7 @@ import * as vscode from 'vscode';
 const fileName = '.gitignore';
 const userRulesMarker = "Custom rules (everything added below won't be overridden when using Update)";
 const legacyUserRulesMarker = "Custom rules (everything added below won't be overriden by 'Generate .gitignore File' if you use 'Update' option)";
-const banner = 'File created using PowerKit';
+const banner = 'File created using Toolkit';
 
 interface GitignoreItem extends vscode.QuickPickItem {
 	picked: boolean;
@@ -170,7 +170,7 @@ function buildFile(selectedTemplates: readonly string[], generated: string, curr
 	const customRules = getCustomRules(currentContent);
 	const output = [
 		`# ${banner}`,
-		`# Created by PowerKit/${selectedTemplates.join(',')}`,
+		`# Created by Toolkit/${selectedTemplates.join(',')}`,
 		'',
 		generated.trim(),
 		`# ${userRulesMarker}`,

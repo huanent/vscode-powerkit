@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 
 export class FeatureTreeProvider implements vscode.TreeDataProvider<vscode.TreeItem>, vscode.Disposable {
-        static readonly viewType = 'vscode-powerkit.features';
+        static readonly viewType = 'vscode-toolkit.features';
         private readonly changeEmitter = new vscode.EventEmitter<void>();
         readonly onDidChangeTreeData = this.changeEmitter.event;
 
@@ -15,7 +15,7 @@ export class FeatureTreeProvider implements vscode.TreeDataProvider<vscode.TreeI
                 chatItem.description = 'Open chat';
                 chatItem.iconPath = new vscode.ThemeIcon('comment-discussion');
                 chatItem.command = {
-                        command: 'vscode-powerkit.openChat',
+                        command: 'vscode-toolkit.openChat',
                         title: 'Open Chat',
                 };
                 items.push(chatItem);
@@ -24,7 +24,7 @@ export class FeatureTreeProvider implements vscode.TreeDataProvider<vscode.TreeI
                 explorerItem.description = 'Browse files';
                 explorerItem.iconPath = new vscode.ThemeIcon('files');
                 explorerItem.command = {
-                        command: 'vscode-powerkit.openExplorer',
+                        command: 'vscode-toolkit.openExplorer',
                         title: 'Open Explorer',
                 };
                 items.push(explorerItem);
@@ -33,7 +33,7 @@ export class FeatureTreeProvider implements vscode.TreeDataProvider<vscode.TreeI
                 httpClientItem.description = 'Open last request';
                 httpClientItem.iconPath = new vscode.ThemeIcon('globe');
                 httpClientItem.command = {
-                        command: 'vscode-powerkit.openHttpClient',
+                        command: 'vscode-toolkit.openHttpClient',
                         title: 'Open HTTP Client',
                 };
                 items.push(httpClientItem);
@@ -43,7 +43,7 @@ export class FeatureTreeProvider implements vscode.TreeDataProvider<vscode.TreeI
                         launchdItem.description = 'Manage startup items';
                         launchdItem.iconPath = new vscode.ThemeIcon('server-process');
                         launchdItem.command = {
-                                command: 'vscode-powerkit.openLaunchd',
+                                command: 'vscode-toolkit.openLaunchd',
                                 title: 'Open LaunchAgents',
                         };
                         items.push(launchdItem);

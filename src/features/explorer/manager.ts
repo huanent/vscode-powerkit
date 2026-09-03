@@ -11,8 +11,8 @@ import { FavoritesStore } from './favoritesStore';
 import { ExplorerPanelController } from './panelController';
 import { isUriWithinRoot } from './uri';
 
-const explorerViewType = 'vscode-powerkit.explorerEditor';
-export const webviewFocusContextKey = 'vscode-powerkit.explorerWebviewFocus';
+const explorerViewType = 'vscode-toolkit.explorerEditor';
+export const webviewFocusContextKey = 'vscode-toolkit.explorerWebviewFocus';
 
 type PanelEntry = {
 	rootUri: vscode.Uri;
@@ -105,7 +105,7 @@ export class ExplorerManager implements vscode.Disposable {
 			query.set('history', JSON.stringify(initialViewState.history));
 		}
 		const resourceUri = vscode.Uri.from({
-			scheme: 'vscode-powerkit-explorer',
+			scheme: 'vscode-toolkit-explorer',
 			path: `/${resourceName}`,
 			query: query.toString()
 		});
@@ -118,7 +118,7 @@ export class ExplorerManager implements vscode.Disposable {
 	async openSpreadsheetPreview(uri: vscode.Uri): Promise<void> {
 		const name = getDisplayName(uri);
 		await openPreviewPanel(this.context, {
-			viewType: 'vscode-powerkit.explorerSpreadsheetPreview',
+			viewType: 'vscode-toolkit.explorerSpreadsheetPreview',
 			title: name,
 			icon: 'table',
 			entryPoint: 'spreadsheet',
@@ -129,7 +129,7 @@ export class ExplorerManager implements vscode.Disposable {
 	async openArchivePreview(uri: vscode.Uri): Promise<void> {
 		const name = getDisplayName(uri);
 		await openPreviewPanel(this.context, {
-			viewType: 'vscode-powerkit.explorerArchivePreview',
+			viewType: 'vscode-toolkit.explorerArchivePreview',
 			title: name,
 			icon: 'file-zip',
 			entryPoint: 'archive',

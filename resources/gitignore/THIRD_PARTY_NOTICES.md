@@ -1,7 +1,7 @@
 # Gitignore template snapshot
 
 The files in `templates/` were generated on 2026-08-06 from the public
-gitignore.io-compatible API at `https://gitignore.palarz.pl`. PowerKit bundles
+gitignore.io-compatible API at `https://gitignore.palarz.pl`. Toolkit bundles
 a curated set of 185 commonly used templates so template selection and
 `.gitignore` generation work without network access.
 
@@ -31,7 +31,7 @@ SOFTWARE.
 
 ## vscode-gitignore-generator
 
-The PowerKit integration was adapted from vscode-gitignore-generator, which is
+The Toolkit integration was adapted from vscode-gitignore-generator, which is
 distributed under the following MIT license:
 
 MIT License

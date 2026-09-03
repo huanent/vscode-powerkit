@@ -273,7 +273,7 @@ export class ChatPanelController implements vscode.Disposable {
 			this.panel.title = createTabTitle(userText);
 		}
 
-		const prompt = vscode.workspace.getConfiguration('powerkit.chat').get<string>('prompt', '').trim();
+		const prompt = vscode.workspace.getConfiguration('toolkit.chat').get<string>('prompt', '').trim();
 		const requestMessages = [
 			...(prompt ? [vscode.LanguageModelChatMessage.User(prompt, 'instructions')] : []),
 			...(session?.messages ?? []).map(message => message.role === 'user'

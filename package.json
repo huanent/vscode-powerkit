@@ -1,15 +1,15 @@
 {
-  "name": "powerkit",
-  "displayName": "PowerKit",
+  "name": "toolkit",
+  "displayName": "Toolkit",
   "description": "Developer utilities for VS Code",
-  "version": "0.8.1",
+  "version": "1.0.0",
   "license": "MIT",
   "publisher": "huanent",
   "icon": "resources/logo.png",
-  "homepage": "https://github.com/huanent/vscode-powerkit.git",
+  "homepage": "https://github.com/huanent/vscode-toolkit.git",
   "repository": {
     "type": "github",
-    "url": "https://github.com/huanent/vscode-powerkit"
+    "url": "https://github.com/huanent/vscode-toolkit"
   },
   "extensionKind": [
     "ui"
@@ -28,7 +28,7 @@
   "contributes": {
     "customEditors": [
       {
-        "viewType": "vscode-powerkit.chatEditor",
+        "viewType": "vscode-toolkit.chatEditor",
         "displayName": "Chat",
         "selector": [
           {
@@ -38,7 +38,7 @@
         "priority": "option"
       },
       {
-        "viewType": "vscode-powerkit.explorerEditor",
+        "viewType": "vscode-toolkit.explorerEditor",
         "displayName": "Explorer",
         "selector": [
           {
@@ -72,357 +72,357 @@
     "viewsContainers": {
       "activitybar": [
         {
-          "id": "vscode-powerkit",
-          "title": "PowerKit",
+          "id": "vscode-toolkit",
+          "title": "Toolkit",
           "icon": "$(tools)"
         }
       ],
       "panel": [
         {
-          "id": "vscode-powerkit-result",
+          "id": "vscode-toolkit-result",
           "title": "Result",
           "icon": "$(output)"
         }
       ]
     },
     "views": {
-      "vscode-powerkit": [
+      "vscode-toolkit": [
         {
-          "id": "vscode-powerkit.features",
-          "name": "PowerKit",
+          "id": "vscode-toolkit.features",
+          "name": "Toolkit",
           "icon": "$(list-tree)"
         }
       ],
-      "vscode-powerkit-result": [
+      "vscode-toolkit-result": [
         {
-          "id": "vscode-powerkit.httpResult",
+          "id": "vscode-toolkit.httpResult",
           "name": "Result",
           "type": "webview",
           "icon": "$(output)",
-          "when": "vscode-powerkit.httpResultVisible"
+          "when": "vscode-toolkit.httpResultVisible"
         }
       ]
     },
     "submenus": [
       {
-        "id": "vscode-powerkit.sourceControl",
+        "id": "vscode-toolkit.sourceControl",
         "label": "Source Control"
       }
     ],
     "commands": [
       {
-        "command": "vscode-powerkit.openHttpClient",
+        "command": "vscode-toolkit.openHttpClient",
         "title": "Open HTTP Client",
         "icon": "$(globe)",
-        "category": "PowerKit"
+        "category": "Toolkit"
       },
       {
-        "command": "vscode-powerkit.newHttpClient",
+        "command": "vscode-toolkit.newHttpClient",
         "title": "New HTTP Request",
         "icon": "$(new-file)",
-        "category": "PowerKit",
-        "enablement": "vscode-powerkit.httpEditor"
+        "category": "Toolkit",
+        "enablement": "vscode-toolkit.httpEditor"
       },
       {
-        "command": "vscode-powerkit.renameHttpFile",
+        "command": "vscode-toolkit.renameHttpFile",
         "title": "Rename HTTP Request",
         "icon": "$(edit)",
-        "category": "PowerKit",
-        "enablement": "vscode-powerkit.httpEditor"
+        "category": "Toolkit",
+        "enablement": "vscode-toolkit.httpEditor"
       },
       {
-        "command": "vscode-powerkit.deleteHttpFile",
+        "command": "vscode-toolkit.deleteHttpFile",
         "title": "Delete HTTP Request",
         "icon": "$(trash)",
-        "category": "PowerKit",
-        "enablement": "vscode-powerkit.httpEditor"
+        "category": "Toolkit",
+        "enablement": "vscode-toolkit.httpEditor"
       },
       {
-        "command": "vscode-powerkit.openLaunchd",
+        "command": "vscode-toolkit.openLaunchd",
         "title": "Open LaunchAgents",
-        "category": "PowerKit",
+        "category": "Toolkit",
         "enablement": "isMac"
       },
       {
-        "command": "vscode-powerkit.generateGitignore",
+        "command": "vscode-toolkit.generateGitignore",
         "title": "Generate .gitignore",
-        "category": "PowerKit"
+        "category": "Toolkit"
       },
       {
-        "command": "vscode-powerkit.sendHttpRequest",
+        "command": "vscode-toolkit.sendHttpRequest",
         "title": "Send HTTP Request",
         "icon": "$(play)",
-        "category": "PowerKit",
+        "category": "Toolkit",
         "enablement": "editorLangId == http && isWorkspaceTrusted"
       },
       {
-        "command": "vscode-powerkit.runDotnetScript",
+        "command": "vscode-toolkit.runDotnetScript",
         "title": "Run dotnet Script",
         "icon": "$(play)",
-        "category": "PowerKit"
+        "category": "Toolkit"
       },
       {
-        "command": "vscode-powerkit.runShScript",
+        "command": "vscode-toolkit.runShScript",
         "title": "Run sh Script",
         "icon": "$(play)",
-        "category": "PowerKit"
+        "category": "Toolkit"
       },
       {
-        "command": "vscode-powerkit.runBatScript",
+        "command": "vscode-toolkit.runBatScript",
         "title": "Run bat Script",
         "icon": "$(play)",
-        "category": "PowerKit"
+        "category": "Toolkit"
       },
       {
-        "command": "vscode-powerkit.runNodeScript",
+        "command": "vscode-toolkit.runNodeScript",
         "title": "Run node Script",
         "icon": "$(play)",
-        "category": "PowerKit"
+        "category": "Toolkit"
       },
       {
-        "command": "vscode-powerkit.runBunScript",
+        "command": "vscode-toolkit.runBunScript",
         "title": "Run bun Script",
         "icon": "$(play)",
-        "category": "PowerKit"
+        "category": "Toolkit"
       },
       {
-        "command": "vscode-powerkit.runNpmScript",
+        "command": "vscode-toolkit.runNpmScript",
         "title": "Run package.json Script",
         "icon": "$(terminal)",
-        "category": "PowerKit"
+        "category": "Toolkit"
       },
       {
-        "command": "vscode-powerkit.runBunPackageScript",
+        "command": "vscode-toolkit.runBunPackageScript",
         "title": "Run package.json Script",
         "icon": "$(terminal)",
-        "category": "PowerKit"
+        "category": "Toolkit"
       },
       {
-        "command": "vscode-powerkit.pullGitRepository",
+        "command": "vscode-toolkit.pullGitRepository",
         "title": "Pull",
         "icon": "$(cloud-download)",
-        "category": "PowerKit"
+        "category": "Toolkit"
       },
       {
-        "command": "vscode-powerkit.pushGitRepository",
+        "command": "vscode-toolkit.pushGitRepository",
         "title": "Push",
         "icon": "$(cloud-upload)",
-        "category": "PowerKit"
+        "category": "Toolkit"
       },
       {
-        "command": "vscode-powerkit.fetchGitRepository",
+        "command": "vscode-toolkit.fetchGitRepository",
         "title": "Fetch",
         "icon": "$(sync)",
-        "category": "PowerKit"
+        "category": "Toolkit"
       },
       {
-        "command": "vscode-powerkit.checkoutGitRepository",
+        "command": "vscode-toolkit.checkoutGitRepository",
         "title": "Checkout to...",
         "icon": "$(git-branch)",
-        "category": "PowerKit"
+        "category": "Toolkit"
       },
       {
-        "command": "vscode-powerkit.openChat",
+        "command": "vscode-toolkit.openChat",
         "title": "Open Chat",
-        "category": "PowerKit"
+        "category": "Toolkit"
       },
       {
-        "command": "vscode-powerkit.newChat",
+        "command": "vscode-toolkit.newChat",
         "title": "New Chat",
-        "category": "PowerKit",
+        "category": "Toolkit",
         "icon": "$(add)"
       },
       {
-        "command": "vscode-powerkit.newChatTab",
+        "command": "vscode-toolkit.newChatTab",
         "title": "New Chat Tab",
-        "category": "PowerKit"
+        "category": "Toolkit"
       },
       {
-        "command": "vscode-powerkit.openExplorer",
+        "command": "vscode-toolkit.openExplorer",
         "title": "Open in Explorer",
-        "category": "PowerKit"
+        "category": "Toolkit"
       },
       {
-        "command": "vscode-powerkit.openExplorerTab",
+        "command": "vscode-toolkit.openExplorerTab",
         "title": "Open Explorer Tab",
-        "category": "PowerKit"
+        "category": "Toolkit"
       }
     ],
     "menus": {
       "editor/title": [
         {
-          "command": "vscode-powerkit.newHttpClient",
-          "when": "vscode-powerkit.httpEditor",
+          "command": "vscode-toolkit.newHttpClient",
+          "when": "vscode-toolkit.httpEditor",
           "group": "navigation@9"
         },
         {
-          "command": "vscode-powerkit.renameHttpFile",
-          "when": "vscode-powerkit.httpEditor",
+          "command": "vscode-toolkit.renameHttpFile",
+          "when": "vscode-toolkit.httpEditor",
           "group": "navigation@10"
         },
         {
-          "command": "vscode-powerkit.deleteHttpFile",
-          "when": "vscode-powerkit.httpEditor",
+          "command": "vscode-toolkit.deleteHttpFile",
+          "when": "vscode-toolkit.httpEditor",
           "group": "navigation@11"
         },
         {
-          "command": "vscode-powerkit.newChat",
-          "when": "activeCustomEditorId == vscode-powerkit.chatEditor",
+          "command": "vscode-toolkit.newChat",
+          "when": "activeCustomEditorId == vscode-toolkit.chatEditor",
           "group": "navigation"
         }
       ],
       "explorer/context": [
         {
-          "submenu": "vscode-powerkit.sourceControl",
-          "when": "explorerResourceIsFolder && resourcePath in vscode-powerkit.gitRepositoryFolders",
+          "submenu": "vscode-toolkit.sourceControl",
+          "when": "explorerResourceIsFolder && resourcePath in vscode-toolkit.gitRepositoryFolders",
           "group": "navigation@9"
         },
         {
-          "command": "vscode-powerkit.runDotnetScript",
+          "command": "vscode-toolkit.runDotnetScript",
           "when": "resourceExtname == .cs",
           "group": "navigation@10"
         },
         {
-          "command": "vscode-powerkit.runShScript",
+          "command": "vscode-toolkit.runShScript",
           "when": "resourceExtname == .sh && !isWindows",
           "group": "navigation@10"
         },
         {
-          "command": "vscode-powerkit.runBatScript",
+          "command": "vscode-toolkit.runBatScript",
           "when": "resourceExtname == .bat && isWindows",
           "group": "navigation@10"
         },
         {
-          "command": "vscode-powerkit.runNodeScript",
-          "when": "(resourceLangId == javascript || resourceLangId == typescript) && vscode-powerkit.nodeAvailable && !vscode-powerkit.bunWorkspace",
+          "command": "vscode-toolkit.runNodeScript",
+          "when": "(resourceLangId == javascript || resourceLangId == typescript) && vscode-toolkit.nodeAvailable && !vscode-toolkit.bunWorkspace",
           "group": "navigation@10"
         },
         {
-          "command": "vscode-powerkit.runBunScript",
-          "when": "(resourceLangId == javascript || resourceLangId == typescript) && vscode-powerkit.bunAvailable && vscode-powerkit.bunWorkspace",
+          "command": "vscode-toolkit.runBunScript",
+          "when": "(resourceLangId == javascript || resourceLangId == typescript) && vscode-toolkit.bunAvailable && vscode-toolkit.bunWorkspace",
           "group": "navigation@10"
         },
         {
-          "command": "vscode-powerkit.runNpmScript",
-          "when": "explorerResourceIsFolder && vscode-powerkit.npmAvailable && resourcePath in vscode-powerkit.npmScriptFolders",
+          "command": "vscode-toolkit.runNpmScript",
+          "when": "explorerResourceIsFolder && vscode-toolkit.npmAvailable && resourcePath in vscode-toolkit.npmScriptFolders",
           "group": "navigation@12"
         },
         {
-          "command": "vscode-powerkit.runBunPackageScript",
-          "when": "explorerResourceIsFolder && vscode-powerkit.bunAvailable && resourcePath in vscode-powerkit.bunScriptFolders",
+          "command": "vscode-toolkit.runBunPackageScript",
+          "when": "explorerResourceIsFolder && vscode-toolkit.bunAvailable && resourcePath in vscode-toolkit.bunScriptFolders",
           "group": "navigation@12"
         },
         {
-          "command": "vscode-powerkit.openExplorer",
+          "command": "vscode-toolkit.openExplorer",
           "group": "navigation@999"
         }
       ],
-      "vscode-powerkit.sourceControl": [
+      "vscode-toolkit.sourceControl": [
         {
-          "command": "vscode-powerkit.pullGitRepository",
+          "command": "vscode-toolkit.pullGitRepository",
           "group": "1_remote@1"
         },
         {
-          "command": "vscode-powerkit.pushGitRepository",
+          "command": "vscode-toolkit.pushGitRepository",
           "group": "1_remote@2"
         },
         {
-          "command": "vscode-powerkit.fetchGitRepository",
+          "command": "vscode-toolkit.fetchGitRepository",
           "group": "1_remote@3"
         },
         {
-          "command": "vscode-powerkit.checkoutGitRepository",
+          "command": "vscode-toolkit.checkoutGitRepository",
           "group": "2_local@1"
         }
       ],
       "commandPalette": [
         {
-          "command": "vscode-powerkit.newHttpClient",
+          "command": "vscode-toolkit.newHttpClient",
           "when": "false"
         },
         {
-          "command": "vscode-powerkit.renameHttpFile",
+          "command": "vscode-toolkit.renameHttpFile",
           "when": "false"
         },
         {
-          "command": "vscode-powerkit.deleteHttpFile",
+          "command": "vscode-toolkit.deleteHttpFile",
           "when": "false"
         },
         {
-          "command": "vscode-powerkit.runNodeScript",
-          "when": "vscode-powerkit.nodeAvailable && !vscode-powerkit.bunWorkspace"
+          "command": "vscode-toolkit.runNodeScript",
+          "when": "vscode-toolkit.nodeAvailable && !vscode-toolkit.bunWorkspace"
         },
         {
-          "command": "vscode-powerkit.runBunScript",
-          "when": "vscode-powerkit.bunAvailable && vscode-powerkit.bunWorkspace"
+          "command": "vscode-toolkit.runBunScript",
+          "when": "vscode-toolkit.bunAvailable && vscode-toolkit.bunWorkspace"
         },
         {
-          "command": "vscode-powerkit.runNpmScript",
+          "command": "vscode-toolkit.runNpmScript",
           "when": "false"
         },
         {
-          "command": "vscode-powerkit.runBunPackageScript",
+          "command": "vscode-toolkit.runBunPackageScript",
           "when": "false"
         },
         {
-          "command": "vscode-powerkit.pullGitRepository",
+          "command": "vscode-toolkit.pullGitRepository",
           "when": "false"
         },
         {
-          "command": "vscode-powerkit.pushGitRepository",
+          "command": "vscode-toolkit.pushGitRepository",
           "when": "false"
         },
         {
-          "command": "vscode-powerkit.fetchGitRepository",
+          "command": "vscode-toolkit.fetchGitRepository",
           "when": "false"
         },
         {
-          "command": "vscode-powerkit.checkoutGitRepository",
+          "command": "vscode-toolkit.checkoutGitRepository",
           "when": "false"
         }
       ]
     },
     "keybindings": [
       {
-        "command": "vscode-powerkit.openChat",
+        "command": "vscode-toolkit.openChat",
         "key": "ctrl+shift+i",
         "mac": "cmd+shift+i",
-        "when": "!vscode-powerkit.chatWebviewFocus"
+        "when": "!vscode-toolkit.chatWebviewFocus"
       },
       {
-        "command": "vscode-powerkit.newChat",
+        "command": "vscode-toolkit.newChat",
         "key": "ctrl+shift+i",
         "mac": "cmd+shift+i",
-        "when": "activeCustomEditorId == vscode-powerkit.chatEditor && vscode-powerkit.chatWebviewFocus"
+        "when": "activeCustomEditorId == vscode-toolkit.chatEditor && vscode-toolkit.chatWebviewFocus"
       },
       {
-        "command": "vscode-powerkit.newChatTab",
+        "command": "vscode-toolkit.newChatTab",
         "key": "ctrl+t",
         "mac": "cmd+t",
-        "when": "activeCustomEditorId == vscode-powerkit.chatEditor && vscode-powerkit.chatWebviewFocus"
+        "when": "activeCustomEditorId == vscode-toolkit.chatEditor && vscode-toolkit.chatWebviewFocus"
       },
       {
-        "command": "vscode-powerkit.openExplorer",
+        "command": "vscode-toolkit.openExplorer",
         "key": "ctrl+shift+;",
         "mac": "cmd+shift+;"
       },
       {
-        "command": "vscode-powerkit.openExplorerTab",
+        "command": "vscode-toolkit.openExplorerTab",
         "key": "ctrl+t",
         "mac": "cmd+t",
-        "when": "activeCustomEditorId == vscode-powerkit.explorerEditor && vscode-powerkit.explorerWebviewFocus"
+        "when": "activeCustomEditorId == vscode-toolkit.explorerEditor && vscode-toolkit.explorerWebviewFocus"
       }
     ],
     "configuration": {
-      "title": "PowerKit",
+      "title": "Toolkit",
       "properties": {
-        "powerkit.storagePath": {
+        "toolkit.storagePath": {
           "type": "string",
           "default": "",
-          "markdownDescription": "PowerKit data directory. Supports `~`. Defaults to extension global storage.",
+          "markdownDescription": "Toolkit data directory. Supports `~`. Defaults to extension global storage.",
           "scope": "machine"
         },
-        "powerkit.chat.prompt": {
+        "toolkit.chat.prompt": {
           "type": "string",
           "default": "",
           "markdownDescription": "The prompt used for chats.",

@@ -2,7 +2,7 @@ import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
 import * as vscode from 'vscode';
 
-const gitRepositoryFoldersContext = 'vscode-powerkit.gitRepositoryFolders';
+const gitRepositoryFoldersContext = 'vscode-toolkit.gitRepositoryFolders';
 const execFileAsync = promisify(execFile);
 const gitRepositoryBranches = new Map<string, string>();
 const gitDecorationEmitter = new vscode.EventEmitter<vscode.Uri | vscode.Uri[] | undefined>();
@@ -16,19 +16,19 @@ const gitCommands = {
 export function registerSourceControl(context: vscode.ExtensionContext): void {
 	for (const [command, gitCommand] of Object.entries(gitCommands)) {
 		context.subscriptions.push(
-			vscode.commands.registerCommand(`vscode-powerkit.${command}`, (folderUri: vscode.Uri | undefined) => {
+			vscode.commands.registerCommand(`vscode-toolkit.${command}`, (folderUri: vscode.Uri | undefined) => {
 				if (!folderUri) {
 					return;
 				}
 
-				const terminal = vscode.window.createTerminal({ name: 'PowerKit Git', cwd: folderUri });
+				const terminal = vscode.window.createTerminal({ name: 'Toolkit Git', cwd: folderUri });
 				terminal.show();
 				terminal.sendText(gitCommand);
 			}),
 		);
 	}
 	context.subscriptions.push(
-		vscode.commands.registerCommand('vscode-powerkit.checkoutGitRepository', checkoutGitRepository),
+		vscode.commands.registerCommand('vscode-toolkit.checkoutGitRepository', checkoutGitRepository),
 		vscode.window.registerFileDecorationProvider({
 			onDidChangeFileDecorations: gitDecorationEmitter.event,
 			provideFileDecoration(uri) {
@@ -96,7 +96,7 @@ async function checkoutGitRepository(folderUri: vscode.Uri | undefined): Promise
 		return;
 	}
 
-	const terminal = vscode.window.createTerminal({ name: 'PowerKit Git', cwd: folderUri });
+	const terminal = vscode.window.createTerminal({ name: 'Toolkit Git', cwd: folderUri });
 	terminal.show();
 	const branch = quoteShellArgument(selected.branch);
 	terminal.sendText(selected.remote ? `git switch --track ${branch}` : `git switch ${branch}`);

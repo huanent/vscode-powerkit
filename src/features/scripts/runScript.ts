@@ -4,7 +4,7 @@ import { getTypeScriptRuntimeArgs } from './nodeRuntime';
 import { getRunnableFileUri, isNodeScriptUri, isTypeScriptDocument, resolveNodeDocument } from './scriptDocument';
 import { getScriptRuntime } from './scriptRuntime';
 
-const terminalName = 'PowerKit Script';
+const terminalName = 'Toolkit Script';
 
 export async function runScript(
 	context: vscode.ExtensionContext,

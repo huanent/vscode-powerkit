@@ -13,8 +13,8 @@ export interface HttpResult {
 }
 
 export class HttpResultPanel implements vscode.WebviewViewProvider {
-	static readonly viewType = 'vscode-powerkit.httpResult';
-	private static readonly visibleContext = 'vscode-powerkit.httpResultVisible';
+	static readonly viewType = 'vscode-toolkit.httpResult';
+	private static readonly visibleContext = 'vscode-toolkit.httpResultVisible';
 	private view: vscode.WebviewView | undefined;
 	private result: HttpResult | undefined;
 

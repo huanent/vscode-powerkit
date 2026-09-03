@@ -2,8 +2,8 @@ import { basename } from 'node:path';
 import * as vscode from 'vscode';
 import { getStorageUri } from '../../storagePath';
 
-const scheme = 'powerkit-http';
-const historyKey = 'vscode-powerkit.httpClient.history';
+const scheme = 'toolkit-http';
+const historyKey = 'vscode-toolkit.httpClient.history';
 
 export class HttpDocumentStore implements vscode.FileSystemProvider, vscode.Disposable {
 	private readonly changeEmitter = new vscode.EventEmitter<vscode.FileChangeEvent[]>();

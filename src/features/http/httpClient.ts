@@ -9,12 +9,12 @@ const headers = [
 	['Accept', 'application/json'],
 	['Authorization', 'Bearer ${1:token}'],
 	['Content-Type', 'application/json'],
-	['User-Agent', 'PowerKit HTTP Client'],
+	['User-Agent', 'Toolkit HTTP Client'],
 	['Cache-Control', 'no-cache'],
 ];
 const languageService = new HttpLanguageService();
 const httpSaveDelay = 500;
-const httpEditorContext = 'vscode-powerkit.httpEditor';
+const httpEditorContext = 'vscode-toolkit.httpEditor';
 
 export function registerHttpClient(context: vscode.ExtensionContext): void {
 	const resultPanel = new HttpResultPanel();
@@ -29,20 +29,20 @@ export function registerHttpClient(context: vscode.ExtensionContext): void {
 		}),
 		requestStatus,
 		documentStore,
-		vscode.commands.registerCommand('vscode-powerkit.openHttpClient', async () => {
+		vscode.commands.registerCommand('vscode-toolkit.openHttpClient', async () => {
 			await documentStoreReady;
 			await documentStore.openLastOrCreate();
 		}),
-		vscode.commands.registerCommand('vscode-powerkit.newHttpClient', async () => {
+		vscode.commands.registerCommand('vscode-toolkit.newHttpClient', async () => {
 			await documentStoreReady;
 			await documentStore.createAndOpen();
 		}),
-		vscode.commands.registerCommand('vscode-powerkit.renameHttpFile', () => renameHttpFile(documentStore)),
-		vscode.commands.registerCommand('vscode-powerkit.deleteHttpFile', () => deleteHttpFile(documentStore)),
-		vscode.commands.registerCommand('vscode-powerkit.sendHttpRequest', async (uri?: vscode.Uri, line?: number) => {
+		vscode.commands.registerCommand('vscode-toolkit.renameHttpFile', () => renameHttpFile(documentStore)),
+		vscode.commands.registerCommand('vscode-toolkit.deleteHttpFile', () => deleteHttpFile(documentStore)),
+		vscode.commands.registerCommand('vscode-toolkit.sendHttpRequest', async (uri?: vscode.Uri, line?: number) => {
 			await sendRequest(resultPanel, requestStatus, uri, line);
 		}),
-		vscode.commands.registerCommand('vscode-powerkit.cancelHttpRequest', () => requestStatus.cancel()),
+		vscode.commands.registerCommand('vscode-toolkit.cancelHttpRequest', () => requestStatus.cancel()),
 		vscode.languages.registerCodeLensProvider(selector, new HttpCodeLensProvider()),
 		vscode.languages.registerCompletionItemProvider(selector, new HttpCompletionProvider(), '{', ':', '@'),
 		registerHttpHoverProvider(languageService),
@@ -58,9 +58,9 @@ class HttpRequestStatus implements vscode.Disposable {
 	private readonly controllers = new Set<AbortController>();
 
 	constructor() {
-		this.sendingItem.name = 'PowerKit HTTP Request';
+		this.sendingItem.name = 'Toolkit HTTP Request';
 		this.sendingItem.tooltip = '取消请求';
-		this.sendingItem.command = 'vscode-powerkit.cancelHttpRequest';
+		this.sendingItem.command = 'vscode-toolkit.cancelHttpRequest';
 	}
 
 	start(controller: AbortController, method: string): void {
@@ -206,7 +206,7 @@ class HttpCodeLensProvider implements vscode.CodeLensProvider {
 
 			lenses.push(new vscode.CodeLens(document.lineAt(line).range, {
 				title: '$(play) Send Request',
-				command: 'vscode-powerkit.sendHttpRequest',
+				command: 'vscode-toolkit.sendHttpRequest',
 				arguments: [document.uri, line],
 			}));
 		}

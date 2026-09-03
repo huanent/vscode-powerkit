@@ -29,7 +29,7 @@ export async function registerExplorer(context: vscode.ExtensionContext): Promis
 
 	context.subscriptions.push(
 		explorerManager,
-		vscode.commands.registerCommand('vscode-powerkit.openExplorer', async (argument?: vscode.Uri) => {
+		vscode.commands.registerCommand('vscode-toolkit.openExplorer', async (argument?: vscode.Uri) => {
 			if (!argument && explorerManager.revealExplorer()) {
 				return;
 			}
@@ -39,7 +39,7 @@ export async function registerExplorer(context: vscode.ExtensionContext): Promis
 				history: [],
 			});
 		}),
-		vscode.commands.registerCommand('vscode-powerkit.openExplorerTab', async () => {
+		vscode.commands.registerCommand('vscode-toolkit.openExplorerTab', async () => {
 			const { rootUri, currentUri } = await resolveOpenTarget();
 			await explorerManager.openExplorer(rootUri, undefined, {
 				currentUri: currentUri.toString(),

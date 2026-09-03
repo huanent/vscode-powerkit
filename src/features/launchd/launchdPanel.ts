@@ -14,7 +14,7 @@ type WebviewMessage =
 	| { type: 'openDirectory' };
 
 export class LaunchdPanel {
-	static readonly viewType = 'vscode-powerkit.launchd';
+	static readonly viewType = 'vscode-toolkit.launchd';
 	private static currentPanel: LaunchdPanel | undefined;
 	private readonly service = new LaunchdService();
 

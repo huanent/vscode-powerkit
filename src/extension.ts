@@ -21,13 +21,13 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
 			FeatureTreeProvider.viewType,
 			featureTree,
 		),
-		vscode.commands.registerCommand('vscode-powerkit.openLaunchd', () => LaunchdPanel.show(context.extensionUri)),
-		vscode.commands.registerCommand('vscode-powerkit.generateGitignore', () => generateGitignore(context.extensionUri)),
+		vscode.commands.registerCommand('vscode-toolkit.openLaunchd', () => LaunchdPanel.show(context.extensionUri)),
+		vscode.commands.registerCommand('vscode-toolkit.generateGitignore', () => generateGitignore(context.extensionUri)),
 		...['runDotnetScript', 'runShScript', 'runBatScript', 'runNodeScript', 'runBunScript'].map(command =>
-			vscode.commands.registerCommand(`vscode-powerkit.${command}`, (uri, selectedUris) => runScript(context, uri, selectedUris)),
+			vscode.commands.registerCommand(`vscode-toolkit.${command}`, (uri, selectedUris) => runScript(context, uri, selectedUris)),
 		),
-		vscode.commands.registerCommand('vscode-powerkit.runNpmScript', runNpmScript),
-		vscode.commands.registerCommand('vscode-powerkit.runBunPackageScript', runNpmScript),
+		vscode.commands.registerCommand('vscode-toolkit.runNpmScript', runNpmScript),
+		vscode.commands.registerCommand('vscode-toolkit.runBunPackageScript', runNpmScript),
 		registerXmlFormatter(),
 	);
 	registerNpmScriptWatcher(context);
