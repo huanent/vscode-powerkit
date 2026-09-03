@@ -1,8 +1,10 @@
 .vscode/**
 .vscode-test/**
+node_modules/**
 src/**
 webview/**
 vite.config.ts
+vite.extension.config.ts
 .gitignore
 .yarnrc
 vsc-extension-quickstart.md

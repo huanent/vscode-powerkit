@@ -1,10 +1,16 @@
 {
-  "name": "vscode-powerkit",
+  "name": "powerkit",
   "displayName": "PowerKit",
   "description": "Developer utilities for VS Code",
   "version": "0.8.1",
+  "license": "MIT",
   "publisher": "huanent",
   "icon": "resources/logo.png",
+  "homepage": "https://github.com/huanent/vscode-powerkit.git",
+  "repository": {
+    "type": "github",
+    "url": "https://github.com/huanent/vscode-powerkit"
+  },
   "extensionKind": [
     "ui"
   ],
@@ -428,7 +434,7 @@
   "scripts": {
     "vscode:prepublish": "npm run build",
     "build": "npm run compile && npm run compile:webview",
-    "compile": "rimraf out && tsc -p ./",
+    "compile": "rimraf out && tsc -p ./ --noEmit && vite build --config vite.extension.config.ts",
     "compile:webview": "tsc -p webview/tsconfig.json && vite build",
     "package": "vsce package --no-yarn",
     "publish": "vsce publish --no-yarn"
