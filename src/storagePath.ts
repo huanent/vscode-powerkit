@@ -3,7 +3,7 @@ import * as path from 'node:path';
 import * as vscode from 'vscode';
 
 export function getStorageUri(context: vscode.ExtensionContext, directory: string): vscode.Uri {
-	const configuredPath = vscode.workspace.getConfiguration('vscode-powerkit')
+	const configuredPath = vscode.workspace.getConfiguration('powerkit')
 		.get<string>('storagePath', '')
 		.trim();
 	const rootUri = configuredPath
