@@ -1,0 +1,45 @@
+@import "@vscode/codicons/dist/codicon.css";
+@import "tailwindcss";
+
+@layer base {
+	* {
+		box-sizing: border-box;
+	}
+
+	html,
+	body,
+	#root {
+		width: 100%;
+		min-width: 300px;
+		height: 100%;
+		margin: 0;
+		overflow: hidden;
+	}
+
+	body {
+		color: var(--vscode-foreground);
+		background: var(--vscode-editor-background);
+		font-family: var(--vscode-font-family);
+		font-size: var(--vscode-font-size);
+		user-select: none;
+	}
+
+	button {
+		font: inherit;
+	}
+}
+
+@layer components {
+	.webview-focus-sink {
+		position: fixed;
+		left: -10000px;
+		width: 1px;
+		height: 1px;
+		opacity: 0;
+		pointer-events: none;
+	}
+
+	.breadcrumb-active-icon::before {
+		-webkit-text-stroke: 0.4px currentColor;
+	}
+}

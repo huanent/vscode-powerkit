@@ -20,6 +20,15 @@ export class FeatureTreeProvider implements vscode.TreeDataProvider<vscode.TreeI
                 };
                 items.push(chatItem);
 
+                const explorerItem = new vscode.TreeItem('Explorer', vscode.TreeItemCollapsibleState.None);
+                explorerItem.description = 'Browse files';
+                explorerItem.iconPath = new vscode.ThemeIcon('files');
+                explorerItem.command = {
+                        command: 'vscode-powerkit.openExplorer',
+                        title: 'Open Explorer',
+                };
+                items.push(explorerItem);
+
                 const httpClientItem = new vscode.TreeItem('HTTP Client', vscode.TreeItemCollapsibleState.None);
                 httpClientItem.description = 'Open last request';
                 httpClientItem.iconPath = new vscode.ThemeIcon('globe');

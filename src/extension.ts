@@ -5,6 +5,7 @@ import { generateGitignore } from './features/git/gitignoreService';
 import { registerHttpClient } from './features/http/httpClient';
 import { LaunchdPanel } from './features/launchd/launchdPanel';
 import { registerChat } from './features/chat/registerChat';
+import { registerExplorer } from './features/explorer/registerExplorer';
 import { PerfTipsProvider } from './features/perftips/perftips';
 import { registerNpmScriptWatcher, runNpmScript } from './features/scripts/npmScripts';
 import { runScript } from './features/scripts/runScript';
@@ -34,6 +35,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
 	registerSourceControl(context);
 	registerHttpClient(context);
 	await registerChat(context);
+	await registerExplorer(context);
 
 	const perfTipsProvider = new PerfTipsProvider();
 	context.subscriptions.push(

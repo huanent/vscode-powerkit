@@ -2,7 +2,7 @@
   "name": "vscode-powerkit",
   "displayName": "PowerKit",
   "description": "Developer utilities for VS Code",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "publisher": "huanent",
   "icon": "resources/logo.png",
   "extensionKind": [
@@ -27,6 +27,16 @@
         "selector": [
           {
             "filenamePattern": "*.chat"
+          }
+        ],
+        "priority": "option"
+      },
+      {
+        "viewType": "vscode-powerkit.explorerEditor",
+        "displayName": "Explorer",
+        "selector": [
+          {
+            "filenamePattern": "*.explorer"
           }
         ],
         "priority": "option"
@@ -220,6 +230,16 @@
         "command": "vscode-powerkit.newChatTab",
         "title": "New Chat Tab",
         "category": "PowerKit"
+      },
+      {
+        "command": "vscode-powerkit.openExplorer",
+        "title": "Open in Explorer",
+        "category": "PowerKit"
+      },
+      {
+        "command": "vscode-powerkit.openExplorerTab",
+        "title": "Open Explorer Tab",
+        "category": "PowerKit"
       }
     ],
     "menus": {
@@ -285,6 +305,10 @@
           "command": "vscode-powerkit.runBunPackageScript",
           "when": "explorerResourceIsFolder && vscode-powerkit.bunAvailable && resourcePath in vscode-powerkit.bunScriptFolders",
           "group": "navigation@12"
+        },
+        {
+          "command": "vscode-powerkit.openExplorer",
+          "group": "navigation@999"
         }
       ],
       "vscode-powerkit.sourceControl": [
@@ -370,6 +394,17 @@
         "key": "ctrl+t",
         "mac": "cmd+t",
         "when": "activeCustomEditorId == vscode-powerkit.chatEditor && vscode-powerkit.chatWebviewFocus"
+      },
+      {
+        "command": "vscode-powerkit.openExplorer",
+        "key": "ctrl+shift+;",
+        "mac": "cmd+shift+;"
+      },
+      {
+        "command": "vscode-powerkit.openExplorerTab",
+        "key": "ctrl+t",
+        "mac": "cmd+t",
+        "when": "activeCustomEditorId == vscode-powerkit.explorerEditor && vscode-powerkit.explorerWebviewFocus"
       }
     ],
     "configuration": {
@@ -406,6 +441,8 @@
     "@types/react": "^19.2.2",
     "@types/react-dom": "^19.2.2",
     "@types/vscode": "^1.125.0",
+    "@types/yauzl": "^3.4.0",
+    "@types/yazl": "^3.3.1",
     "@vitejs/plugin-react": "^5.1.1",
     "@vscode/vsce": "^3.6.2",
     "dompurify": "^3.4.13",
@@ -422,8 +459,11 @@
     "vite": "^7.2.2"
   },
   "dependencies": {
-    "@vscode/debugprotocol": "^1.68.0",
     "@vscode/codicons": "^0.0.46-24",
-    "xml-formatter": "^3.7.0"
+    "@vscode/debugprotocol": "^1.68.0",
+    "exceljs": "^4.4.0",
+    "xml-formatter": "^3.7.0",
+    "yauzl": "^3.4.0",
+    "yazl": "^3.3.1"
   }
 }
