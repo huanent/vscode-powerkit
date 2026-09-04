@@ -1,3 +1,4 @@
+import { cn } from 'cn';
 import type { ComponentPropsWithRef, ReactNode } from 'react';
 
 export enum IconButtonVariant {
@@ -32,7 +33,7 @@ const variantClasses: Record<IconButtonVariant, string> = {
 export function IconButton({ label, icon, size = IconButtonSize.Small, variant = IconButtonVariant.Default, className = '', title = label, type = 'button', ...props }: IconButtonProps) {
 	return (
 		<button
-			className={`${sizeClasses[size]} ${variantClasses[variant]} grid shrink-0 place-items-center rounded border-0 bg-transparent p-0 text-(--vscode-icon-foreground) transition-colors duration-75 disabled:cursor-default disabled:opacity-50 focus-visible:outline focus-visible:-outline-offset-1 focus-visible:outline-(--vscode-focusBorder) ${className}`}
+			className={cn(sizeClasses[size], variantClasses[variant], 'grid shrink-0 place-items-center rounded border-0 bg-transparent p-0 text-(--vscode-icon-foreground) transition-colors duration-75 disabled:cursor-default disabled:opacity-50 focus-visible:outline focus-visible:-outline-offset-1 focus-visible:outline-(--vscode-focusBorder)', className)}
 			type={type}
 			title={title}
 			aria-label={label}

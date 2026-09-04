@@ -1,3 +1,4 @@
+import { cn } from 'cn';
 import { lazy, Suspense } from 'react';
 
 const MarkdownContent = lazy(() => import('../MarkdownContent').then(module => ({ default: module.MarkdownContent })));
@@ -8,5 +9,5 @@ export function MessageContent({ content, isUser, isEditing, isLoading }: Messag
 	if (isLoading) {
 		return <div className="message-loading" role="status" aria-label="Waiting for response"><span /><span /><span /></div>;
 	}
-	return <Suspense fallback={<div className="min-w-0 max-w-full whitespace-pre-wrap wrap-anywhere">{content}</div>}><MarkdownContent text={content} className={`${isUser ? 'rounded-md border border-(--vscode-chat-requestBorder,var(--vscode-panel-border)) bg-(--vscode-chat-requestBackground,var(--vscode-input-background)) px-3 py-2' : ''} ${isEditing ? 'border-(--vscode-focusBorder) shadow-[0_0_0_1px_var(--vscode-focusBorder)]' : ''}`} /></Suspense>;
+	return <Suspense fallback={<div className="min-w-0 max-w-full whitespace-pre-wrap wrap-anywhere">{content}</div>}><MarkdownContent text={content} className={cn(isUser && 'rounded-md border border-(--vscode-chat-requestBorder,var(--vscode-panel-border)) bg-(--vscode-chat-requestBackground,var(--vscode-input-background)) px-3 py-2', isEditing && 'border-(--vscode-focusBorder) shadow-[0_0_0_1px_var(--vscode-focusBorder)]')} /></Suspense>;
 }

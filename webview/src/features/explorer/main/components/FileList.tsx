@@ -1,3 +1,4 @@
+import { cn } from 'cn';
 import type { MouseEvent } from 'react';
 import { useLayoutEffect, useMemo, useRef, useState, type CSSProperties } from 'react';
 import { createPortal } from 'react-dom';
@@ -59,7 +60,7 @@ export function FileList({ state, actions }: FileListProps) {
 			}}
 			onContextMenu={event => actions.showContextMenu(event, null)}
 		>
-			<div className={`${fileGridClasses} sticky top-0 z-2 h-8 border-b border-(--vscode-panel-border) bg-(--vscode-editor-background) text-xs text-(--vscode-descriptionForeground)`}>
+			<div className={cn(fileGridClasses, 'sticky top-0 z-2 h-8 border-b border-(--vscode-panel-border) bg-(--vscode-editor-background) text-xs text-(--vscode-descriptionForeground)')}>
 				<SortHeader label={`Name${state.entries.length ? ` (${entries.length}${normalizedQuery ? ` of ${state.entries.length}` : ''})` : ''}`} sortKey="name" sort={sort} onSort={toggleSort} className="pl-6" />
 				<SortHeader label="Created" sortKey="created" sort={sort} onSort={toggleSort} className="max-[600px]:hidden" />
 				<SortHeader label="Modified" sortKey="modified" sort={sort} onSort={toggleSort} className="max-[600px]:hidden" />
@@ -81,9 +82,9 @@ export function FileList({ state, actions }: FileListProps) {
 function SortHeader({ label, sortKey, sort, onSort, className = '' }: { label: string; sortKey: SortKey; sort: SortState; onSort: (key: SortKey, direction: SortDirection) => void; className?: string }) {
 	const columnLabel = label.replace(/ \(.*/, '');
 	return (
-		<div className={`group flex h-full min-w-0 items-center overflow-hidden ${className}`}>
+		<div className={cn('group flex h-full min-w-0 items-center overflow-hidden', className)}>
 			<span className="overflow-hidden text-ellipsis whitespace-nowrap">{label}</span>
-			<span className={`ml-auto grid h-5 w-5 shrink-0 grid-rows-2 place-items-center ${sort?.key === sortKey ? 'opacity-100' : 'opacity-0 group-hover:opacity-100 group-focus-within:opacity-100'}`}>
+			<span className={cn('ml-auto grid h-5 w-5 shrink-0 grid-rows-2 place-items-center', sort?.key === sortKey ? 'opacity-100' : 'opacity-0 group-hover:opacity-100 group-focus-within:opacity-100')}>
 				<SortButton label={`Sort ascending by ${columnLabel}`} active={sort?.key === sortKey && sort.direction === 'ascending'} direction="ascending" onClick={() => onSort(sortKey, 'ascending')} />
 				<SortButton label={`Sort descending by ${columnLabel}`} active={sort?.key === sortKey && sort.direction === 'descending'} direction="descending" onClick={() => onSort(sortKey, 'descending')} />
 			</span>
@@ -104,7 +105,7 @@ function SortButton({ label, active, direction, onClick }: { label: string; acti
 				if (event.detail > 0) event.currentTarget.blur();
 			}}
 		>
-			<span className={`size-0 border-x-4 border-x-transparent ${direction === 'ascending' ? 'border-b-[6px] border-b-current' : 'border-t-[6px] border-t-current'} ${active ? 'text-(--vscode-foreground) opacity-100' : 'opacity-55'}`} />
+			<span className={cn('size-0 border-x-4 border-x-transparent', direction === 'ascending' ? 'border-b-[6px] border-b-current' : 'border-t-[6px] border-t-current', active ? 'text-(--vscode-foreground) opacity-100' : 'opacity-55')} />
 		</button>
 	);
 }
@@ -128,7 +129,7 @@ function FileRow({ entry, state, actions }: { entry: FileEntry } & FileListProps
 
 	return (
 		<div
-			className={`${fileGridClasses} h-8 cursor-default rounded-sm ${classes} ${cut ? 'opacity-50' : ''}`}
+			className={cn(fileGridClasses, 'h-8 cursor-default rounded-sm', classes, cut && 'opacity-50')}
 			role="option"
 			aria-selected={selected}
 			data-uri={entry.uri}
@@ -145,11 +146,11 @@ function FileRow({ entry, state, actions }: { entry: FileEntry } & FileListProps
 			onContextMenu={event => actions.showContextMenu(event, entry)}
 		>
 			<div className="flex min-w-0 items-center gap-2">
-				<i className={`codicon ${entry.type === 'directory' ? 'codicon-folder text-(--vscode-symbolIcon-folderForeground,var(--vscode-icon-foreground))' : `${getFileIcon(entry.name)} text-(--vscode-symbolIcon-fileForeground,var(--vscode-icon-foreground))`} shrink-0 text-base ${selected ? 'text-inherit!' : ''}`} />
+				<i className={cn('codicon shrink-0 text-base', entry.type === 'directory' ? 'codicon-folder text-(--vscode-symbolIcon-folderForeground,var(--vscode-icon-foreground))' : `${getFileIcon(entry.name)} text-(--vscode-symbolIcon-fileForeground,var(--vscode-icon-foreground))`, selected && 'text-inherit!')} />
 				<span className="overflow-hidden text-ellipsis whitespace-nowrap">{entry.name}</span>
 			</div>
-			<span className={`entry-created overflow-hidden text-xs text-ellipsis whitespace-nowrap max-[600px]:hidden ${selected ? 'text-inherit' : 'text-(--vscode-descriptionForeground)'}`}>{formatDate(entry.created)}</span>
-			<span className={`entry-modified overflow-hidden text-xs text-ellipsis whitespace-nowrap max-[600px]:hidden ${selected ? 'text-inherit' : 'text-(--vscode-descriptionForeground)'}`}>{formatDate(entry.modified)}</span>
+			<span className={cn('entry-created overflow-hidden text-xs text-ellipsis whitespace-nowrap max-[600px]:hidden', selected ? 'text-inherit' : 'text-(--vscode-descriptionForeground)')}>{formatDate(entry.created)}</span>
+			<span className={cn('entry-modified overflow-hidden text-xs text-ellipsis whitespace-nowrap max-[600px]:hidden', selected ? 'text-inherit' : 'text-(--vscode-descriptionForeground)')}>{formatDate(entry.modified)}</span>
 			<EntrySize entry={entry} selected={selected} onCalculate={(event) => actions.calculateSize(entry, event.metaKey || event.ctrlKey)} />
 		</div>
 	);
@@ -157,17 +158,17 @@ function FileRow({ entry, state, actions }: { entry: FileEntry } & FileListProps
 
 function EntrySize({ entry, selected, onCalculate }: { entry: FileEntry; selected: boolean; onCalculate: (event: MouseEvent) => void }) {
 	if (entry.type === 'file') {
-		return <span className={`entry-size overflow-hidden text-right text-xs text-ellipsis whitespace-nowrap ${selected ? 'text-inherit' : 'text-(--vscode-descriptionForeground)'}`}>{formatSize(entry.size)}</span>;
+		return <span className={cn('entry-size overflow-hidden text-right text-xs text-ellipsis whitespace-nowrap', selected ? 'text-inherit' : 'text-(--vscode-descriptionForeground)')}>{formatSize(entry.size)}</span>;
 	}
 	if (entry.calculatedSize !== undefined) {
-		return <span className={`entry-size overflow-hidden text-right text-xs text-ellipsis whitespace-nowrap ${selected ? 'text-inherit' : 'text-(--vscode-descriptionForeground)'}`}>{formatSize(entry.calculatedSize)}</span>;
+		return <span className={cn('entry-size overflow-hidden text-right text-xs text-ellipsis whitespace-nowrap', selected ? 'text-inherit' : 'text-(--vscode-descriptionForeground)')}>{formatSize(entry.calculatedSize)}</span>;
 	}
 	if (entry.calculationError) {
 		return <FolderSizeError message={entry.calculationError} selected={selected} onCalculate={onCalculate} />;
 	}
 	const label = entry.calculating ? 'Calculating folder size' : 'Calculate folder size (Command/Ctrl+click calculates all folders)';
 	return (
-		<span className={`entry-size flex justify-end ${selected ? 'text-inherit' : 'text-(--vscode-descriptionForeground)'}`}>
+		<span className={cn('entry-size flex justify-end', selected ? 'text-inherit' : 'text-(--vscode-descriptionForeground)')}>
 			<button
 				type="button"
 				title={label}
@@ -177,7 +178,7 @@ function EntrySize({ entry, selected, onCalculate }: { entry: FileEntry; selecte
 				onClick={event => { event.stopPropagation(); onCalculate(event); }}
 				onDoubleClick={event => event.stopPropagation()}
 			>
-				<i className={`codicon ${entry.calculating ? 'codicon-loading codicon-modifier-spin' : 'codicon-refresh'}`} />
+				<i className={cn('codicon', entry.calculating ? 'codicon-loading codicon-modifier-spin' : 'codicon-refresh')} />
 			</button>
 		</span>
 	);
@@ -205,7 +206,7 @@ function FolderSizeError({ message, selected, onCalculate }: { message: string; 
 	}, [message]);
 
 	return (
-		<span className={`entry-size flex justify-end ${selected ? 'text-inherit' : 'text-(--vscode-list-warningForeground)'}`}>
+		<span className={cn('entry-size flex justify-end', selected ? 'text-inherit' : 'text-(--vscode-list-warningForeground)')}>
 			<button
 				ref={buttonRef}
 				type="button"

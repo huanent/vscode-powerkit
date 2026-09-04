@@ -1,3 +1,4 @@
+import { cn } from 'cn';
 import { LoaderCircle, X } from 'lucide-react';
 import { IconButton } from '../../../components/ui';
 import type { LaunchAgentDetails } from '../types';
@@ -25,5 +26,5 @@ function DetailsContent({ details }: { details: LaunchAgentDetails }) {
 
 function Detail({ label, value, wide = false }: { label: string; value?: string | number; wide?: boolean }) {
 	if (value === undefined || value === '') return null;
-	return <div className={`min-w-0 bg-(--vscode-editorWidget-background) px-3 py-2.5 ${wide ? 'col-span-2 max-[760px]:col-auto' : ''}`}><dt className="mb-1 text-[10px] font-semibold uppercase text-(--vscode-descriptionForeground)">{label}</dt><dd className="m-0 font-(--vscode-editor-font-family) text-xs leading-5 break-anywhere">{value}</dd></div>;
+	return <div className={cn('min-w-0 bg-(--vscode-editorWidget-background) px-3 py-2.5', wide && 'col-span-2 max-[760px]:col-auto')}><dt className="mb-1 text-[10px] font-semibold uppercase text-(--vscode-descriptionForeground)">{label}</dt><dd className="m-0 font-(--vscode-editor-font-family) text-xs leading-5 break-anywhere">{value}</dd></div>;
 }

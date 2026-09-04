@@ -1,3 +1,4 @@
+import { cn } from 'cn';
 import type { ExplorerModel } from '../hooks/useExplorer';
 import { getRelativePath } from '../../shared/formatters';
 import { IconButton } from './IconButton';
@@ -31,7 +32,7 @@ export function FavoritesPanel({ state, actions }: FavoritesPanelProps) {
 							actions.navigateQuickLocation(location);
 						}}
 					>
-						<i className={`codicon ${icon} shrink-0 text-base text-(--vscode-icon-foreground)`} aria-hidden="true" />
+						<i className={cn('codicon shrink-0 text-base text-(--vscode-icon-foreground)', icon)} aria-hidden="true" />
 						<span className="min-w-0 overflow-hidden text-ellipsis whitespace-nowrap">{label}</span>
 					</button>
 				))}

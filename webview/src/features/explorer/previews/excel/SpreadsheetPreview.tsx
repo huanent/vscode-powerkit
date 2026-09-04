@@ -1,3 +1,4 @@
+import { cn } from 'cn';
 import { useEffect, useState } from 'react';
 import type { SpreadsheetSheet } from '../../../../../../src/features/explorer/excel/types';
 
@@ -23,7 +24,7 @@ export function SpreadsheetPreview({ name, sheets }: SpreadsheetPreviewProps) {
 					</div>
 				</header>
 				{sheets.length > 1 && <div className="flex h-9 shrink-0 items-end gap-0.5 overflow-x-auto border-b border-(--vscode-panel-border) px-2" role="tablist" aria-label="Worksheets">
-					{sheets.map((item, index) => <button key={`${item.name}-${index}`} type="button" role="tab" aria-selected={index === activeSheetIndex} className={`h-8 shrink-0 cursor-pointer border-0 border-b-2 bg-transparent px-3 text-sm ${index === activeSheetIndex ? 'border-(--vscode-focusBorder) text-(--vscode-foreground)' : 'border-transparent text-(--vscode-descriptionForeground) hover:text-(--vscode-foreground)'}`} onClick={() => setActiveSheetIndex(index)}>{item.name}</button>)}
+					{sheets.map((item, index) => <button key={`${item.name}-${index}`} type="button" role="tab" aria-selected={index === activeSheetIndex} className={cn('h-8 shrink-0 cursor-pointer border-0 border-b-2 bg-transparent px-3 text-sm', index === activeSheetIndex ? 'border-(--vscode-focusBorder) text-(--vscode-foreground)' : 'border-transparent text-(--vscode-descriptionForeground) hover:text-(--vscode-foreground)')} onClick={() => setActiveSheetIndex(index)}>{item.name}</button>)}
 				</div>}
 				<div className="min-h-0 flex-1 overflow-auto">
 					{sheet?.rows.length

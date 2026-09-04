@@ -1,3 +1,4 @@
+import { cn } from 'cn';
 import { useState } from 'react';
 import { useMessageNavigation } from '../../hooks/useMessageNavigation';
 import { getRandomQuote } from '../../lib/quotes';
@@ -19,8 +20,8 @@ export function MessageList({ messages, busy, editingIndex, onEdit, onRegenerate
 				{messages.length === 0 && <EmptyState icon={<span className="codicon codicon-comment-discussion text-[32px]! leading-none text-(--vscode-icon-foreground)" aria-hidden="true" />} title={greeting} titleAs="h1" description={<>“{quote.text}” — {quote.author}</>} className="h-full" titleClassName="mt-3.5 text-xl font-semibold" descriptionClassName="mt-2 max-w-105 text-[12px] leading-5 text-(--vscode-descriptionForeground)" />}
 				{messages.length > 0 && <div className="min-h-full pt-8 pb-10">{messages.map((message, index) => <MessageItem key={`${index}-${message.role}`} message={message} busy={busy} isEditing={editingIndex === index} messageRef={element => { navigation.messageRefs.current[index] = element; }} onEdit={() => onEdit(index, message.content)} onRegenerate={() => onRegenerate(index)} onRetry={() => onRetry(index)} />)}</div>}
 			</main>
-			<div className={`message-list-fade message-list-fade-top ${navigation.scrollOverflow.top ? 'opacity-100' : 'opacity-0'}`} aria-hidden="true" />
-			<div className={`message-list-fade message-list-fade-bottom ${navigation.scrollOverflow.bottom ? 'opacity-100' : 'opacity-0'}`} aria-hidden="true" />
+			<div className={cn('message-list-fade message-list-fade-top', navigation.scrollOverflow.top ? 'opacity-100' : 'opacity-0')} aria-hidden="true" />
+			<div className={cn('message-list-fade message-list-fade-bottom', navigation.scrollOverflow.bottom ? 'opacity-100' : 'opacity-0')} aria-hidden="true" />
 		</div>
 	);
 }

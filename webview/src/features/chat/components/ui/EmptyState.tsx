@@ -1,3 +1,4 @@
+import { cn } from 'cn';
 import type { ReactNode } from 'react';
 
 type EmptyStateProps = {
@@ -12,7 +13,7 @@ type EmptyStateProps = {
 
 export function EmptyState({ icon, title, titleAs: Title = 'strong', description, className = '', titleClassName = '', descriptionClassName = '' }: EmptyStateProps) {
 	return (
-		<div className={`grid place-content-center justify-items-center text-center ${className}`}>
+		<div className={cn('grid place-content-center justify-items-center text-center', className)}>
 			{icon}
 			<Title className={titleClassName}>{title}</Title>
 			{description !== undefined && <span className={descriptionClassName}>{description}</span>}

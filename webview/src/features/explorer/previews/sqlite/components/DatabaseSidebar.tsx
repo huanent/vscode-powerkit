@@ -1,3 +1,4 @@
+import { cn } from 'cn';
 import type { MouseEvent } from 'react';
 import type { DatabaseObject } from '../types';
 
@@ -15,8 +16,8 @@ export function DatabaseSidebar({ objects, selectedObject, onCreateTable, onOpen
 			<span className="flex-1 text-[11px] font-semibold uppercase text-(--vscode-descriptionForeground)">Tables</span>
 			<button type="button" title="Create table" className="grid size-6 place-items-center border-0 bg-transparent hover:bg-(--vscode-toolbar-hoverBackground)" onClick={onCreateTable}><i className="codicon codicon-add" aria-hidden="true" /></button>
 		</div>
-		<div className="min-h-0 flex-1 overflow-auto py-1">{objects.map(object => <button key={`${object.type}:${object.name}`} type="button" className={`flex h-7 w-full items-center gap-2 border-0 px-3 text-left text-xs ${selectedObject?.name === object.name ? 'bg-(--vscode-list-activeSelectionBackground) text-(--vscode-list-activeSelectionForeground)' : 'bg-transparent hover:bg-(--vscode-list-hoverBackground)'}`} onClick={() => onOpenObject(object)} onContextMenu={event => onOpenContextMenu(object, event)}>
-			<i className={`codicon ${object.type === 'table' ? 'codicon-table' : 'codicon-eye'}`} aria-hidden="true" />
+		<div className="min-h-0 flex-1 overflow-auto py-1">{objects.map(object => <button key={`${object.type}:${object.name}`} type="button" className={cn('flex h-7 w-full items-center gap-2 border-0 px-3 text-left text-xs', selectedObject?.name === object.name ? 'bg-(--vscode-list-activeSelectionBackground) text-(--vscode-list-activeSelectionForeground)' : 'bg-transparent hover:bg-(--vscode-list-hoverBackground)')} onClick={() => onOpenObject(object)} onContextMenu={event => onOpenContextMenu(object, event)}>
+			<i className={cn('codicon', object.type === 'table' ? 'codicon-table' : 'codicon-eye')} aria-hidden="true" />
 			<span className="min-w-0 overflow-hidden text-ellipsis whitespace-nowrap">{object.name}</span>
 		</button>)}
 		{objects.length === 0 && <div className="px-3 py-2 text-xs text-(--vscode-descriptionForeground)">No tables or views</div>}

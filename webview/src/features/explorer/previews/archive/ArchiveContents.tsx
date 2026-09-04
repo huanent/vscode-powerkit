@@ -1,3 +1,4 @@
+import { cn } from 'cn';
 import { useMemo, useState } from 'react';
 import type { ArchiveTreeEntry } from '../../../../../../src/features/explorer/archive/types';
 import { formatSize, getFileIcon } from '../../shared/formatters';
@@ -40,10 +41,10 @@ function ArchiveTreeRow({ entry, path, depth }: { entry: ArchiveTreeEntry; path:
 				<div className="flex min-w-0 items-center gap-1">
 					{directory ? (
 						<button type="button" className="grid size-6 shrink-0 cursor-pointer place-items-center border-0 bg-transparent p-0 text-inherit disabled:cursor-default disabled:opacity-35" disabled={!hasChildren} aria-label={`${expanded ? 'Collapse' : 'Expand'} ${entry.name}`} onClick={() => setExpanded(current => !current)}>
-							<i className={`codicon codicon-chevron-${expanded ? 'down' : 'right'}`} aria-hidden="true" />
+							<i className={cn('codicon', `codicon-chevron-${expanded ? 'down' : 'right'}`)} aria-hidden="true" />
 						</button>
 					) : <span className="w-6 shrink-0" />}
-					<i className={`codicon ${directory ? `codicon-folder${expanded ? '-opened' : ''} text-(--vscode-symbolIcon-folderForeground,var(--vscode-icon-foreground))` : `${getFileIcon(entry.name)} text-(--vscode-symbolIcon-fileForeground,var(--vscode-icon-foreground))`} shrink-0 text-base`} aria-hidden="true" />
+					<i className={cn('codicon shrink-0 text-base', directory ? `codicon-folder${expanded ? '-opened' : ''} text-(--vscode-symbolIcon-folderForeground,var(--vscode-icon-foreground))` : `${getFileIcon(entry.name)} text-(--vscode-symbolIcon-fileForeground,var(--vscode-icon-foreground))`)} aria-hidden="true" />
 					<span className="overflow-hidden text-ellipsis whitespace-nowrap" title={path}>{entry.name}</span>
 				</div>
 				<span className="overflow-hidden text-right text-xs text-ellipsis whitespace-nowrap text-(--vscode-descriptionForeground)">{directory ? '' : formatSize(entry.size)}</span>

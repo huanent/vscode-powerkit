@@ -1,3 +1,4 @@
+import { cn } from 'cn';
 import { useEffect, useRef, useState } from 'react';
 import type { StoredMessage } from '../../types';
 import { MessageContent } from './MessageContent';
@@ -18,5 +19,5 @@ export function MessageItem({ message, busy, isEditing, messageRef, onEdit, onRe
 		setCopied(true);
 		copyFeedbackTimerRef.current = setTimeout(() => setCopied(false), 1500);
 	};
-	return <article ref={messageRef} className={`group flex py-2.5 ${isUser ? 'justify-end' : 'justify-start'}`}><div className={`flex min-w-0 max-w-full flex-col ${isUser ? 'items-end' : 'items-start'}`}><MessageContent content={message.content} isUser={isUser} isEditing={isEditing} isLoading={isLoading} />{message.error && <MessageError message={message.error} details={message.errorDetails} busy={busy} onRetry={onRetry} />}<MessageFooter message={message} busy={busy} copied={copied} onEdit={onEdit} onRegenerate={onRegenerate} onCopy={() => void copyMessage()} /></div></article>;
+	return <article ref={messageRef} className={cn('group flex py-2.5', isUser ? 'justify-end' : 'justify-start')}><div className={cn('flex min-w-0 max-w-full flex-col', isUser ? 'items-end' : 'items-start')}><MessageContent content={message.content} isUser={isUser} isEditing={isEditing} isLoading={isLoading} />{message.error && <MessageError message={message.error} details={message.errorDetails} busy={busy} onRetry={onRetry} />}<MessageFooter message={message} busy={busy} copied={copied} onEdit={onEdit} onRegenerate={onRegenerate} onCopy={() => void copyMessage()} /></div></article>;
 }

@@ -1,3 +1,4 @@
+import { cn } from 'cn';
 import { useModelPicker } from '../hooks/useModelPicker';
 import type { ModelItem } from '../types';
 import { TextButton } from './ui/TextButton';
@@ -19,7 +20,7 @@ export function ModelPicker({ models, selectedModelId, disabled, error, onSelect
 
 	return (
 		<div className="relative min-w-0 max-w-[min(60vw,320px)] max-[620px]:max-w-[52vw]" ref={rootRef}>
-			<TextButton className={`flex h-7 min-w-0 max-w-full items-center gap-1.5 px-2 text-xs text-(--vscode-descriptionForeground) hover:bg-(--vscode-toolbar-hoverBackground,var(--vscode-list-hoverBackground)) hover:text-(--vscode-foreground) ${open ? 'bg-(--vscode-toolbar-hoverBackground,var(--vscode-list-hoverBackground)) text-(--vscode-foreground)' : ''}`} disabled={disabled || models.length === 0} aria-haspopup="listbox" aria-expanded={open} title={selectedModel ? `${selectedModel.providerName} · ${selectedModel.name}` : label} onClick={() => setOpen(value => !value)}>
+			<TextButton className={cn('flex h-7 min-w-0 max-w-full items-center gap-1.5 px-2 text-xs text-(--vscode-descriptionForeground) hover:bg-(--vscode-toolbar-hoverBackground,var(--vscode-list-hoverBackground)) hover:text-(--vscode-foreground)', open && 'bg-(--vscode-toolbar-hoverBackground,var(--vscode-list-hoverBackground)) text-(--vscode-foreground)')} disabled={disabled || models.length === 0} aria-haspopup="listbox" aria-expanded={open} title={selectedModel ? `${selectedModel.providerName} · ${selectedModel.name}` : label} onClick={() => setOpen(value => !value)}>
 				<span className="codicon codicon-sparkle shrink-0 text-[14px] leading-none" aria-hidden="true" />
 				<span className="overflow-hidden text-ellipsis whitespace-nowrap">{label}</span>
 			</TextButton>

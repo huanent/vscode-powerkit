@@ -1,3 +1,4 @@
+import { cn } from 'cn';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import type { ExplorerModel } from '../hooks/useExplorer';
 import { FavoritesPanel } from './FavoritesPanel';
@@ -114,7 +115,7 @@ export function Toolbar({ state, actions }: ToolbarProps) {
 								}}
 								onContextMenu={event => actions.showDirectoryContextMenu(event, crumb.uri)}
 							>
-								{index === 0 ? <i className={`codicon codicon-home ${index === crumbs.length - 1 ? 'breadcrumb-active-icon' : ''}`} aria-hidden="true" /> : crumb.label}
+								{index === 0 ? <i className={cn('codicon codicon-home', index === crumbs.length - 1 && 'breadcrumb-active-icon')} aria-hidden="true" /> : crumb.label}
 							</button>
 						</span>
 					))}
